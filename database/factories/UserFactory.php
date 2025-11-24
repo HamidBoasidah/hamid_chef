@@ -16,19 +16,21 @@ class UserFactory extends Factory
      */
     protected static ?string $password;
 
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
     public function definition(): array
     {
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
+            'address' => fake()->address(),
+            'phone_number' => fake()->numerify('5########'),
+            'whatsapp_number' => fake()->numerify('7########'),
+            'is_active' => true,
             'password' => static::$password ??= Hash::make('password'),
+            'created_by' => null,
+            'updated_by' => null,
             'remember_token' => Str::random(10),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 
@@ -40,5 +42,15 @@ class UserFactory extends Factory
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
         ]);
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function ($user) {
+            $role = \Spatie\Permission\Models\Role::inRandomOrder()->first();
+            if ($role) {
+                $user->assignRole($role->name);
+            }
+        });
     }
 }
