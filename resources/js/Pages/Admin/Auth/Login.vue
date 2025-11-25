@@ -214,7 +214,7 @@
                         </label>
                       </div>
                       <Link
-                        href="/reset-password"
+                        :href="route('admin.password.request')"
                         class="text-sm text-brand-500 hover:text-brand-600 dark:text-brand-400"
                         >{{ t('auth.login.forgotPassword') }}</Link
                       >
@@ -230,18 +230,18 @@
                     </div>
                   </div>
                 </form>
-                <div class="mt-5">
+                <!-- <div class="mt-5">
                   <p
                     class="text-sm font-normal text-center text-gray-700 dark:text-gray-400 sm:text-start"
                   >
                     {{ t('auth.login.noAccount') }}
                     <Link
-                      href="/signup"
+                      :href="route('admin.register')"
                       class="text-brand-500 hover:text-brand-600 dark:text-brand-400"
                       >{{ t('auth.login.signUp') }}</Link
                     >
                   </p>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>
@@ -294,7 +294,7 @@ const togglePasswordVisibility = () => {
 }
 
 const handleSubmit = () => {
-  form.post(route('login'), {
+  form.post(route('admin.login'), {
     onError: (errors) => {
       // يمكن عرض الأخطاء هنا إذا رغبت
     },

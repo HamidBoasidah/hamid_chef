@@ -308,19 +308,25 @@ const menuGroups = computed(() =>
         {
           icon: UserCircleIcon,
           name: t('menu.users'),
+          path: route('admin.users.index'),
+          permission: 'users.view',
+        },
+        {
+          icon: UserCircleIcon,
+          name: t('menu.admins'),
           subItems: [
             {
-              name: 'المستخدمون',
-              path: route('admin.users.index'),
-              permission: 'users.view',
+              name: t('menu.admins'),
+              path: route('admin.admins.index'),
+              permission: 'admins.view',
             },
             {
-              name: 'الأدوار',
+              name: t('menu.roles'),
               path: route('admin.roles.index'),
               permission: 'roles.view',
             },
             {
-              name: 'الصلاحيات',
+              name: t('menu.permissions'),
               path: route('admin.permissions.index'),
               permission: 'permissions.view',
             },

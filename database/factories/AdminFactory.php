@@ -3,17 +3,14 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Hash;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Admin>
  */
-class UserFactory extends Factory
+class AdminFactory extends Factory
 {
-    /**
-     * The current password being used by the factory.
-     */
     protected static ?string $password;
 
     public function definition(): array
@@ -23,9 +20,9 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'email' => fake()->unique()->safeEmail(),
             'avatar' => null,
-            'address' => fake()->address(),
             'phone_number' => fake()->numerify('5########'),
             'whatsapp_number' => fake()->numerify('7########'),
+            'address' => fake()->address(),
             'password' => static::$password ??= Hash::make('password'),
             'facebook' => null,
             'x_url' => null,
@@ -41,13 +38,13 @@ class UserFactory extends Factory
         ];
     }
 
-    /**
-     * Indicate that the model's email address should be unverified.
-     */
-    public function unverified(): static
+    public function configure()
     {
-        return $this->state(fn (array $attributes) => [
-            'email_verified_at' => null,
-        ]);
+        return $this->afterCreating(function ($admin) {
+            $role = \Spatie\Permission\Models\Role::where('name', 'admin')->first() ?? \Spatie\Permission\Models\Role::inRandomOrder()->first();
+            if ($role) {
+                $admin->assignRole($role->name);
+            }
+        });
     }
 }

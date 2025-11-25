@@ -2,9 +2,9 @@
 
 namespace App\DTOs;
 
-use App\Models\User;
- 
-class UserDTO extends BaseDTO
+use App\Models\Admin;
+
+class AdminDTO extends BaseDTO
 {
     public $id;
     public $first_name;
@@ -51,36 +51,36 @@ class UserDTO extends BaseDTO
         $this->deleted_at = $deleted_at;
     }
 
-    public static function fromModel(User $user): self
+    public static function fromModel(Admin $admin): self
     {
-        $user->loadMissing(['roles']);
-        $role = $user->roles->first();
+        $admin->loadMissing(['roles']);
+        $role = $admin->roles->first();
 
         return new self(
-            $user->id,
-            $user->first_name ?? null,
-            $user->last_name ?? null,
-            $user->email ?? null,
-            $user->address ?? null,
-            $user->phone_number ?? null,
-            $user->whatsapp_number ?? null,
-            $user->facebook ?? null,
-            $user->x_url ?? null,
-            $user->linkedin ?? null,
-            $user->instagram ?? null,
-            (bool) ($user->is_active ?? false),
-            $user->locale ?? null,
-            $user->avatar ?? null,
+            $admin->id,
+            $admin->first_name ?? null,
+            $admin->last_name ?? null,
+            $admin->email ?? null,
+            $admin->address ?? null,
+            $admin->phone_number ?? null,
+            $admin->whatsapp_number ?? null,
+            $admin->facebook ?? null,
+            $admin->x_url ?? null,
+            $admin->linkedin ?? null,
+            $admin->instagram ?? null,
+            (bool) ($admin->is_active ?? false),
+            $admin->locale ?? null,
+            $admin->avatar ?? null,
             $role ? [
                 'id' => $role->id,
                 'name' => $role->name,
                 'display_name' => $role->getTranslations('display_name'),
             ] : null,
             $role?->id,
-            $user->created_by ?? null,
-            $user->updated_by ?? null,
-            $user->created_at?->toDateTimeString() ?? null,
-            $user->deleted_at?->toDateTimeString() ?? null
+            $admin->created_by ?? null,
+            $admin->updated_by ?? null,
+            $admin->created_at?->toDateTimeString() ?? null,
+            $admin->deleted_at?->toDateTimeString() ?? null
         );
     }
 
