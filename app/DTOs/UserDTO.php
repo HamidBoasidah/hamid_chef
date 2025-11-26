@@ -20,14 +20,13 @@ class UserDTO extends BaseDTO
     public $is_active;
     public $locale;
     public $avatar;
-    public $role;
-    public $role_id;
+    
     public $created_by;
     public $updated_by;
     public $created_at;
     public $deleted_at;
 
-    public function __construct($id, $first_name, $last_name, $email, $address, $phone_number, $whatsapp_number, $facebook, $x_url, $linkedin, $instagram, $is_active, $locale, $avatar, $role, $role_id, $created_by, $updated_by, $created_at = null, $deleted_at = null)
+    public function __construct($id, $first_name, $last_name, $email, $address, $phone_number, $whatsapp_number, $facebook, $x_url, $linkedin, $instagram, $is_active, $locale, $avatar, $created_by, $updated_by, $created_at = null, $deleted_at = null)
     {
         $this->id = $id;
         $this->first_name = $first_name;
@@ -43,8 +42,6 @@ class UserDTO extends BaseDTO
         $this->is_active = $is_active;
         $this->locale = $locale;
         $this->avatar = $avatar;
-        $this->role = $role;
-        $this->role_id = $role_id;
         $this->created_by = $created_by;
         $this->updated_by = $updated_by;
         $this->created_at = $created_at;
@@ -53,9 +50,6 @@ class UserDTO extends BaseDTO
 
     public static function fromModel(User $user): self
     {
-        $user->loadMissing(['roles']);
-        $role = $user->roles->first();
-
         return new self(
             $user->id,
             $user->first_name ?? null,
@@ -71,12 +65,6 @@ class UserDTO extends BaseDTO
             (bool) ($user->is_active ?? false),
             $user->locale ?? null,
             $user->avatar ?? null,
-            $role ? [
-                'id' => $role->id,
-                'name' => $role->name,
-                'display_name' => $role->getTranslations('display_name'),
-            ] : null,
-            $role?->id,
             $user->created_by ?? null,
             $user->updated_by ?? null,
             $user->created_at?->toDateTimeString() ?? null,
@@ -101,8 +89,7 @@ class UserDTO extends BaseDTO
             'is_active' => $this->is_active,
             'locale' => $this->locale,
             'avatar' => $this->avatar,
-            'role' => $this->role,
-            'role_id' => $this->role_id,
+            
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
@@ -120,7 +107,7 @@ class UserDTO extends BaseDTO
             'phone_number' => $this->phone_number,
             'is_active' => $this->is_active,
             'avatar' => $this->avatar,
-            'role' => $this->role,
+            
         ];
     }
 }

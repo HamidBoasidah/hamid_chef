@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('whatsapp_number')->nullable();
             $table->string('address')->nullable();
             $table->string('password');
+            // multi-vendor: user can be a customer or a chef
+            $table->enum('user_type', ['customer', 'chef'])->default('customer');
             $table->string('facebook')->nullable();
             $table->string('x_url')->nullable();
             $table->string('linkedin')->nullable();

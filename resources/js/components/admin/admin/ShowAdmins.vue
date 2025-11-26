@@ -376,19 +376,15 @@
               <div class="flex items-center gap-3">
                 <div class="h-10 w-10">
                   <img
-                    v-if="admin.attachment"
-                    :src="`/storage/${admin.attachment}`"
-                    
+                    v-if="admin.avatar"
+                    :src="`/storage/${admin.avatar}`"
                     class="h-10 w-10 rounded-full object-cover"
                     alt=""
                   />
-                  <UserCircleIcon
-                  v-else
-                  class="h-10 w-10 text-gray-400"
-                  />
+                  <UserCircleIcon v-else class="h-10 w-10 text-gray-400" />
                 </div>
                 <div class="flex flex-col">
-                  <span class="text-sm font-medium text-gray-700 dark:text-gray-400">{{ admin.name }}</span>
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-400">{{ (admin.first_name || admin.last_name) ? `${admin.first_name ?? ''} ${admin.last_name ?? ''}`.trim() : admin.name }}</span>
                   <!-- <span class="text-xs text-gray-500 dark:text-gray-400">{{ admin.email }}</span> -->
                 </div>
               </div>

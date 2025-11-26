@@ -1,0 +1,67 @@
+<?php
+
+namespace App\DTOs;
+
+use App\Models\Category;
+
+class CategoryDTO extends BaseDTO
+{
+    public $id;
+    public $name;
+    public $slug;
+    public $is_active;
+    public $created_by;
+    public $updated_by;
+    public $created_at;
+    public $deleted_at;
+
+    public function __construct($id, $name, $slug, $is_active, $created_by, $updated_by, $created_at = null, $deleted_at = null)
+    {
+        $this->id = $id;
+        $this->name = $name;
+        $this->slug = $slug;
+        $this->is_active = (bool) $is_active;
+        $this->created_by = $created_by;
+        $this->updated_by = $updated_by;
+        $this->created_at = $created_at;
+        $this->deleted_at = $deleted_at;
+    }
+
+    public static function fromModel(Category $category): self
+    {
+        return new self(
+            $category->id,
+            $category->name ?? null,
+            $category->slug ?? null,
+            $category->is_active ?? false,
+            $category->created_by ?? null,
+            $category->updated_by ?? null,
+            $category->created_at?->toDateTimeString() ?? null,
+            $category->deleted_at?->toDateTimeString() ?? null,
+        );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'is_active' => $this->is_active,
+            'created_by' => $this->created_by,
+            'updated_by' => $this->updated_by,
+            'created_at' => $this->created_at,
+            'deleted_at' => $this->deleted_at,
+        ];
+    }
+
+    public function toIndexArray(): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'slug' => $this->slug,
+            'is_active' => $this->is_active,
+        ];
+    }
+}

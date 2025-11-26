@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
@@ -91,12 +92,59 @@ abstract class BaseRepository implements BaseRepositoryInterface
                     Storage::disk('public')->delete($record->{$key});
                 }
 
-                // قم بتخزين الملف الجديد في مجلد يعتمد على اسم جدول النموذج
-                $path = $value->store($this->model->getTable(), 'public');
+                // قم بتخزين الملف الجديد في مجلد يعتمد على اسم جدول النموذج باستخدام اسم ملف فريد UUID
+                $filename = (string) Str::uuid() . '.' . $value->getClientOriginalExtension();
+                $path = $value->storeAs($this->model->getTable(), $filename, 'public');
+
                 $value = $path; // استبدل كائن الملف بالمسار
             }
         }
 
         return $attributes;
+    }
+
+    /**
+     * يخزن ملفًا خاصًا في تخزين محلي (storage/app) باستخدام اسم ملف UUID.
+     *
+     * @param UploadedFile $file
+     * @param string|null $oldPath
+     * @param string $directory مجلد داخل storage/app، مثال: 'private' أو 'private/kyc'
+     * @return string|null
+     */
+    protected function storePrivateFile(UploadedFile $file, ?string $oldPath = null, string $directory = 'private'): ?string
+    {
+        if (!$file->isValid()) {
+            return null;
+        }
+
+        $disk = Storage::disk('local');
+
+        if ($oldPath && $disk->exists($oldPath)) {
+            $disk->delete($oldPath);
+        }
+
+        $filename = (string) Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $fullPath = trim($directory, '/');
+        $storedPath = $file->storeAs($fullPath, $filename, 'local');
+
+        return $storedPath;
+    }
+
+    /**
+     * يحذف ملفًا من التخزين الخاص (local disk) إن وجد.
+     */
+    protected function deletePrivateFile(?string $path): bool
+    {
+        if (!$path) {
+            return false;
+        }
+
+        $disk = Storage::disk('local');
+
+        if ($disk->exists($path)) {
+            return $disk->delete($path);
+        }
+
+        return false;
     }
 }

@@ -245,42 +245,7 @@
                 </span>
               </div>
             </th>
-            <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
-              <div
-                class="flex items-center justify-between w-full cursor-pointer"
-                @click="sortBy('office')"
-              >
-                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('common.type') }}</p>
-                <span class="flex flex-col gap-0.5">
-                  <svg
-                    class="fill-gray-300 dark:fill-gray-700"
-                    width="8"
-                    height="5"
-                    viewBox="0 0 8 5"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z"
-                      fill=""
-                    />
-                  </svg>
-                  <svg
-                    class="fill-gray-300 dark:fill-gray-700"
-                    width="8"
-                    height="5"
-                    viewBox="0 0 8 5"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z"
-                      fill=""
-                    />
-                  </svg>
-                </span>
-              </div>
-            </th>
+            <!-- type column removed -->
             <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
               <div
                 class="flex items-center justify-between w-full cursor-pointer"
@@ -376,9 +341,9 @@
               <div class="flex items-center gap-3">
                 <div class="h-10 w-10">
                   <img
-                    v-if="user.attachment"
-                    :src="`/storage/${user.attachment}`"
-                    
+                    v-if="user.avatar"
+                    :src="`/storage/${user.avatar}`"
+
                     class="h-10 w-10 rounded-full object-cover"
                     alt=""
                   />
@@ -399,9 +364,7 @@
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
               <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ user.phone_number }}</p>
             </td>
-            <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ displayName(user.role) }}</p>
-            </td>
+            <!-- role/type column removed -->
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
               <span
                 class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
@@ -826,14 +789,7 @@ watch(perPage, (val, oldVal) => {
   if (val !== oldVal) fetchPage(1)
 })
 
-function displayName(role) {
-  const loc = locale.value
-  if (!role) return ''
-  if (role.display_name && typeof role.display_name === 'object') {
-    return role.display_name[loc] ?? role.display_name.en ?? role.name ?? ''
-  }
-  return role.display_name ?? role.name ?? ''
-}
+
 
 </script>
 

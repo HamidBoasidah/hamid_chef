@@ -10,7 +10,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable , HasRoles;
+    use HasFactory, Notifiable;
 
     protected $fillable = [
         'first_name',
@@ -26,6 +26,7 @@ class User extends Authenticatable
         'linkedin',
         'instagram',
         'is_active',
+        'user_type',
         'locale',
         'created_by',
         'updated_by',
@@ -52,5 +53,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'is_active' => 'boolean',
+    ];
+
+    // default user type when creating from model
+    protected $attributes = [
+        'user_type' => 'customer',
     ];
 }

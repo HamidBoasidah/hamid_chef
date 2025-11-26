@@ -10,20 +10,33 @@
       <div class="p-4 sm:p-6 dark:border-gray-800">
         <form @submit.prevent>
           <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
-            <!-- UserName Input -->
+            <!-- First & Last Name Inputs -->
             <div>
               <label
-                for="user-name"
+                for="first-name"
                 class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-                >{{ t('adduser.userName') }}</label
-              >
+              >{{ t('profile.labels.firstName') }}</label>
               <input
-                v-model="form.name"
+                v-model="form.first_name"
                 type="text"
-                id="user-name"
-                autocomplete="username"
+                id="first-name"
+                autocomplete="given-name"
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                :placeholder="t('adduser.userNamePlaceholder')"
+                :placeholder="t('profile.labels.firstName')"
+              />
+            </div>
+            <div>
+              <label
+                for="last-name"
+                class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+              >{{ t('profile.labels.lastName') }}</label>
+              <input
+                v-model="form.last_name"
+                type="text"
+                id="last-name"
+                autocomplete="family-name"
+                class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+                :placeholder="t('profile.labels.lastName')"
               />
             </div>
             <!-- Email Input -->
@@ -151,52 +164,7 @@
                 />
               </div>
             </div>
-            <!-- User Role Input -->
-            <div>
-              <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
-                {{ t('roles.roleInformation') }}
-              </label>
-              <div class="relative z-20 bg-transparent">
-                <select
-                  v-model="form.role_id"
-                  class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 pr-11 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
-                  :class="{ 'text-gray-800 dark:text-white/90': form.role_id }"
-                >
-                  <option value="" disabled class="text-gray-700 dark:bg-gray-900 dark:text-gray-400">
-                    {{ t('roles.selectRole') }}
-                  </option>
-                  <option
-                    v-for="role in roles"
-                    :key="role.id"
-                    :value="role.id"
-                    class="text-gray-700 dark:bg-gray-900 dark:text-gray-400"
-                  >
-                    {{ displayName(role)  }}
-                  </option>
-                </select>
-                <span
-                  class="pointer-events-none absolute top-1/2 right-4 z-30 -translate-y-1/2 text-gray-700 dark:text-gray-400"
-                >
-                  <svg
-                    class="stroke-current"
-                    width="20"
-                    height="20"
-                    viewBox="0 0 20 20"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.79175 7.396L10.0001 12.6043L15.2084 7.396"
-                      stroke=""
-                      stroke-width="1.5"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    />
-                  </svg>
-                </span>
-              </div>
-            </div>
-            <!-- End User Role Input -->
+            <!-- Social Links Inputs will appear in separate section -->
             <!-- UserName Input -->
             <div>
               <label
@@ -293,6 +261,75 @@
             <!-- End Password Type Input -->
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Social Links Section -->
+    <div
+      class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]"
+    >
+      <div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+        <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ t('users.socialLinks') }}</h2>
+      </div>
+      <div class="p-4 sm:p-6">
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div>
+            <label
+              for="facebook"
+              class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+            >{{ t('profile.labels.facebook') }}</label>
+            <input
+              v-model="form.facebook"
+              type="text"
+              id="facebook"
+              autocomplete="off"
+              class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+              :placeholder="t('profile.labels.facebook')"
+            />
+          </div>
+          <div>
+            <label
+              for="x_url"
+              class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+            >{{ t('profile.labels.x') }}</label>
+            <input
+              v-model="form.x_url"
+              type="text"
+              id="x_url"
+              autocomplete="off"
+              class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+              :placeholder="t('profile.labels.x')"
+            />
+          </div>
+          <div>
+            <label
+              for="linkedin"
+              class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+            >{{ t('profile.labels.linkedin') }}</label>
+            <input
+              v-model="form.linkedin"
+              type="text"
+              id="linkedin"
+              autocomplete="off"
+              class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+              :placeholder="t('profile.labels.linkedin')"
+            />
+          </div>
+          <div>
+            <label
+              for="instagram"
+              class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+            >{{ t('profile.labels.instagram') }}</label>
+            <input
+              v-model="form.instagram"
+              type="text"
+              id="instagram"
+              autocomplete="off"
+              class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
+              :placeholder="t('profile.labels.instagram')"
+            />
+          </div>
+        </div>
       </div>
     </div>
 
@@ -420,30 +457,33 @@ const { success, error } = useNotifications()
 
 const props = defineProps({
   user: Object,
-  roles : Array
 });
 
 const form = useForm({
   _method: 'PUT', // لإعلام Laravel بأن هذا طلب تحديث
-  name: props.user.name,
+  first_name: props.user.first_name ?? '',
+  last_name: props.user.last_name ?? '',
   email: props.user.email,
   phone_number: props.user.phone_number,
   whatsapp_number: props.user.whatsapp_number,
   address: props.user.address,
-  role_id: props.user.role_id,
   is_active: props.user.is_active,
   password: '', // اتركه فارغًا لعدم تغيير كلمة المرور
   password_confirmation: '',
-  attachment: null, // سيمثل الملف الجديد المرفوع
+  avatar: null, // سيمثل الملف الجديد المرفوع
+  facebook: props.user.facebook ?? '',
+  x_url: props.user.x_url ?? '',
+  linkedin: props.user.linkedin ?? '',
+  instagram: props.user.instagram ?? '',
 });
 
 const showPassword = ref(false)
-const imagePreview = ref(props.user.attachment ? `/storage/${props.user.attachment}` : null);
+const imagePreview = ref(props.user.avatar ? `/storage/${props.user.avatar}` : null);
 const fileInput = ref(null)
 
 function handleFileUpload(event) {
   const file = event.target.files?.[0] || null
-  form.attachment = file
+  form.avatar = file
   // cleanup previous preview URL
   if (imagePreview.value) {
     URL.revokeObjectURL(imagePreview.value)
@@ -452,7 +492,7 @@ function handleFileUpload(event) {
 }
 
 function removeImage() {
-  form.attachment = null
+  form.avatar = null
   if (imagePreview.value) {
     URL.revokeObjectURL(imagePreview.value)
     imagePreview.value = null
@@ -497,13 +537,5 @@ function facilityDisplayName(facility) {
   return facility[`name_${loc}`] ?? facility.name_en ?? facility.name_ar ?? ''
 }
 
-function displayName(role) {
-  const loc = locale.value
-  if (!role) return ''
-  if (role.display_name && typeof role.display_name === 'object') {
-    return role.display_name[loc] ?? role.display_name.en ?? role.name ?? ''
-  }
-  return role.display_name ?? role.name ?? ''
-}
 
 </script>

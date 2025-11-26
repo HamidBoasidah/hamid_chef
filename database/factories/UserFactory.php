@@ -27,12 +27,13 @@ class UserFactory extends Factory
             'phone_number' => fake()->numerify('5########'),
             'whatsapp_number' => fake()->numerify('7########'),
             'password' => static::$password ??= Hash::make('password'),
-            'facebook' => null,
-            'x_url' => null,
-            'linkedin' => null,
-            'instagram' => null,
+            'facebook' => 'https://facebook.com/' . fake()->userName(),
+            'x_url' => 'https://x.com/' . fake()->userName(),
+            'linkedin' => 'https://linkedin.com/in/' . fake()->userName(),
+            'instagram' => 'https://instagram.com/' . fake()->userName(),
             'is_active' => true,
             'locale' => 'ar',
+            'user_type' => 'customer',
             'created_by' => null,
             'updated_by' => null,
             'remember_token' => Str::random(10),
@@ -48,6 +49,20 @@ class UserFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'email_verified_at' => null,
+        ]);
+    }
+
+    public function chef(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'chef',
+        ]);
+    }
+
+    public function customer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'user_type' => 'customer',
         ]);
     }
 }
