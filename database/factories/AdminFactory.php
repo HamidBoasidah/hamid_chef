@@ -41,7 +41,10 @@ class AdminFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function ($admin) {
-            $role = \Spatie\Permission\Models\Role::where('name', 'admin')->first() ?? \Spatie\Permission\Models\Role::inRandomOrder()->first();
+            $roleModel = \App\Models\Role::query();
+            $guard = config('acl.guard', 'admin');
+            $role = $roleModel->where('name', 'admin')->where('guard_name', $guard)->first()
+                ?? $roleModel->where('guard_name', $guard)->inRandomOrder()->first();
             if ($role) {
                 $admin->assignRole($role->name);
             }

@@ -17,7 +17,7 @@
 <script setup lang="ts">
 import { useGlobalLoading } from '@/composables/useGlobalLoading'
 import { useI18n } from 'vue-i18n'
-import SpinnerThree from '@/components/spinner/SpinnerThree.vue'
+import SpinnerThree from '@/Components/spinner/SpinnerThree.vue'
 
 const { globalLoading } = useGlobalLoading()
 const { t } = useI18n()

@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import AdminLayout from '@/components/layout/AdminLayout.vue'
+import AdminLayout from '@/Components/layout/AdminLayout.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

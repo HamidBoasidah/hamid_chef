@@ -10,7 +10,7 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])
     ->group(function () {
-            
+
 });
 
 // روابط مصادقة لوحة التحكم (بدون حماية)

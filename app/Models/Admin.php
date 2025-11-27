@@ -14,6 +14,9 @@ class Admin extends Authenticatable
 
     protected $table = 'admins';
 
+    // Ensure Spatie permissions use the correct guard for admins
+    protected $guard_name = 'admin';
+
     protected $fillable = [
         'first_name',
         'last_name',
