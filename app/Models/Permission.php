@@ -7,7 +7,8 @@ use Spatie\Permission\Models\Permission as SpatiePermission;
 class Permission extends SpatiePermission
 {
 
-    protected $guard_name = 'web';
+    // Use admin guard by default to match our ACL config
+    protected $guard_name = 'admin';
 
     protected $fillable = ['name', 'guard_name'];
 }

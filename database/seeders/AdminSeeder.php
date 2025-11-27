@@ -3,23 +3,29 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\Admin;
-use Spatie\Permission\Models\Role;
+use App\Models\Role;
 
 class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ensure there's at least one admin role
-        $adminRole = Role::firstOrCreate(['name' => 'admin'], ['display_name' => json_encode(['en' => 'Admin', 'ar' => 'مشرف'])]);
+        // Ensure there's at least one admin role (use app Role model and correct guard/display name)
+        $guard = config('acl.guard', 'admin');
+        $adminRole = Role::firstOrCreate(
+            ['name' => 'admin', 'guard_name' => $guard],
+            ['display_name' => ['en' => 'Admin', 'ar' => 'مشرف']]
+        );
 
         // Create a main admin account if not exists
         $mainEmail = env('ADMIN_EMAIL', 'admin@example.com');
         $main = Admin::where('email', $mainEmail)->first();
         if (! $main) {
-            $main = Admin::factory()->create([
+            // Create directly to avoid factory afterCreating assigning a random role
+            $main = Admin::query()->create([
                 'first_name' => 'System',
                 'last_name' => 'Administrator',
                 'email' => $mainEmail,
+                'password' => 'password',
                 'is_active' => true,
             ]);
             $main->assignRole($adminRole->name);
