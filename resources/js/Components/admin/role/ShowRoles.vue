@@ -246,9 +246,9 @@ import { ref, computed, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { route } from '@/route'
 import { useI18n } from 'vue-i18n'
-import DangerAlert from '@/components/modals/DangerAlert.vue'
+import DangerAlert from '@/Components/modals/DangerAlert.vue'
 import { useNotifications } from '@/composables/useNotifications'
-import Tooltip from '@/components/ui/Tooltip.vue'
+import Tooltip from '@/Components/ui/Tooltip.vue'
 import { usePermissions } from '@/composables/usePermissions'
 
 // i18n

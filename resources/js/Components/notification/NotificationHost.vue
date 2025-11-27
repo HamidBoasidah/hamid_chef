@@ -16,13 +16,13 @@
       />
     </transition-group>
   </teleport>
-  
+
 </template>
 
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useNotifications } from '@/composables/useNotifications'
-import Notification from '@/components/notification/Notification.vue'
+import Notification from '@/Components/notification/Notification.vue'
 
 const props = withDefaults(defineProps<{
   // Logical positions adapt to LTR/RTL automatically via tailwindcss-rtl

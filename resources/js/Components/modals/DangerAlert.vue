@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import Modal from '@/components/ui/Modal.vue'
+import Modal from '@/Components/ui/Modal.vue'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()

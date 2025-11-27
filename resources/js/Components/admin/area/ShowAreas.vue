@@ -19,7 +19,7 @@
             class="absolute z-30 text-gray-500 -translate-y-1/2 pointer-events-none right-2 top-1/2 dark:text-gray-400"
           >
             <svg class="stroke-current" width="16" height="16" viewBox="0 0 16 16" fill="none">
-              <path d="M3.8335 5.9165L8.00016 10.0832L12.1668 5.9165" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3.8335 5.9165L8.00016 10.0832L12.1668 5.9165" stroke="" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
           </span>
         </div>
@@ -30,7 +30,7 @@
         <div class="relative">
           <button class="absolute text-gray-500 -translate-y-1/2 left-4 top-1/2 dark:text-gray-400">
             <svg class="fill-current" width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.04199 9.37363C3.04199 5.87693 5.87735 3.04199 9.37533 3.04199C12.8733 3.04199 15.7087 5.87693 15.7087 9.37363C15.7087 12.8703 12.8733 15.7053 9.37533 15.7053C5.87735 15.7053 3.04199 12.8703 3.04199 9.37363ZM9.37533 1.54199C5.04926 1.54199 1.54199 5.04817 1.54199 9.37363C1.54199 13.6991 5.04926 17.2053 9.37533 17.2053C11.2676 17.2053 13.0032 16.5344 14.3572 15.4176L17.1773 18.238C17.4702 18.5309 17.945 18.5309 18.2379 18.238C18.5308 17.9451 18.5309 17.4703 18.238 17.1773L15.4182 14.3573C16.5367 13.0033 17.2087 11.2669 17.2087 9.37363C17.2087 5.04817 13.7014 1.54199 9.37533 1.54199Z" fill=""/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.04199 9.37363C3.04199 5.87693 5.87735 3.04199 9.37533 3.04199C12.8733 3.04199 15.7087 5.87693 15.7087 9.37363C15.7087 12.8703 12.8733 15.7053 9.37533 15.7053C5.87735 15.7053 3.04199 12.8703 3.04199 9.37363ZM9.37533 1.54199C5.04926 1.54199 1.54199 5.04817 1.54199 9.37363C1.54199 13.6991 5.04926 17.2053 9.37533 17.2053C11.2676 17.2053 13.0032 16.5344 14.3572 15.4176L17.1773 18.238C17.4702 18.5309 17.945 18.5309 18.2379 18.238C18.5308 17.9451 18.5309 17.4703 18.238 17.1773L15.4182 14.3573C16.5367 13.0033 17.2087 11.2669 17.2087 9.37363C17.2087 5.04817 13.7014 1.54199 9.37533 1.54199Z" />
             </svg>
           </button>
           <input
@@ -47,10 +47,10 @@
             @click="handleCreateClick"
             class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-[11px] text-sm font-medium text-white transition sm:w-auto disabled:bg-brand-300 disabled:hover:bg-brand-300 disabled:text-white/70"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none">
-              <path d="M5 10.0002H15.0006M10.0002 5V15.0006" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+              <path d="M5 10.0002H15.0006M10.0002 5V15.0006" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
-            {{ t('districts.addDistrict') }}
+            {{ t('areas.addArea') }}
           </button>
         </Tooltip>
       </div>
@@ -70,7 +70,7 @@
                   >
                     <span :class="selectAll ? '' : 'opacity-0'">
                       <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="1.6666" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="1.6666" stroke-linecap="round" stroke-linejoin="round" />
                       </svg>
                     </span>
                   </span>
@@ -78,42 +78,47 @@
               </label>
             </th>
 
-            <!-- name_ar -->
             <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
               <div class="flex items-center justify-between w-full cursor-pointer" @click="sortBy('name_ar')">
-                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('districts.nameAr') }}</p>
+                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('areas.nameAr') }}</p>
                 <span class="flex flex-col gap-0.5">
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z"/></svg>
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z"/></svg>
+                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                    <path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z" />
+                  </svg>
+                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                    <path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z" />
+                  </svg>
                 </span>
               </div>
             </th>
 
-            <!-- name_en -->
             <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
               <div class="flex items-center justify-between w-full cursor-pointer" @click="sortBy('name_en')">
-                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('districts.nameEn') }}</p>
+                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('areas.nameEn') }}</p>
                 <span class="flex flex-col gap-0.5">
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z"/></svg>
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z"/></svg>
+                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                    <path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z" />
+                  </svg>
+                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                    <path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z" />
+                  </svg>
                 </span>
               </div>
             </th>
 
-            <!-- governorate name -->
             <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
               <div class="flex items-center justify-between w-full">
-                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('governorates.governorate') }}</p>
+                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('districts.district') }}</p>
               </div>
             </th>
 
-            <!-- status -->
             <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
               <div class="flex items-center justify-between w-full cursor-pointer" @click="sortBy('is_active')">
                 <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('common.status') }}</p>
                 <span class="flex flex-col gap-0.5">
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z"/></svg>
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none"><path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z"/></svg>
+                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none">
+                    <path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z" />
+                  </svg>
                 </span>
               </div>
             </th>
@@ -128,43 +133,29 @@
         </thead>
 
         <tbody>
-          <tr
-            v-for="district in paginatedData"
-            :key="district.id"
-            :class="{ 'bg-gray-50 dark:bg-gray-900': district.selected }"
-          >
+          <tr v-for="area in paginatedData" :key="area.id" :class="{ 'bg-gray-50 dark:bg-gray-900': area.selected }">
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
               <label class="flex items-center text-sm font-medium text-gray-700 cursor-pointer select-none dark:text-gray-400">
                 <span class="relative">
-                  <input type="checkbox" class="sr-only" v-model="district.selected" @change="updateSelectAll" />
-                  <span
-                    :class="district.selected ? 'border-brand-500 bg-brand-500' : 'bg-transparent border-gray-300 dark:border-gray-700'"
-                    class="flex h-4 w-4 items-center justify-center rounded-sm border-[1.25px]"
-                  >
-                    <span :class="district.selected ? '' : 'opacity-0'">
-                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                        <path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="1.6666" stroke-linecap="round" stroke-linejoin="round"/>
-                      </svg>
-                    </span>
-                  </span>
+                  <input type="checkbox" class="sr-only" v-model="area.selected" @change="updateSelectAll" />
+                  <span :class="area.selected ? 'border-brand-500 bg-brand-500' : 'bg-transparent border-gray-300 dark:border-gray-700'" class="flex h-4 w-4 items-center justify-center rounded-sm border-[1.25px]"><span :class="area.selected ? '' : 'opacity-0'"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M10 3L4.5 8.5L2 6" stroke="white" stroke-width="1.6666" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span>
                 </span>
               </label>
             </td>
 
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ district.name_ar }}</p>
+              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ area.name_ar }}</p>
             </td>
 
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ district.name_en }}</p>
+              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ area.name_en }}</p>
             </td>
 
-            <!-- governorate name from relation or DTO fields -->
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
               <p class="text-gray-700 text-theme-sm dark:text-gray-400">
                 {{ locale === 'ar'
-                  ? (district.governorate?.name_ar ?? district.governorate_name_ar ?? '—')
-                  : (district.governorate?.name_en ?? district.governorate_name_en ?? '—')
+                  ? (area.district?.name_ar ?? area.district_name_ar ?? '—')
+                  : (area.district?.name_en ?? area.district_name_en ?? '—')
                 }}
               </p>
             </td>
@@ -173,26 +164,26 @@
               <span
                 class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
                 :class="{
-                  'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500': district.is_active,
-                  'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500': !district.is_active,
+                  'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500': area.is_active,
+                  'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500': !area.is_active,
                 }"
               >
-                {{ district.is_active ? t('common.active') : t('common.inactive') }}
+                {{ area.is_active ? t('common.active') : t('common.inactive') }}
               </span>
             </td>
 
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <label :for="'toggle-' + district.id" class="cursor-pointer">
+              <label :for="'toggle-' + area.id" class="cursor-pointer">
                 <div class="relative">
                   <input
                     type="checkbox"
-                    :id="'toggle-' + district.id"
+                    :id="'toggle-' + area.id"
                     class="sr-only"
-                    :checked="district.is_active"
-                    @change="toggleDistrictStatus(district)"
+                    :checked="area.is_active"
+                    @change="toggleAreaStatus(area)"
                   />
-                  <div class="block h-5 w-9 rounded-full" :class="district.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
-                  <div :class="[district.is_active ? 'rtl:translate-x-[-100%] ltr:translate-x-full' : 'translate-x-0']" class="shadow-theme-sm absolute top-0.5 h-4 w-4 rounded-full bg-white duration-200 ease-linear rtl:right-0.5 ltr:left-0.5"></div>
+                  <div class="block h-5 w-9 rounded-full" :class="area.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
+                  <div :class="[area.is_active ? 'rtl:translate-x-[-100%] ltr:translate-x-full' : 'translate-x-0']" class="shadow-theme-sm absolute top-0.5 h-4 w-4 rounded-full bg-white duration-200 ease-linear rtl:right-0.5 ltr:left-0.5"></div>
                 </div>
               </label>
             </td>
@@ -202,7 +193,7 @@
                 <Tooltip :text="t('messages.notAuthorized')" :show="!canView">
                   <button
                     :disabled="!canView"
-                    @click="handleViewClick(district.id)"
+                    @click="handleViewClick(area.id)"
                     class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 disabled:text-gray-400 disabled:dark:text-gray-500"
                   >
                     <svg class="fill-current" width="21" height="20" viewBox="0 0 21 20" fill="none">
@@ -214,7 +205,7 @@
                 <Tooltip :text="t('messages.notAuthorized')" :show="!canEdit">
                   <button
                     :disabled="!canEdit"
-                    @click="handleEditClick(district.id)"
+                    @click="handleEditClick(area.id)"
                     class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-300 disabled:text-gray-400 disabled:dark:text-gray-500"
                   >
                     <svg class="fill-current" width="21" height="21" viewBox="0 0 21 21" fill="none">
@@ -226,7 +217,7 @@
                 <Tooltip :text="t('messages.notAuthorized')" :show="!canDelete">
                   <button
                     :disabled="!canDelete"
-                    @click="handleDeleteClick(district.id)"
+                    @click="handleDeleteClick(area.id)"
                     class="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500 disabled:text-gray-400 disabled:dark:text-gray-500"
                   >
                     <svg class="fill-current" width="21" height="21" viewBox="0 0 21 21" fill="none">
@@ -240,7 +231,7 @@
 
           <tr v-if="paginatedData.length === 0">
             <td colspan="7" class="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400">
-              {{ t('districts.noDistrict') }}
+              {{ t('areas.noArea') ?? t('areas.noArea') }}
             </td>
           </tr>
         </tbody>
@@ -276,7 +267,7 @@
   <DangerAlert
     :isOpen="isDeleteModalOpen"
     :title="t('messages.areYouSure')"
-    :message="t('messages.deleteDistrictConfirmation')"
+    :message="t('messages.deleteAreaConfirmation')"
     @close="closeDeleteModal"
     @confirm="confirmDelete"
   />
@@ -287,80 +278,80 @@ import { ref, computed, watch } from 'vue'
 import { router } from '@inertiajs/vue3'
 import { route } from '@/route'
 import { useI18n } from 'vue-i18n'
-import Tooltip from '@/components/ui/Tooltip.vue'
-import DangerAlert from '@/components/modals/DangerAlert.vue'
+import Tooltip from '@/Components/ui/Tooltip.vue'
+import DangerAlert from '@/Components/modals/DangerAlert.vue'
 import { usePermissions } from '@/composables/usePermissions'
 import { useNotifications } from '@/composables/useNotifications'
 
 const { hasAnyPermission } = usePermissions()
 
-// تحديث مفاتيح الأذونات إلى districts.*
-const canCreate = computed(() => hasAnyPermission(['districts.create', 'districts.store', 'districts.add']))
-const canView   = computed(() => hasAnyPermission(['districts.view', 'districts.show', 'districts.read']))
-const canEdit   = computed(() => hasAnyPermission(['districts.update', 'districts.edit']))
-const canDelete = computed(() => hasAnyPermission(['districts.delete', 'districts.destroy']))
+// permissions for areas
+const canCreate = computed(() => hasAnyPermission(['areas.create', 'areas.store', 'areas.add']))
+const canView   = computed(() => hasAnyPermission(['areas.view', 'areas.show', 'areas.read']))
+const canEdit   = computed(() => hasAnyPermission(['areas.update', 'areas.edit']))
+const canDelete = computed(() => hasAnyPermission(['areas.delete', 'areas.destroy']))
 
 const { t, locale } = useI18n()
 const { success, error } = useNotifications()
 
-// استقبل districts بدل governorates
-const props = defineProps({ districts: Object })
+// accept areas prop
+const props = defineProps({ areas: Object })
 
 const search         = ref('')
 const sortColumn     = ref('name_ar')
 const sortDirection  = ref('asc')
-const currentPage    = ref(props.districts?.current_page ?? 1)
-const perPage        = ref(props.districts?.per_page ?? 10)
+const currentPage    = ref(props.areas?.current_page ?? 1)
+const perPage        = ref(props.areas?.per_page ?? 10)
 const selectAll      = ref(false)
 
-// راوتات districts
-function goToCreate()      { router.visit(route('admin.districts.create')) }
-function goToView(id)      { router.visit(route('admin.districts.show', id)) }
-function goToEdit(id)      { router.visit(route('admin.districts.edit', id)) }
+// routes for areas
+function goToCreate()      { router.visit(route('admin.areas.create')) }
+function goToView(id)      { router.visit(route('admin.areas.show', id)) }
+function goToEdit(id)      { router.visit(route('admin.areas.edit', id)) }
 
 function handleCreateClick(){ if (!canCreate.value) return; goToCreate() }
 function handleViewClick(id){ if (!canView.value)   return; goToView(id) }
 function handleEditClick(id){ if (!canEdit.value)   return; goToEdit(id) }
 
 const isDeleteModalOpen  = ref(false)
-const districtToDeleteId = ref(null)
+const areaToDeleteId = ref(null)
 
-function openDeleteModal(id)  { districtToDeleteId.value = id; isDeleteModalOpen.value = true }
+function openDeleteModal(id)  { areaToDeleteId.value = id; isDeleteModalOpen.value = true }
 function handleDeleteClick(id){ if (!canDelete.value) return; openDeleteModal(id) }
-function closeDeleteModal()   { isDeleteModalOpen.value = false; districtToDeleteId.value = null }
+function closeDeleteModal()   { isDeleteModalOpen.value = false; areaToDeleteId.value = null }
 
 function confirmDelete() {
-  if (districtToDeleteId.value) {
-    router.delete(route('admin.districts.destroy', districtToDeleteId.value), {
-      onSuccess: () => { success(t('districts.districtDeletedSuccessfully')); closeDeleteModal() },
-      onError:   () => { error(t('districts.districtDeletionFailed'));       closeDeleteModal() },
+  if (areaToDeleteId.value) {
+    router.delete(route('admin.areas.destroy', areaToDeleteId.value), {
+      onSuccess: () => { success(t('areas.areaDeletedSuccessfully')); closeDeleteModal() },
+      onError:   () => { error(t('areas.areaDeletionFailed'));       closeDeleteModal() },
       preserveScroll: true,
     })
   }
 }
 
-function toggleDistrictStatus(district) {
-  const wasActive = district.is_active
-  district.is_active = !wasActive
+function toggleAreaStatus(area) {
+  const wasActive = area.is_active
+  area.is_active = !wasActive
   const url = wasActive
-    ? route('admin.districts.deactivate', { id: district.id })
-    : route('admin.districts.activate',   { id: district.id })
+    ? route('admin.areas.deactivate', { id: area.id })
+    : route('admin.areas.activate',   { id: area.id })
   router.patch(url, {}, {
     preserveState: true,
     preserveScroll: true,
-    onError: () => { district.is_active = wasActive },
+    onError: () => { area.is_active = wasActive },
   })
 }
 
 const filteredData = computed(() => {
   const searchLower = (search.value || '').toLowerCase()
-  return (props.districts?.data || [])
-    .filter((d) => {
-      const nameAr = d.name_ar?.toLowerCase() || ''
-      const nameEn = d.name_en?.toLowerCase() || ''
-      const govAr  = (d.governorate?.name_ar || d.governorate_name_ar || '').toLowerCase()
-      const govEn  = (d.governorate?.name_en || d.governorate_name_en || '').toLowerCase()
-      return nameAr.includes(searchLower) || nameEn.includes(searchLower) || govAr.includes(searchLower) || govEn.includes(searchLower)
+  return (props.areas?.data || [])
+    .filter((a) => {
+      const nameAr = a.name_ar?.toLowerCase() || ''
+      const nameEn = a.name_en?.toLowerCase() || ''
+      const distAr  = (a.district?.name_ar || a.district_name_ar || '').toLowerCase()
+      const distEn  = (a.district?.name_en || a.district_name_en || '').toLowerCase()
+      return nameAr.includes(searchLower) || nameEn.includes(searchLower) || distAr.includes(searchLower) || distEn.includes(searchLower)
     })
     .sort((a, b) => {
       const modifier = sortDirection.value === 'asc' ? 1 : -1
@@ -374,10 +365,10 @@ const filteredData = computed(() => {
 
 const paginatedData = computed(() => filteredData.value)
 
-const totalEntries = computed(() => props.districts?.total || filteredData.value.length)
-const startEntry   = computed(() => props.districts?.from  || 1)
-const endEntry     = computed(() => props.districts?.to    || filteredData.value.length)
-const totalPages   = computed(() => props.districts?.last_page || 1)
+const totalEntries = computed(() => props.areas?.total || filteredData.value.length)
+const startEntry   = computed(() => props.areas?.from  || 1)
+const endEntry     = computed(() => props.areas?.to    || filteredData.value.length)
+const totalPages   = computed(() => props.areas?.last_page || 1)
 
 const pagesAroundCurrent = computed(() => {
   const pages = []
@@ -387,10 +378,10 @@ const pagesAroundCurrent = computed(() => {
   return pages
 })
 
-watch(() => props.districts?.current_page, (val) => {
+watch(() => props.areas?.current_page, (val) => {
   currentPage.value = typeof val === 'number' ? val : 1
 })
-watch(() => props.districts?.per_page, (val) => {
+watch(() => props.areas?.per_page, (val) => {
   if (typeof val === 'number') perPage.value = val
 })
 
@@ -418,9 +409,9 @@ const sortBy = (column) => {
   else { sortDirection.value = 'asc'; sortColumn.value = column }
 }
 
-const toggleSelectAll = () => { filteredData.value.forEach((d) => { d.selected = selectAll.value }) }
+const toggleSelectAll = () => { paginatedData.value.forEach((d) => { d.selected = selectAll.value }) }
 const updateSelectAll = () => {
-  const items = filteredData.value
+  const items = paginatedData.value
   selectAll.value = items.length > 0 && items.every((d) => d.selected)
 }
 

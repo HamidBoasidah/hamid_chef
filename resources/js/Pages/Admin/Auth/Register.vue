@@ -385,8 +385,8 @@
 </template>
 
 <script setup>
-import FullScreenLayout from '@/components/layout/FullScreenLayout.vue';
-import CommonGridShape from '@/components/common/CommonGridShape.vue';
+import FullScreenLayout from '@/Components/layout/FullScreenLayout.vue';
+import CommonGridShape from '@/Components/common/CommonGridShape.vue';
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import { ref, watch } from 'vue';
 

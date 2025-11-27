@@ -168,8 +168,8 @@
 </template>
 
 <script setup lang="ts">
-import CommonGridShape from '@/components/common/CommonGridShape.vue'
-import FullScreenLayout from '@/components/layout/FullScreenLayout.vue'
+import CommonGridShape from '@/Components/common/CommonGridShape.vue'
+import FullScreenLayout from '@/Components/layout/FullScreenLayout.vue'
 import InputError from '@/Components/InputError.vue'
 import { useForm } from '@inertiajs/vue3'
 import { route } from 'ziggy-js'

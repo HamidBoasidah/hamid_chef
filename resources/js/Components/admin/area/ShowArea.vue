@@ -57,7 +57,7 @@
 </template>
 
 <script setup>
-import ComponentCard from '@/components/common/ComponentCard.vue'
+import ComponentCard from '@/Components/common/ComponentCard.vue'
 import { Link } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
 

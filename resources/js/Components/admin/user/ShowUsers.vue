@@ -87,7 +87,7 @@
                 stroke-linejoin="round"
               />
             </svg>
-            {{ t('admins.addAdmin') }}
+            {{ t('users.addUser') }}
           </button>
         </Tooltip>
       </div>
@@ -245,42 +245,7 @@
                 </span>
               </div>
             </th>
-            <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
-              <div
-                class="flex items-center justify-between w-full cursor-pointer"
-                @click="sortBy('office')"
-              >
-                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('common.type') }}</p>
-                <span class="flex flex-col gap-0.5">
-                  <svg
-                    class="fill-gray-300 dark:fill-gray-700"
-                    width="8"
-                    height="5"
-                    viewBox="0 0 8 5"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z"
-                      fill=""
-                    />
-                  </svg>
-                  <svg
-                    class="fill-gray-300 dark:fill-gray-700"
-                    width="8"
-                    height="5"
-                    viewBox="0 0 8 5"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z"
-                      fill=""
-                    />
-                  </svg>
-                </span>
-              </div>
-            </th>
+            <!-- type column removed -->
             <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
               <div
                 class="flex items-center justify-between w-full cursor-pointer"
@@ -327,10 +292,10 @@
         </thead>
         <tbody>
           <tr
-            v-for="admin in paginatedData"
-            :key="admin.id"
+            v-for="user in paginatedData"
+            :key="user.id"
             class=""
-            :class="{ 'bg-gray-50 dark:bg-gray-900': admin.selected }"
+            :class="{ 'bg-gray-50 dark:bg-gray-900': user.selected }"
           >
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
               <label
@@ -340,18 +305,18 @@
                   <input
                     type="checkbox"
                     class="sr-only"
-                    v-model="admin.selected"
+                    v-model="user.selected"
                     @change="updateSelectAll"
                   />
                   <span
                     :class="
-                      admin.selected
+                      user.selected
                         ? 'border-brand-500 bg-brand-500'
                         : 'bg-transparent border-gray-300 dark:border-gray-700'
                     "
                     class="flex h-4 w-4 items-center justify-center rounded-sm border-[1.25px]"
                   >
-                    <span :class="admin.selected ? '' : 'opacity-0'">
+                    <span :class="user.selected ? '' : 'opacity-0'">
                       <svg
                         width="12"
                         height="12"
@@ -376,55 +341,57 @@
               <div class="flex items-center gap-3">
                 <div class="h-10 w-10">
                   <img
-                    v-if="admin.avatar"
-                    :src="`/storage/${admin.avatar}`"
+                    v-if="user.avatar"
+                    :src="`/storage/${user.avatar}`"
+
                     class="h-10 w-10 rounded-full object-cover"
                     alt=""
                   />
-                  <UserCircleIcon v-else class="h-10 w-10 text-gray-400" />
+                  <UserCircleIcon
+                  v-else
+                  class="h-10 w-10 text-gray-400"
+                  />
                 </div>
                 <div class="flex flex-col">
-                  <span class="text-sm font-medium text-gray-700 dark:text-gray-400">{{ (admin.first_name || admin.last_name) ? `${admin.first_name ?? ''} ${admin.last_name ?? ''}`.trim() : admin.name }}</span>
-                  <!-- <span class="text-xs text-gray-500 dark:text-gray-400">{{ admin.email }}</span> -->
+                  <span class="text-sm font-medium text-gray-700 dark:text-gray-400">{{ user.name }}</span>
+                  <!-- <span class="text-xs text-gray-500 dark:text-gray-400">{{ user.email }}</span> -->
                 </div>
               </div>
             </td>
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ admin.email }}</p>
+              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ user.email }}</p>
             </td>
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ admin.phone_number }}</p>
+              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ user.phone_number }}</p>
             </td>
-            <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <p class="text-gray-700 text-theme-sm dark:text-gray-400">{{ displayName(admin.role) }}</p>
-            </td>
+            <!-- role/type column removed -->
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
               <span
                 class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
                 :class="{
-                  'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500': admin.is_active,
-                  'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500': !admin.is_active,
+                  'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500': user.is_active,
+                  'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500': !user.is_active,
                 }"
               >
-                {{ admin.is_active ? t('common.active') : t('common.inactive') }}
+                {{ user.is_active ? t('common.active') : t('common.inactive') }}
               </span>
             </td>
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <label :for="'toggle-' + admin.id" class="cursor-pointer">
+              <label :for="'toggle-' + user.id" class="cursor-pointer">
                 <div class="relative">
                   <input
                     type="checkbox"
-                    :id="'toggle-' + admin.id"
+                    :id="'toggle-' + user.id"
                     class="sr-only"
-                    :checked="admin.is_active"
-                    @change="toggleAdminStatus(admin)"
+                    :checked="user.is_active"
+                    @change="toggleUserStatus(user)"
                   />
                   <div
                     class="block h-5 w-9 rounded-full"
-                    :class="admin.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"
+                    :class="user.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"
                   ></div>
                   <div
-                    :class="[admin.is_active ? 'rtl:translate-x-[-100%] ltr:translate-x-full' : 'translate-x-0']"
+                    :class="[user.is_active ? 'rtl:translate-x-[-100%] ltr:translate-x-full' : 'translate-x-0']"
                     class="shadow-theme-sm absolute top-0.5 h-4 w-4 rounded-full bg-white duration-200 ease-linear rtl:right-0.5 ltr:left-0.5"
                   ></div>
                 </div>
@@ -435,7 +402,7 @@
                 <Tooltip :text="t('messages.notAuthorized')" :show="!canView">
                   <button
                     :disabled="!canView"
-                    @click="handleViewClick(admin.id)"
+                    @click="handleViewClick(user.id)"
                     class="text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-white/90 disabled:text-gray-400 disabled:dark:text-gray-500"
                   >
                     <svg
@@ -458,7 +425,7 @@
                 <Tooltip :text="t('messages.notAuthorized')" :show="!canEdit">
                   <button
                     :disabled="!canEdit"
-                    @click="handleEditClick(admin.id)"
+                    @click="handleEditClick(user.id)"
                     class="text-gray-500 hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-300 disabled:text-gray-400 disabled:dark:text-gray-500"
                   >
                     <svg
@@ -481,7 +448,7 @@
                 <Tooltip :text="t('messages.notAuthorized')" :show="!canDelete">
                   <button
                     :disabled="!canDelete"
-                    @click="handleDeleteClick(admin.id)"
+                    @click="handleDeleteClick(user.id)"
                     class="text-gray-500 hover:text-error-500 dark:text-gray-400 dark:hover:text-error-500 disabled:text-gray-400 disabled:dark:text-gray-500"
                   >
                     <svg
@@ -602,43 +569,46 @@ import { Link, router } from '@inertiajs/vue3'
 import { route } from '@/route'
 import { useI18n } from 'vue-i18n'
 import { UserCircleIcon } from '@/icons'
-import Tooltip from '@/components/ui/Tooltip.vue'
-import DangerAlert from '@/components/modals/DangerAlert.vue'
+import Tooltip from '@/Components/ui/Tooltip.vue'
+import DangerAlert from '@/Components/modals/DangerAlert.vue'
 import { usePermissions } from '@/composables/usePermissions'
 import { useNotifications } from '@/composables/useNotifications'
 
 const { hasAnyPermission } = usePermissions()
 
-const canCreate = computed(() => hasAnyPermission(['admins.create', 'admins.store', 'admins.add']))
-const canView = computed(() => hasAnyPermission(['admins.view', 'admins.show', 'admins.read']))
-const canEdit = computed(() => hasAnyPermission(['admins.update', 'admins.edit']))
-const canDelete = computed(() => hasAnyPermission(['admins.delete', 'admins.destroy']))
+const canCreate = computed(() => hasAnyPermission(['users.create', 'users.store', 'users.add']))
+const canView = computed(() => hasAnyPermission(['users.view', 'users.show', 'users.read']))
+const canEdit = computed(() => hasAnyPermission(['users.update', 'users.edit']))
+const canDelete = computed(() => hasAnyPermission(['users.delete', 'users.destroy']))
 
 const { t , locale} = useI18n()
 const { success, error } = useNotifications()
 
-// Props from Inertia (server-paginated admins)
-const props = defineProps({ admins: Object })
+// Props from Inertia (server-paginated users)
+const props = defineProps({ users: Object })
 
 const search = ref('')
 const sortColumn = ref('name')
 const sortDirection = ref('asc')
 // Sync these with server-provided pagination data
-const currentPage = ref(props.admins?.current_page ?? 1)
-const perPage = ref(props.admins?.per_page ?? 10)
+const currentPage = ref(props.users?.current_page ?? 1)
+const perPage = ref(props.users?.per_page ?? 10)
 const selectAll = ref(false)
 
 
 function goToCreate() {
-  router.visit(route('admin.admins.create'))
+  // Global spinner will be shown by router events
+  router.visit(route('admin.users.create'))
 }
 
 function goToView(id) {
-  router.visit(route('admin.admins.show', id))
+  // Global spinner will be shown by router events
+  router.visit(route('admin.users.show', id))
 }
 
 function goToEdit(id) {
-  router.visit(route('admin.admins.edit', id))
+  // Global spinner will be shown by router events
+  router.visit(route('admin.users.edit', id))
 }
 
 function handleCreateClick() {
@@ -658,32 +628,32 @@ function handleEditClick(id) {
 
 // Modal State
 const isDeleteModalOpen = ref(false)
-const adminToDeleteId = ref(null)
+const userToDeleteId = ref(null)
 
-function openDeleteModal(adminId) {
-  adminToDeleteId.value = adminId
+function openDeleteModal(userId) {
+  userToDeleteId.value = userId
   isDeleteModalOpen.value = true
 }
 
-function handleDeleteClick(adminId) {
+function handleDeleteClick(userId) {
   if (!canDelete.value) return
-  openDeleteModal(adminId)
+  openDeleteModal(userId)
 }
 
 function closeDeleteModal() {
   isDeleteModalOpen.value = false
-  adminToDeleteId.value = null
+  userToDeleteId.value = null
 }
 
 function confirmDelete() {
-  if (adminToDeleteId.value) {
-    router.delete(route('admin.admins.destroy', adminToDeleteId.value), {
+  if (userToDeleteId.value) {
+    router.delete(route('admin.users.destroy', userToDeleteId.value), {
       onSuccess: () => {
-  success(t('admins.adminDeletedSuccessfully'))
+  success(t('users.userDeletedSuccessfully'))
         closeDeleteModal()
       },
       onError: (errors) => {
-  error(t('admins.adminDeletionFailed'))
+  error(t('users.userDeletionFailed'))
         closeDeleteModal()
       },
       preserveScroll: true,
@@ -692,29 +662,31 @@ function confirmDelete() {
 }
 
 
-function toggleAdminStatus(admin) {
-  const wasActive = admin.is_active
-  admin.is_active = !wasActive
+function toggleUserStatus(user) {
+  const wasActive = user.is_active
+  // Optimistic update for immediate UX
+  user.is_active = !wasActive
   const url = wasActive
-    ? route('admin.admins.deactivate', { id: admin.id })
-    : route('admin.admins.activate', { id: admin.id })
+    ? route('admin.users.deactivate', { id: user.id })
+    : route('admin.users.activate', { id: user.id })
   router.patch(url, {}, {
     preserveState: true,
     preserveScroll: true,
     onError: () => {
-      admin.is_active = wasActive
+      // Revert on failure
+      user.is_active = wasActive
     }
   })
 }
 
 const filteredData = computed(() => {
   const searchLower = search.value.toLowerCase()
-  return (props.admins?.data || [])
+  return (props.users?.data || [])
     .filter(
-      (admin) =>
-        admin.name?.toLowerCase().includes(searchLower) ||
-        admin.email?.toLowerCase().includes(searchLower) ||
-        admin.phone_number?.toLowerCase().includes(searchLower),
+      (user) =>
+        user.name?.toLowerCase().includes(searchLower) ||
+        user.email?.toLowerCase().includes(searchLower) ||
+        user.phone_number?.toLowerCase().includes(searchLower),
     )
     .sort((a, b) => {
       let modifier = sortDirection.value === 'asc' ? 1 : -1
@@ -724,12 +696,15 @@ const filteredData = computed(() => {
     })
 })
 
-const paginatedData = computed(() => filteredData.value)
+const paginatedData = computed(() => {
+  // إذا كانت البيانات من السيرفر paginated بالفعل، استخدمها مباشرة
+  return filteredData.value
+})
 
-const totalEntries = computed(() => props.admins?.total || filteredData.value.length)
-const startEntry = computed(() => props.admins?.from || 1)
-const endEntry = computed(() => props.admins?.to || filteredData.value.length)
-const totalPages = computed(() => props.admins?.last_page || 1)
+const totalEntries = computed(() => props.users?.total || filteredData.value.length)
+const startEntry = computed(() => props.users?.from || 1)
+const endEntry = computed(() => props.users?.to || filteredData.value.length)
+const totalPages = computed(() => props.users?.last_page || 1)
 
 const pagesAroundCurrent = computed(() => {
   let pages = []
@@ -742,19 +717,21 @@ const pagesAroundCurrent = computed(() => {
   return pages
 })
 
+// Keep local currentPage/perPage in sync with server updates
 watch(
-  () => props.admins?.current_page,
+  () => props.users?.current_page,
   (val) => {
     currentPage.value = typeof val === 'number' ? val : 1
   }
 )
 watch(
-  () => props.admins?.per_page,
+  () => props.users?.per_page,
   (val) => {
     if (typeof val === 'number') perPage.value = val
   }
 )
 
+// Helper: fetch a page from server via Inertia (preserve state/scroll)
 const fetchPage = (page) => {
   const targetPage = page ?? currentPage.value
   router.get(
@@ -762,6 +739,7 @@ const fetchPage = (page) => {
     {
       page: targetPage,
       per_page: perPage.value,
+      // Optional: include current UI state (search/sort) if backend supports it
       search: search.value || undefined,
       sort: sortColumn.value,
       direction: sortDirection.value,
@@ -798,25 +776,20 @@ const sortBy = (column) => {
 }
 
 const toggleSelectAll = () => {
-  filteredData.value.forEach((admin) => (admin.selected = selectAll.value))
+  filteredData.value.forEach((user) => (user.selected = selectAll.value))
 }
 
 const updateSelectAll = () => {
   const items = filteredData.value
-  selectAll.value = items.length > 0 && items.every((admin) => admin.selected)
+  selectAll.value = items.length > 0 && items.every((user) => user.selected)
 }
 
+// When per-page changes, refetch starting from page 1
 watch(perPage, (val, oldVal) => {
   if (val !== oldVal) fetchPage(1)
 })
 
-function displayName(role) {
-  const loc = locale.value
-  if (!role) return ''
-  if (role.display_name && typeof role.display_name === 'object') {
-    return role.display_name[loc] ?? role.display_name.en ?? role.name ?? ''
-  }
-  return role.display_name ?? role.name ?? ''
-}
+
 
 </script>
+
