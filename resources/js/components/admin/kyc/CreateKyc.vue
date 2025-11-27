@@ -179,19 +179,6 @@
               </span>
             </label>
           </div>
-          <div>
-            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('kyc.isActive') }}</label>
-            <label class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400">
-              <div class="relative">
-                <input type="checkbox" class="sr-only" v-model="form.is_active" />
-                <div class="block h-6 w-11 rounded-full" :class="form.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
-                <div :class="form.is_active ? 'translate-x-full' : 'translate-x-0'" class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-theme-sm duration-300 ease-linear"></div>
-              </div>
-              <span class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium" :class="form.is_active ? 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400' : 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-400'">
-                {{ form.is_active ? t('common.active') : t('common.inactive') }}
-              </span>
-            </label>
-          </div>
         </div>
         <div v-if="form.status === 'rejected'">
           <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('kyc.rejectionReason') }}</label>
@@ -252,7 +239,7 @@ const form = useForm({
   rejected_reason: '',
   is_verified: false,
   verified_at: '',
-  is_active: true,
+  
 })
 
 const documentPreviewUrl = ref(null)

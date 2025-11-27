@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
 {
@@ -38,10 +39,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(User::class, 'created_by');
     }
-
     public function updatedUsers()
     {
         return $this->hasMany(User::class, 'updated_by');
+    }
+
+    public function kyc(): HasOne
+    {
+        return $this->hasOne(Kyc::class);
     }
 
     protected $hidden = [

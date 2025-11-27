@@ -19,7 +19,7 @@ class GovernorateController extends Controller
     {
         $this->middleware('permission:governorates.view')->only(['index', 'show']);
         $this->middleware('permission:governorates.create')->only(['create', 'store']);
-        $this->middleware('permission:governorates.update')->only(['edit', 'update']);
+        $this->middleware('permission:governorates.update')->only(['edit', 'update', 'activate', 'deactivate']);
         $this->middleware('permission:governorates.delete')->only(['destroy']);
     }
 

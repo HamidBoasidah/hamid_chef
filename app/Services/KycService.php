@@ -2,7 +2,10 @@
 
 namespace App\Services;
 
+use App\Models\Kyc;
 use App\Repositories\KycRepository;
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class KycService
 {
@@ -43,13 +46,37 @@ class KycService
         return $this->kycs->delete($id);
     }
 
-    public function activate($id)
+    public function streamDocument(Kyc $kyc, bool $download = false): StreamedResponse
     {
-        return $this->kycs->activate($id);
+        if (!$kyc->document_scan_copy) {
+            abort(404, __('Document not found.'));
+        }
+
+        $disk = Storage::disk('public');
+        $path = $kyc->document_scan_copy;
+
+        if (!$disk->exists($path)) {
+            abort(404, __('Document not found.'));
+        }
+
+        $fileName = basename($path);
+        $absolutePath = $disk->path($path);
+        $mimeType = mime_content_type($absolutePath) ?: 'application/octet-stream';
+        $stream = $disk->readStream($path);
+
+        if ($stream === false) {
+            abort(500, __('Unable to read document.'));
+        }
+
+        return response()->stream(function () use ($stream) {
+            fpassthru($stream);
+            if (is_resource($stream)) {
+                fclose($stream);
+            }
+        }, 200, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => sprintf('%s; filename="%s"', $download ? 'attachment' : 'inline', $fileName),
+        ]);
     }
 
-    public function deactivate($id)
-    {
-        return $this->kycs->deactivate($id);
-    }
 }

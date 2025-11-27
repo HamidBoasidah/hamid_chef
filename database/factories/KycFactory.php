@@ -26,7 +26,6 @@ class KycFactory extends Factory
             'document_type' => $this->faker->randomElement(['passport', 'driving_license', 'id_card']),
             // store a placeholder filename (we don't write actual files during seeding)
             'document_scan_copy' => $this->faker->randomElement(['kycs']) . '/' . Str::uuid() . '.jpg',
-            'is_active' => true,
             'created_by' => null,
             'updated_by' => null,
         ];

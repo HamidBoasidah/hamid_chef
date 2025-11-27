@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ActivityLogController;
+use App\Http\Controllers\Admin\KycController;
 use App\Support\RoutePermissions;
 use Illuminate\Support\Facades\Route;
 
@@ -76,71 +77,69 @@ Route::middleware('auth:admin')
             ->names('governorates');
 
         Route::patch('governorates/{id}/activate', [GovernorateController::class, 'activate'])
-            ->name('governorates.activate')
-            ->middleware(RoutePermissions::can('governorates.update'));
+            ->name('governorates.activate');
 
         Route::patch('governorates/{id}/deactivate', [GovernorateController::class, 'deactivate'])
-            ->name('governorates.deactivate')
-            ->middleware(RoutePermissions::can('governorates.update'));
+            ->name('governorates.deactivate');
 
         // Districts
         Route::resource('districts', DistrictController::class)
             ->names('districts');
 
         Route::patch('districts/{id}/activate', [DistrictController::class, 'activate'])
-            ->name('districts.activate')
-            ->middleware(RoutePermissions::can('districts.update'));
+            ->name('districts.activate');
 
         Route::patch('districts/{id}/deactivate', [DistrictController::class, 'deactivate'])
-            ->name('districts.deactivate')
-            ->middleware(RoutePermissions::can('districts.update'));
+            ->name('districts.deactivate');
 
         // Areas
         Route::resource('areas', AreaController::class)
             ->names('areas');
 
         Route::patch('areas/{id}/activate', [AreaController::class, 'activate'])
-            ->name('areas.activate')
-            ->middleware(RoutePermissions::can('areas.update'));
+            ->name('areas.activate');
 
         Route::patch('areas/{id}/deactivate', [AreaController::class, 'deactivate'])
-            ->name('areas.deactivate')
-            ->middleware(RoutePermissions::can('areas.update'));
+            ->name('areas.deactivate');
 
         // Users
         Route::resource('users', UserController::class)
             ->names('users');
 
+        // KYCs
+        Route::get('kycs/{kyc}/document/view', [KycController::class, 'viewDocument'])
+            ->name('kycs.document.view');
+        Route::get('kycs/{kyc}/document/download', [KycController::class, 'downloadDocument'])
+            ->name('kycs.document.download');
+        Route::resource('kycs', KycController::class)
+            ->names('kycs');
+
+        
+
         // Admins (managers of the system)
         Route::resource('admins', AdminController::class)
             ->names('admins');
         Route::patch('admins/{admin}/activate', [AdminController::class, 'activate'])
-            ->name('admins.activate')
-            ->middleware(RoutePermissions::can('admins.update'));
+            ->name('admins.activate');
 
         Route::patch('admins/{admin}/deactivate', [AdminController::class, 'deactivate'])
-            ->name('admins.deactivate')
-            ->middleware(RoutePermissions::can('admins.update'));
+            ->name('admins.deactivate');
 
         Route::patch('users/{id}/activate', [UserController::class, 'activate'])
-            ->name('users.activate')
-            ->middleware(RoutePermissions::can('users.update'));
+            ->name('users.activate');
 
         Route::patch('users/{id}/deactivate', [UserController::class, 'deactivate'])
-            ->name('users.deactivate')
-            ->middleware(RoutePermissions::can('users.update'));
+            ->name('users.deactivate');
 
         // Roles
         Route::resource('roles', RoleController::class)
             ->names('roles');
 
         Route::patch('roles/{id}/activate', [RoleController::class, 'activate'])
-            ->name('roles.activate')
-            ->middleware(RoutePermissions::can('roles.update'));
+            ->name('roles.activate');
 
         Route::patch('roles/{id}/deactivate', [RoleController::class, 'deactivate'])
-            ->name('roles.deactivate')
-            ->middleware(RoutePermissions::can('roles.update'));
+            ->name('roles.deactivate');
 
         // Permissions
         Route::get('permissions', [PermissionController::class, 'index'])

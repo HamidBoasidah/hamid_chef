@@ -19,7 +19,7 @@ class DistrictController extends Controller
     {
         $this->middleware('permission:districts.view')->only(['index', 'show']);
         $this->middleware('permission:districts.create')->only(['create', 'store']);
-        $this->middleware('permission:districts.update')->only(['edit', 'update']);
+        $this->middleware('permission:districts.update')->only(['edit', 'update', 'activate', 'deactivate']);
         $this->middleware('permission:districts.delete')->only(['destroy']);
     }
 

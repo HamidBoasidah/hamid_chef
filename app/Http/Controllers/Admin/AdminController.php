@@ -21,7 +21,7 @@ class AdminController extends Controller
         $this->service = $service;
         $this->middleware('permission:admins.view')->only(['index', 'show']);
         $this->middleware('permission:admins.create')->only(['create', 'store']);
-        $this->middleware('permission:admins.update')->only(['edit', 'update']);
+        $this->middleware('permission:admins.update')->only(['edit', 'update', 'activate', 'deactivate']);
         $this->middleware('permission:admins.delete')->only(['destroy']);
     }
 

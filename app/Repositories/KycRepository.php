@@ -8,7 +8,7 @@ use App\Repositories\Eloquent\BaseRepository;
 class KycRepository extends BaseRepository
 {
     protected array $defaultWith = [
-        'user' => ['id', 'first_name', 'last_name', 'email'],
+        'user' => ['id', 'first_name', 'last_name', 'email', 'phone_number', 'avatar'],
     ];
 
     public function __construct(Kyc $model)

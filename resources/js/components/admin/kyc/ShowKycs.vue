@@ -186,19 +186,7 @@
                 </span>
               </div>
             </th>
-            <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
-              <div class="flex items-center justify-between w-full cursor-pointer" @click="sortBy('is_active')">
-                <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('common.toggle') }}</p>
-                <span class="flex flex-col gap-0.5">
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.40962 0.585167C4.21057 0.300808 3.78943 0.300807 3.59038 0.585166L1.05071 4.21327C0.81874 4.54466 1.05582 5 1.46033 5H6.53967C6.94418 5 7.18126 4.54466 6.94929 4.21327L4.40962 0.585167Z" fill="" />
-                  </svg>
-                  <svg class="fill-gray-300 dark:fill-gray-700" width="8" height="5" viewBox="0 0 8 5" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M4.40962 4.41483C4.21057 4.69919 3.78943 4.69919 3.59038 4.41483L1.05071 0.786732C0.81874 0.455343 1.05582 0 1.46033 0H6.53967C6.94418 0 7.18126 0.455342 6.94929 0.786731L4.40962 4.41483Z" fill="" />
-                  </svg>
-                </span>
-              </div>
-            </th>
+            
             <th class="px-4 py-3 text-start border border-gray-100 dark:border-gray-800">
               <p class="font-medium text-gray-700 text-theme-xs dark:text-gray-400">{{ t('common.action') }}</p>
             </th>
@@ -248,42 +236,16 @@
               <p class="text-gray-700 text-theme-sm dark:text-gray-300">{{ documentTypeLabel(kyc.document_type) }}</p>
             </td>
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <span
-                class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                :class="statusBadgeClass(kyc.status)"
-              >
+              <Badge size="sm" :color="statusBadgeColor(kyc.status)">
                 {{ statusLabel(kyc.status) }}
-              </span>
+              </Badge>
             </td>
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <span
-                class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
-                :class="verificationBadgeClass(kyc.is_verified)"
-              >
+              <Badge size="sm" :color="verificationBadgeColor(kyc.is_verified)">
                 {{ kyc.is_verified ? t('kyc.verified') : t('kyc.notVerified') }}
-              </span>
+              </Badge>
             </td>
-            <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
-              <label :for="'toggle-' + kyc.id" class="cursor-pointer">
-                <div class="relative">
-                  <input
-                    type="checkbox"
-                    :id="'toggle-' + kyc.id"
-                    class="sr-only"
-                    :checked="kyc.is_active"
-                    @change="toggleKycStatus(kyc)"
-                  />
-                  <div
-                    class="block h-5 w-9 rounded-full"
-                    :class="kyc.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"
-                  ></div>
-                  <div
-                    :class="[kyc.is_active ? 'rtl:translate-x-[-100%] ltr:translate-x-full' : 'translate-x-0']"
-                    class="shadow-theme-sm absolute top-0.5 h-4 w-4 rounded-full bg-white duration-200 ease-linear rtl:right-0.5 ltr:left-0.5"
-                  ></div>
-                </div>
-              </label>
-            </td>
+            
             <td class="px-4 py-3 border border-gray-100 dark:border-gray-800">
               <div class="flex items-center gap-2">
                 <Tooltip :text="t('messages.notAuthorized')" :show="!canView">
@@ -359,7 +321,7 @@
             </td>
           </tr>
           <tr v-if="!paginatedData.length">
-            <td class="px-4 py-6 text-center text-gray-500 dark:text-gray-400" colspan="7">
+            <td class="px-4 py-6 text-center text-gray-500 dark:text-gray-400" colspan="6">
               {{ t('kyc.noRecords') }}
             </td>
           </tr>
@@ -441,6 +403,7 @@ import { router } from '@inertiajs/vue3'
 import { route } from '@/route'
 import { useI18n } from 'vue-i18n'
 import Tooltip from '@/components/ui/Tooltip.vue'
+import Badge from '@/components/ui/Badge.vue'
 import DangerAlert from '@/components/modals/DangerAlert.vue'
 import { usePermissions } from '@/composables/usePermissions'
 import { useNotifications } from '@/composables/useNotifications'
@@ -472,20 +435,15 @@ const selectAll = ref(false)
 const isDeleteModalOpen = ref(false)
 const kycToDeleteId = ref(null)
 
-const statusStyles = {
-  pending: 'bg-amber-50 text-amber-600 dark:bg-amber-500/15 dark:text-amber-400',
-  approved: 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400',
-  rejected: 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-400',
-}
-
-const verificationStyles = {
-  true: 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400',
-  false: 'bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-300',
+const statusBadgeColors = {
+  pending: 'warning',
+  approved: 'success',
+  rejected: 'error',
 }
 
 const statusLabel = (status) => t(`kyc.statuses.${status}`, status?.replace('_', ' ') ?? '')
-const statusBadgeClass = (status) => statusStyles[status] ?? statusStyles.pending
-const verificationBadgeClass = (isVerified) => (isVerified ? verificationStyles.true : verificationStyles.false)
+const statusBadgeColor = (status) => statusBadgeColors[status] ?? 'warning'
+const verificationBadgeColor = (isVerified) => (isVerified ? 'success' : 'warning')
 
 const documentTypeLabel = (type) => t(`kyc.documentTypes.${type}`, type ?? '')
 
@@ -530,8 +488,6 @@ const sortableValue = (kyc, column) => {
       return statusLabel(kyc.status).toLowerCase()
     case 'is_verified':
       return kyc.is_verified ? 1 : 0
-    case 'is_active':
-      return kyc.is_active ? 1 : 0
     case 'applicant':
     default:
       return applicantName(kyc).toLowerCase()
@@ -652,21 +608,7 @@ const confirmDelete = () => {
   })
 }
 
-const toggleKycStatus = (kyc) => {
-  const previous = kyc.is_active
-  // eslint-disable-next-line no-param-reassign
-  kyc.is_active = !previous
-  const url = previous
-    ? route('admin.kycs.deactivate', { kyc: kyc.id })
-    : route('admin.kycs.activate', { kyc: kyc.id })
-  router.patch(url, {}, {
-    preserveScroll: true,
-    onError: () => {
-      // eslint-disable-next-line no-param-reassign
-      kyc.is_active = previous
-    },
-  })
-}
+
 
 watch(
   () => props.kycs?.current_page,

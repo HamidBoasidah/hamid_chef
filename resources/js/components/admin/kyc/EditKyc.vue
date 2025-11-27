@@ -99,15 +99,67 @@
           </div>
         </div>
 
-        <div v-if="existingDocumentUrl" class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
-          <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div v-if="hasExistingDocument" class="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-900">
+          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ t('kyc.currentDocument') }}</p>
               <p class="text-xs text-gray-500 dark:text-gray-400">{{ existingDocumentName }}</p>
             </div>
-            <a :href="existingDocumentUrl" target="_blank" rel="noopener" class="inline-flex items-center justify-center rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-700 transition hover:bg-gray-50 dark:border-gray-600 dark:text-gray-200 dark:hover:bg-white/10">
-              {{ t('kyc.viewDocument') }}
-            </a>
+            <div class="flex justify-end gap-2">
+              <button
+                type="button"
+                :aria-label="t('kyc.downloadDocument')"
+                :disabled="!existingDocumentDownloadUrl"
+                @click="handleDownloadExistingDocument"
+                class="shadow-theme-xs inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="21"
+                  height="20"
+                  viewBox="0 0 21 20"
+                  fill="none"
+                >
+                  <path
+                    d="M17.1661 13.333V15.4163C17.1661 16.1067 16.6064 16.6663 15.9161 16.6663H5.08203C4.39168 16.6663 3.83203 16.1067 3.83203 15.4163V13.333M10.5004 13.333L10.5004 3.33301M6.64456 9.47918L10.4986 13.3308L14.3529 9.47918"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+              <button
+                type="button"
+                :aria-label="t('kyc.viewDocument')"
+                :disabled="!existingDocumentViewUrl"
+                @click="handleViewExistingDocument"
+                class="shadow-theme-xs inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-gray-500 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="21"
+                  height="20"
+                  viewBox="0 0 21 20"
+                  fill="none"
+                >
+                  <path
+                    d="M2.96487 10.7925C2.73306 10.2899 2.73306 9.71023 2.96487 9.20764C4.28084 6.35442 7.15966 4.375 10.4993 4.375C13.8389 4.375 16.7178 6.35442 18.0337 9.20765C18.2655 9.71024 18.2655 10.2899 18.0337 10.7925C16.7178 13.6458 13.8389 15.6252 10.4993 15.6252C7.15966 15.6252 4.28084 13.6458 2.96487 10.7925Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                  <path
+                    d="M13.5202 10C13.5202 11.6684 12.1677 13.0208 10.4993 13.0208C8.83099 13.0208 7.47852 11.6684 7.47852 10C7.47852 8.33164 8.83099 6.97917 10.4993 6.97917C12.1677 6.97917 13.5202 8.33164 13.5202 10Z"
+                    stroke="currentColor"
+                    stroke-width="1.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -126,15 +178,72 @@
                 <p class="text-xs text-gray-400 dark:text-gray-500">{{ t('kyc.allowedExtensions') }}</p>
               </div>
             </div>
-            <div v-else class="relative flex flex-col items-center gap-3 p-4">
+            <div v-else class="flex flex-col gap-4 p-4">
+              <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h10M7 12h10M7 17h6" /></svg>
+                  <span>{{ selectedDocumentName }}</span>
+                </div>
+                <div class="flex justify-end gap-2">
+                  <button
+                    type="button"
+                    :aria-label="t('kyc.downloadDocument')"
+                    :disabled="!selectedDocumentUrl"
+                    @click.stop="handleDownloadSelectedDocument"
+                    class="shadow-theme-xs inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-gray-500 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="21"
+                      height="20"
+                      viewBox="0 0 21 20"
+                      fill="none"
+                    >
+                      <path
+                        d="M17.1661 13.333V15.4163C17.1661 16.1067 16.6064 16.6663 15.9161 16.6663H5.08203C4.39168 16.6663 3.83203 16.1067 3.83203 15.4163V13.333M10.5004 13.333L10.5004 3.33301M6.64456 9.47918L10.4986 13.3308L14.3529 9.47918"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    :aria-label="t('kyc.viewDocument')"
+                    :disabled="!selectedDocumentUrl"
+                    @click.stop="handleViewSelectedDocument"
+                    class="shadow-theme-xs inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-300 text-gray-500 transition hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.03] dark:hover:text-gray-200"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="21"
+                      height="20"
+                      viewBox="0 0 21 20"
+                      fill="none"
+                    >
+                      <path
+                        d="M2.96487 10.7925C2.73306 10.2899 2.73306 9.71023 2.96487 9.20764C4.28084 6.35442 7.15966 4.375 10.4993 4.375C13.8389 4.375 16.7178 6.35442 18.0337 9.20765C18.2655 9.71024 18.2655 10.2899 18.0337 10.7925C16.7178 13.6458 13.8389 15.6252 10.4993 15.6252C7.15966 15.6252 4.28084 13.6458 2.96487 10.7925Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                      <path
+                        d="M13.5202 10C13.5202 11.6684 12.1677 13.0208 10.4993 13.0208C8.83099 13.0208 7.47852 11.6684 7.47852 10C7.47852 8.33164 8.83099 6.97917 10.4993 6.97917C12.1677 6.97917 13.5202 8.33164 13.5202 10Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </div>
               <div v-if="documentIsImage" class="w-full max-w-md">
-                <img :src="documentPreviewUrl" class="max-h-64 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700" alt="Document preview" />
+                <img :src="selectedDocumentUrl" class="max-h-64 w-full rounded-lg border border-gray-200 object-contain dark:border-gray-700" alt="Document preview" />
               </div>
-              <div v-else class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h10M7 12h10M7 17h6" /></svg>
-                <span>{{ selectedDocumentName }}</span>
-              </div>
-              <button type="button" @click.stop="removeDocument" class="rounded-full bg-error-500 px-3 py-1 text-xs font-medium text-white shadow-theme-xs">{{ t('kyc.removeDocument') }}</button>
+              <button type="button" @click.stop="removeDocument" class="self-start rounded-full bg-error-500 px-3 py-1 text-xs font-medium text-white shadow-theme-xs">{{ t('kyc.removeDocument') }}</button>
             </div>
             <input ref="documentInput" type="file" id="kyc-document" class="hidden" accept="image/*,.pdf" @change="handleDocumentChange" />
           </label>
@@ -188,19 +297,6 @@
               </div>
               <span class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium" :class="form.is_verified ? 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400' : 'bg-gray-100 text-gray-600 dark:bg-white/10 dark:text-gray-300'">
                 {{ form.is_verified ? t('kyc.verified') : t('kyc.notVerified') }}
-              </span>
-            </label>
-          </div>
-          <div>
-            <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('kyc.isActive') }}</label>
-            <label class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400">
-              <div class="relative">
-                <input type="checkbox" class="sr-only" v-model="form.is_active" />
-                <div class="block h-6 w-11 rounded-full" :class="form.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
-                <div :class="form.is_active ? 'translate-x-full' : 'translate-x-0'" class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-theme-sm duration-300 ease-linear"></div>
-              </div>
-              <span class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium" :class="form.is_active ? 'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-400' : 'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-400'">
-                {{ form.is_active ? t('common.active') : t('common.inactive') }}
               </span>
             </label>
           </div>
@@ -268,12 +364,11 @@ const initialForm = () => ({
   rejected_reason: props.kyc?.rejected_reason ?? '',
   is_verified: !!props.kyc?.is_verified,
   verified_at: props.kyc?.verified_at ? props.kyc.verified_at.slice(0, 10) : '',
-  is_active: !!props.kyc?.is_active,
 })
 
 const form = useForm(initialForm())
 
-const documentPreviewUrl = ref(null)
+const documentFileUrl = ref(null)
 const documentInput = ref(null)
 
 const documentTypeOptions = computed(() => [
@@ -289,32 +384,61 @@ const statusOptions = computed(() => [
 ])
 
 const hasDocument = computed(() => !!form.document_scan_copy)
-const documentIsImage = computed(() => !!documentPreviewUrl.value)
+const documentIsImage = computed(() => form.document_scan_copy?.type?.startsWith('image/') ?? false)
 const selectedDocumentName = computed(() => form.document_scan_copy?.name ?? t('kyc.noDocumentSelected'))
+const selectedDocumentUrl = computed(() => documentFileUrl.value)
 
-const existingDocumentUrl = computed(() => (props.kyc?.document_scan_copy ? `/storage/${props.kyc.document_scan_copy}` : null))
+const hasExistingDocument = computed(() => !!props.kyc?.document_scan_copy)
 const existingDocumentName = computed(() => props.kyc?.document_scan_copy?.split('/').pop() ?? t('kyc.noDocumentUploaded'))
+const existingDocumentViewUrl = computed(() => (hasExistingDocument.value ? route('admin.kycs.document.view', props.kyc.id) : null))
+const existingDocumentDownloadUrl = computed(() => (hasExistingDocument.value ? route('admin.kycs.document.download', props.kyc.id) : null))
 
-const revokePreview = () => {
-  if (documentPreviewUrl.value && documentPreviewUrl.value.startsWith('blob:')) {
-    URL.revokeObjectURL(documentPreviewUrl.value)
+const revokeDocumentUrl = () => {
+  if (documentFileUrl.value && documentFileUrl.value.startsWith('blob:') && typeof URL !== 'undefined') {
+    URL.revokeObjectURL(documentFileUrl.value)
   }
-  documentPreviewUrl.value = null
+  documentFileUrl.value = null
 }
 
 const handleDocumentChange = (event) => {
   const file = event.target.files?.[0] ?? null
   form.document_scan_copy = file
-  revokePreview()
-  if (file && file.type.startsWith('image/')) {
-    documentPreviewUrl.value = URL.createObjectURL(file)
+  revokeDocumentUrl()
+  if (file && typeof window !== 'undefined') {
+    documentFileUrl.value = URL.createObjectURL(file)
   }
 }
 
 const removeDocument = () => {
   form.document_scan_copy = null
-  revokePreview()
+  revokeDocumentUrl()
   if (documentInput.value) documentInput.value.value = ''
+}
+
+const handleDownloadExistingDocument = () => {
+  if (!existingDocumentDownloadUrl.value || typeof window === 'undefined') return
+  window.open(existingDocumentDownloadUrl.value, '_blank', 'noopener')
+}
+
+const handleViewExistingDocument = () => {
+  if (!existingDocumentViewUrl.value || typeof window === 'undefined') return
+  window.open(existingDocumentViewUrl.value, '_blank', 'noopener')
+}
+
+const handleDownloadSelectedDocument = () => {
+  if (!selectedDocumentUrl.value || typeof window === 'undefined' || typeof document === 'undefined') return
+
+  const anchor = document.createElement('a')
+  anchor.href = selectedDocumentUrl.value
+  anchor.download = selectedDocumentName.value || 'document'
+  anchor.target = '_blank'
+  anchor.rel = 'noopener'
+  anchor.click()
+}
+
+const handleViewSelectedDocument = () => {
+  if (!selectedDocumentUrl.value || typeof window === 'undefined') return
+  window.open(selectedDocumentUrl.value, '_blank', 'noopener')
 }
 
 const submit = () => {
@@ -354,7 +478,7 @@ watch(
 )
 
 onBeforeUnmount(() => {
-  revokePreview()
+  revokeDocumentUrl()
 })
 
 const userDisplay = (user) => {

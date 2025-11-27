@@ -45,6 +45,7 @@ return [
     'permissions'  => ['view'],
     'profile'      => ['view'],
     'activitylogs'  => ['view'],
+    'kycs'         => ['view', 'create', 'update', 'delete'],
     ],
 
     /*
@@ -65,6 +66,7 @@ return [
     'permissions'  => ['en' => 'Permissions',   'ar' => 'الصلاحيات'],
     'profile'      => ['en' => 'Profile',            'ar' => 'الملف الشخصي'],
     'activitylogs'  => ['en' => 'Activity Logs',       'ar' => 'سجل التغييرات'],
+    'kycs'         => ['en' => 'KYC Requests',  'ar' => 'طلبات KYC'],
 
     ],
 

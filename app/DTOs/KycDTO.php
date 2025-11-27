@@ -18,7 +18,6 @@ class KycDTO extends BaseDTO
     public $document_type;
     public $document_scan_copy;
     public $is_verified;
-    public $is_active;
     public $created_by;
     public $updated_by;
     public $created_at;
@@ -37,7 +36,6 @@ class KycDTO extends BaseDTO
         $document_type,
         $document_scan_copy,
         $is_verified,
-        $is_active,
         $created_by,
         $updated_by,
         $created_at = null,
@@ -55,7 +53,6 @@ class KycDTO extends BaseDTO
         $this->document_type = $document_type;
         $this->document_scan_copy = $document_scan_copy;
         $this->is_verified = (bool) $is_verified;
-        $this->is_active = (bool) $is_active;
         $this->created_by = $created_by;
         $this->updated_by = $updated_by;
         $this->created_at = $created_at;
@@ -77,7 +74,6 @@ class KycDTO extends BaseDTO
             $kyc->document_type ?? null,
             $kyc->document_scan_copy ?? null,
             $kyc->is_verified ?? false,
-            $kyc->is_active ?? true,
             $kyc->created_by ?? null,
             $kyc->updated_by ?? null,
             $kyc->created_at?->toDateTimeString() ?? null,
@@ -100,7 +96,6 @@ class KycDTO extends BaseDTO
             'document_type' => $this->document_type,
             'document_scan_copy' => $this->document_scan_copy,
             'is_verified' => $this->is_verified,
-            'is_active' => $this->is_active,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,

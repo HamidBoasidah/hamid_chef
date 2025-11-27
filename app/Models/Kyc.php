@@ -20,7 +20,6 @@ class Kyc extends BaseModel
         'address',
         'document_type',
         'document_scan_copy',
-        'is_active',
         'created_by',
         'updated_by',
     ];

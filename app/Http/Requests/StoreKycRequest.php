@@ -34,7 +34,6 @@ class StoreKycRequest extends FormRequest
             'document_type' => 'required|in:passport,driving_license,id_card',
             // accept images and pdfs for document scans
             'document_scan_copy' => 'required|file|mimes:jpg,jpeg,png,pdf|max:5120',
-            'is_active' => 'nullable|boolean',
             'created_by' => 'nullable|exists:users,id',
             'updated_by' => 'nullable|exists:users,id',
         ];

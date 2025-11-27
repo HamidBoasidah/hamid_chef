@@ -20,7 +20,7 @@ class AreaController extends Controller
     {
         $this->middleware('permission:areas.view')->only(['index', 'show']);
         $this->middleware('permission:areas.create')->only(['create', 'store']);
-        $this->middleware('permission:areas.update')->only(['edit', 'update']);
+        $this->middleware('permission:areas.update')->only(['edit', 'update', 'activate', 'deactivate']);
         $this->middleware('permission:areas.delete')->only(['destroy']);
     }
 
