@@ -72,12 +72,12 @@ class AuthService
 
     public function logout(Request $request)
     {
+        // تسجيل خروج المستخدم
         Auth::logout();
 
+        // إبطال الجلسة وحماية CSRF
         $request->session()->invalidate();
         $request->session()->regenerateToken();
-
-        return redirect()->route('dashboard');
     }
 
 
