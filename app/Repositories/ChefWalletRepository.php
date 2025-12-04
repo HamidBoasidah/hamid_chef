@@ -8,7 +8,7 @@ use App\Repositories\Eloquent\BaseRepository;
 class ChefWalletRepository extends BaseRepository
 {
     protected array $defaultWith = [
-        'chef' => ['id', 'user_id', 'display_name'],
+        'chef' => ['id', 'user_id', 'name', 'address'],
         'transactions' => ['id', 'chef_id', 'type', 'amount', 'balance'],
     ];
 

@@ -212,7 +212,9 @@ import {
   ChevronDownIcon,
   HorizontalDots,
   BuildingIcon,
-  HistoryIcon
+  HistoryIcon,
+  AddressIcon,
+  ChefIcon,
 } from "../../icons"
 import { useSidebar } from "@/composables/useSidebar"
 import { usePermissions } from "@/composables/usePermissions"
@@ -304,6 +306,18 @@ const menuGroups = computed(() =>
           name: t('menu.kycs'),
           path: route('admin.kycs.index'),
           permission: 'kycs.view',
+        },
+        {
+          icon: AddressIcon,
+          name: t('menu.addresses'),
+          path: route('admin.addresses.index'),
+          permission: 'addresses.view',
+        },
+        {
+          icon: ChefIcon,
+          name: t('menu.chefs'),
+          path: route('admin.chefs.index'),
+          permission: 'chefs.view',
         },
         {
           icon: UserCircleIcon,

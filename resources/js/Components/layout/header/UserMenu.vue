@@ -5,7 +5,12 @@
       @click.prevent="toggleDropdown"
     >
       <span class="overflow-hidden rounded-full h-11 w-11 ltr:mr-3 rtl:ml-3">
-        <img :src="user?.profile_photo_url || '/images/user/owner.jpg'" alt="User" />
+        <template v-if="user?.avatar">
+          <img :src="`/storage/${user.avatar}`" alt="User" class="h-11 w-11 object-cover" />
+        </template>
+        <template v-else>
+          <UserCircleIcon class="h-11 w-11 text-gray-400" />
+        </template>
       </span>
 
       <span class="block font-medium text-theme-sm ltr:mr-1 rtl:ml-1">{{ user?.name || t('user.name', { default: 'Hamid Boasidah' }) }}</span>
@@ -64,7 +69,7 @@ import { route } from 'ziggy-js'
 
 const { t } = useI18n()
 const page = usePage()
-const user = page.props.value?.auth?.user || null
+const user = page.props.auth?.user || null
 
 const dropdownOpen = ref(false)
 const dropdownRef = ref(null)

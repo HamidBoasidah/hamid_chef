@@ -19,7 +19,7 @@ class UpdateAdminRequest extends FormRequest
             'first_name' => 'sometimes|required|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'sometimes|required|email|unique:admins,email,' . $adminId,
-            'avatar' => 'nullable|file|image|max:2048',
+            'avatar' => 'nullable|image|max:2048',
             'phone_number' => ['nullable', 'regex:/^\d{9}$/'],
             'whatsapp_number' => ['nullable', 'regex:/^\d{9}$/'],
             'address' => 'nullable|string|max:255',

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="iconTitle iconDesc">
+	<title id="iconTitle">MoonChef Icon</title>
+	<desc id="iconDesc">Icon: crescent moon combined with a small chef hat, used as app favicon and small UI marks.</desc>
+	<rect width="64" height="64" rx="12" fill="transparent" />
+	<!-- crescent moon -->
+	<path d="M40 8c0 15.46-12.54 28-28 28 5.58-2.5 9.32-8.4 9.32-15.6S18.58 13.5 13 11c8.3-4 21-1.7 27 0z" fill="#FFD66B"/>
+	<!-- chef hat -->
+	<g transform="translate(18,12)">
+		<path d="M18 6c-3 0-5 2-5 4 0 0-4 1-4 4v1h18v-1c0-3-4-4-4-4 0-2-2-4-5-4z" fill="#FFFFFF"/>
+	</g>
+</svg>

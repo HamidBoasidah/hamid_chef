@@ -27,7 +27,7 @@ class UpdateUserRequest extends FormRequest
             'first_name' => 'sometimes|required|string|max:255',
             'last_name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:users,email,' . $userId,
-            'avatar' => 'nullable|file|image|max:2048',
+            'avatar' => 'nullable|image|max:2048',
             'phone_number' => ['nullable', 'regex:/^\\d{9,15}$/'],
             'whatsapp_number' => ['nullable', 'regex:/^\\d{9,15}$/'],
             'address' => 'nullable|string|max:255',

@@ -14,9 +14,10 @@ class AreaFactory extends Factory
             'name_ar' => $this->faker->citySuffix . ' عربي',
             'name_en' => $this->faker->city,
             'is_active' => true,
-            'district_id' => \App\Models\District::inRandomOrder()->first()?->id ?? 1,
-            'created_by' => 1,
-            'updated_by' => 1,
+            // pick an existing district or create one so the relation is valid
+            'district_id' => \App\Models\District::inRandomOrder()->first()?->id ?? \App\Models\District::factory()->create()->id,
+            'created_by' => \App\Models\User::inRandomOrder()->first()?->id,
+            'updated_by' => \App\Models\User::inRandomOrder()->first()?->id,
         ];
     }
 }

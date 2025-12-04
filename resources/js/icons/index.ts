@@ -47,17 +47,21 @@ import BellIcon from "./BellIcon.vue";
 import BarChartIcon from "./BarChartIcon.vue";
 import BuildingIcon from "./BuildingIcon.vue";
 import HistoryIcon from "./HistoryIcon.vue";
+import AddressIcon from "./AddressIcon.vue";
+import ChefIcon from "./ChefIcon.vue";
 
 export {
   BellIcon,
   BarChartIcon,
   BuildingIcon,
   HistoryIcon,
+  ChefIcon,
   LayoutDashboardIcon,
   UserGroupIcon,
   FolderIcon,
   TrashIconLg,
   SupportIcon,
+  AddressIcon,
   HomeIcon,
   StaredIcon,
   RefreshIcon,

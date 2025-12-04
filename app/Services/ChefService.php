@@ -38,6 +38,12 @@ class ChefService
         return $this->chefs->update($id, $attributes);
     }
 
+    /*public function createOrUpdate(array $attributes)
+    {
+        return $this->chefs->createOrUpdate($attributes);
+    }*/
+
+
     public function delete($id)
     {
         return $this->chefs->delete($id);

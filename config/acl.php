@@ -46,6 +46,8 @@ return [
     'profile'      => ['view'],
     'activitylogs'  => ['view'],
     'kycs'         => ['view', 'create', 'update', 'delete'],
+    'addresses'         => ['view', 'create', 'update', 'delete'],
+    'chefs'         => ['view', 'create', 'update', 'delete'],
     ],
 
     /*
@@ -67,6 +69,7 @@ return [
     'profile'      => ['en' => 'Profile',            'ar' => 'الملف الشخصي'],
     'activitylogs'  => ['en' => 'Activity Logs',       'ar' => 'سجل التغييرات'],
     'kycs'         => ['en' => 'KYC Requests',  'ar' => 'طلبات KYC'],
+    'addresses'         => ['en' => 'Addresses',  'ar' => 'العناوين'],
 
     ],
 

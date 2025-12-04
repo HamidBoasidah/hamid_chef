@@ -17,7 +17,7 @@ class StoreAdminRequest extends FormRequest
             'first_name' => 'required|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'required|email|unique:admins,email',
-            'avatar' => 'nullable|file|image|max:2048',
+            'avatar' => 'nullable|image|max:2048',
             'phone_number' => ['nullable', 'regex:/^\d{9}$/'],
             'whatsapp_number' => ['nullable', 'regex:/^\d{9}$/'],
             'address' => 'nullable|string|max:255',

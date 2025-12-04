@@ -8,7 +8,7 @@ use App\Repositories\Eloquent\BaseRepository;
 class ChefServiceRepository extends BaseRepository
 {
     protected array $defaultWith = [
-        'chef' => ['id', 'user_id', 'display_name'],
+        'chef' => ['id', 'user_id', 'name', 'address'],
         'images' => ['id', 'chef_service_id', 'image'],
         'tags' => ['id', 'name', 'slug'],
     ];

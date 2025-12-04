@@ -27,8 +27,8 @@ return new class extends Migration
             $table->string('instagram')->nullable();
             $table->boolean('is_active')->default(true);
             $table->string('locale', 10)->default('ar');
-            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
-            $table->foreignId('updated_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('created_by')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('updated_by')->nullable()->constrained('admins')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletes();

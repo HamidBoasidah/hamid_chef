@@ -36,7 +36,10 @@
     "areas": "المناطق",
     "governorates": "المحافظات",
     "districts": "المديريات",
-    "activityLogs": "سجل التغييرات"
+    "activityLogs": "سجل التغييرات",
+    "addresses": "العناوين"
+    ,"chefs": "الطهاة",
+    "createChef": "إضافة طاهٍ"
   },
   "pages": {
     "welcomeLoggedIn": "لقد قمت بتسجيل الدخول!",
@@ -57,6 +60,7 @@
     "deleteAreaConfirmation": "هل أنت متأكد أنك تريد حذف هذه المنطقة؟",
     "deleteRoleConfirmation": "هل أنت متأكد أنك تريد حذف هذا الدور؟",
     "notAuthorized": "غير مصرح لك"
+    ,"deleteChefConfirmation": "هل أنت متأكد أنك تريد حذف هذا الطاهي؟"
   },
   "charts": {
     "lineChart": "مخطط خطي",
@@ -67,6 +71,7 @@
     "switchToLTR": "تحويل إلى الاتجاه من اليسار لليمين",
     "home": "الرئيسية",
     "new": "جديد",
+    "user": "المستخدم",
     "pro": "برو",
     "loading": "جاري التحميل...",
     "name": "الاسم",
@@ -94,6 +99,8 @@
     "read": "قراءة",
     "write": "كتابة",
     "view": "عرض"
+    ,"select": "اختر",
+    "selectUser": "اختر المستخدم"
   },
   "user": {
     "name": "حميد بوعصيدة",
@@ -135,6 +142,32 @@
     "userUpdatedSuccessfully": "تم تحديث المستخدم بنجاح",
     "userUpdateFailed": "فشل تحديث المستخدم"
   ,"noImage": "لا توجد صورة للمستخدم"
+  },
+  "chefs": {
+    "chefInformation": "معلومات الطاهي",
+    "namePlaceholder": "ادخل اسم الطاهي",
+    "emailPlaceholder": "ادخل البريد الإلكتروني",
+    "phonePlaceholder": "777 777 777",
+    "addressPlaceholder": "ادخل العنوان",
+    "shortDescription": "وصف مختصر",
+    "shortDescriptionPlaceholder": "أدخل وصفًا مختصرًا",
+    "longDescription": "وصف مطول",
+    "longDescriptionPlaceholder": "أدخل وصفًا تفصيليًا",
+    "baseHourlyRate": "سعر الساعة الأساسي",
+    "chefCreatedSuccessfully": "تم إنشاء الطاهي بنجاح",
+    "chefCreationFailed": "فشل إنشاء الطاهي",
+    "addChef": "إضافة طاهي",
+    "showChef": "عرض طاهي",
+    "rating": "التقييم",
+    "chefDeletedSuccessfully": "تم حذف الطاهي بنجاح",
+    "chefDeletionFailed": "فشل حذف الطاهي",
+    "editChef": "تعديل الطاهي",
+    "chefUpdatedSuccessfully": "تم تحديث الطاهي بنجاح",
+    "chefUpdateFailed": "فشل تحديث الطاهي"
+    ,"logo": "الشعار",
+    "banner": "الخلفية",
+    "noBanner": "لا يوجد صورة خلفية",
+    "noChefsFound": "لا يوجد طهاة حالياً."
   },
   "admins": {
     "userNamePlaceholder": "ادخل اسم المشرف",
@@ -377,9 +410,28 @@
       "taxId": "معرف الضريبة"
     }
   },
+  "addresses": {
+    "addressInformation": "معلومات العنوان",
+    "label": "الوسم",
+    "street": "الشارع",
+    "address": "العنوان",
+    "buildingNumber": "رقم المبنى",
+    "floorNumber": "رقم الطابق",
+    "apartmentNumber": "رقم الشقة",
+    "addAddress": "إضافة عنوان",
+    "noAddress": "لا توجد عناوين.",
+    "addressCreatedSuccessfully": "تم إنشاء العنوان بنجاح",
+    "addressCreationFailed": "فشل إنشاء العنوان",
+    "addressUpdatedSuccessfully": "تم تحديث العنوان بنجاح",
+    "addressUpdateFailed": "فشل تحديث العنوان",
+    "addressDeletedSuccessfully": "تم حذف العنوان بنجاح",
+    "addressDeletionFailed": "فشل حذف العنوان"
+  },
+
   "buttons": {
     "close": "إغلاق",
     "saveChanges": "حفظ التغييرات",
+    "save": "حفظ",
     "cancel": "إلغاء",
     "create": "إنشاء",
     "update": "تحديث",

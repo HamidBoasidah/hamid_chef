@@ -10,14 +10,20 @@ return new class extends Migration
     {
         Schema::create('chefs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->string('display_name');
-            $table->text('bio')->nullable();
-            $table->string('profile_image')->nullable();
-            $table->string('city')->nullable();
-            $table->string('area')->nullable();
+            // link to users table - use user_id as the referencing column
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->string('name');
+            $table->text('short_description')->nullable();
+            $table->text('long_description')->nullable();
+            $table->text('email')->nullable();
+            $table->text('phone')->nullable();
+            $table->string('logo')->nullable();
+            $table->string('banner')->nullable();
+            $table->string('address')->nullable();
+            $table->foreignId('governorate_id')->constrained('governorates')->onDelete('cascade');
+            $table->foreignId('district_id')->constrained('districts')->onDelete('cascade');
+            $table->foreignId('area_id')->constrained('areas')->onDelete('cascade');
             $table->decimal('base_hourly_rate', 10, 2)->default(0);
-            $table->enum('status', ['pending', 'approved', 'suspended'])->default('pending');
             $table->decimal('rating_avg', 3, 2)->default(0);
             $table->boolean('is_active')->default(true);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();

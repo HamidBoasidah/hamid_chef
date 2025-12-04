@@ -46,7 +46,12 @@ class User extends Authenticatable
 
     public function kyc(): HasOne
     {
-        return $this->hasOne(Kyc::class);
+        return $this->hasOne(Kyc::class, 'user_id');
+    }
+
+    public function chef(): HasOne
+    {
+        return $this->hasOne(Chef::class , 'user_id');
     }
 
     protected $hidden = [
@@ -64,4 +69,14 @@ class User extends Authenticatable
     protected $attributes = [
         'user_type' => 'customer',
     ];
+
+    public function getNameAttribute()
+    {
+        $parts = array_filter([
+            $this->first_name ?? null,
+            $this->last_name ?? null,
+        ], fn($p) => !is_null($p) && $p !== '');
+
+        return $parts ? implode(' ', $parts) : null;
+    }
 }

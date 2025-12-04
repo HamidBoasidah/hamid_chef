@@ -14,11 +14,18 @@ class Chef extends BaseModel
 
     protected $fillable = [
         'user_id',
-        'display_name',
+        'name',
+        'short_description',
+        'long_description',
         'bio',
-        'profile_image',
-        'city',
-        'area',
+        'email',
+        'phone',
+        'logo',
+        'banner',
+        'address',
+        'governorate_id',
+        'district_id',
+        'area_id',
         'base_hourly_rate',
         'status',
         'rating_avg',
@@ -34,11 +41,27 @@ class Chef extends BaseModel
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function governorate(): BelongsTo
+    {
+        return $this->belongsTo(Governorate::class, 'governorate_id');
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function area(): BelongsTo
+    {
+        return $this->belongsTo(Area::class, 'area_id');
     }
 
     public function kyc(): HasOne
     {
+        // Kyc is linked by user_id; local key on this model is user_id
         return $this->hasOne(Kyc::class, 'user_id', 'user_id');
     }
 

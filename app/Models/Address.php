@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 
 class Address extends BaseModel
 {
@@ -14,10 +15,13 @@ class Address extends BaseModel
         'user_id',
         'label',
         'address',
-        'city',
-        'area',
-        'latitude',
-        'longitude',
+        'governorate_id',
+        'district_id',
+        'area_id',
+        'street',
+        'building_number',
+        'floor_number',
+        'apartment_number',
         'is_default',
         'is_active',
         'created_by',
@@ -25,14 +29,41 @@ class Address extends BaseModel
     ];
 
     protected $casts = [
-        'latitude' => 'float',
-        'longitude' => 'float',
+        'building_number' => 'integer',
+        'floor_number' => 'integer',
+        'apartment_number' => 'integer',
         'is_default' => 'boolean',
+        'is_active' => 'boolean',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function governorate(): BelongsTo
+    {
+        return $this->belongsTo(Governorate::class);
+    }
+
+    public function district(): BelongsTo
+    {
+        return $this->belongsTo(District::class);
+    }
+
+    public function area(): BelongsTo
+    {
+        return $this->belongsTo(Area::class);
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function updatedBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by');
     }
 
     public function bookings(): HasMany

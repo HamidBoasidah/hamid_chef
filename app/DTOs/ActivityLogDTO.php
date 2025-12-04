@@ -23,6 +23,7 @@ class ActivityLogDTO extends BaseDTO
         $subject_type,
         $subject_id,
         $causer_id,
+        
         $causer_name,
         $properties,
         $created_at

@@ -42,7 +42,7 @@ class HandleInertiaRequests extends Middleware
             'dir'    => fn () => app()->getLocale() === 'ar' ? 'rtl' : 'ltr',
 
             'auth' => [
-                'user' => fn () => $request->user()?->only(['id', 'name', 'email']),
+                'user' => fn () => $request->user()?->only(['id', 'name', 'email' , 'avatar']),
                 'permissions' => fn () => $request->user()
                     ? $request->user()->getAllPermissions()->pluck('name')->all()
                     : [],

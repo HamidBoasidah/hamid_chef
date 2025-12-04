@@ -7,6 +7,7 @@
     "areYouSure": "Are you sure?",
     "deleteConfirmation": "Are you sure you want to delete this user?",
     "deleteKycConfirmation": "Are you sure you want to delete this KYC record?",
+    "deleteChefConfirmation": "Are you sure you want to delete this chef?",
     "notAuthorized": "You are not authorized to perform this action.",
     "notAuthorizedDelete": "You are not authorized to perform delete operation."
   },
@@ -41,7 +42,10 @@
     "auth": "Authentication",
     "signin": "Signin",
     "signup": "Signup",
-    "activityLog": "Activity Log"
+    "activityLog": "Activity Log",
+    "addresses": "Addresses"
+    ,"chefs": "Chefs",
+    "createChef": "Create Chef"
   },
   "pages": {
     "welcomeLoggedIn": "You're logged in!",
@@ -80,6 +84,8 @@
     "edit": "Edit",
     "delete": "Delete",
     "backToList": "Back to list"
+    ,"select": "Select",
+    "selectUser": "Select user"
   },
   "user": {
     "name": "Hamid Boasidah",
@@ -123,6 +129,31 @@
     "name": "Name",
     "email": "Email",
     "type": "Type"
+  },
+  "chefs": {
+    "chefInformation": "Chef Information",
+    "namePlaceholder": "Enter chef name",
+    "emailPlaceholder": "Enter email address",
+    "phonePlaceholder": "777 777 777",
+    "addressPlaceholder": "Enter address",
+    "shortDescription": "Short Description",
+    "shortDescriptionPlaceholder": "Enter a short description",
+    "longDescription": "Long Description",
+    "longDescriptionPlaceholder": "Enter a detailed description",
+    "baseHourlyRate": "Base Hourly Rate",
+    "chefCreatedSuccessfully": "Chef created successfully",
+    "chefCreationFailed": "Failed to create chef",
+    "addChef": "Add Chef",
+    "rating": "Rating",
+    "chefDeletedSuccessfully": "Chef deleted successfully",
+    "chefDeletionFailed": "Failed to delete chef",
+    "editChef": "Edit Chef",
+    "chefUpdatedSuccessfully": "Chef updated successfully",
+    "chefUpdateFailed": "Failed to update chef"
+    ,"logo": "Logo",
+    "banner": "Banner"
+    ,"noBanner": "No banner image",
+    "noChefsFound": "No chefs found."
   },
   "admins": {
     "userNamePlaceholder": "Enter admin name",
@@ -282,9 +313,28 @@
       "taxId": "TAX ID"
     }
   },
+  "addresses": {
+    "addressInformation": "Address Information",
+    "label": "Label",
+    "street": "Street",
+    "address": "Address",
+    "buildingNumber": "Building Number",
+    "floorNumber": "Floor Number",
+    "apartmentNumber": "Apartment Number",
+    "addAddress": "Add Address",
+    "noAddress": "No addresses found.",
+    "addressCreatedSuccessfully": "Address created successfully",
+    "addressCreationFailed": "Failed to create address",
+    "addressUpdatedSuccessfully": "Address updated successfully",
+    "addressUpdateFailed": "Failed to update address",
+    "addressDeletedSuccessfully": "Address deleted successfully",
+    "addressDeletionFailed": "Failed to delete address"
+  },
+
   "buttons": {
     "close": "Close",
     "saveChanges": "Save Changes",
+    "save": "Save",
     "cancel": "Cancel",
     "create": "Create",
     "update": "Update",

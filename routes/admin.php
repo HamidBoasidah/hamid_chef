@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\PermissionController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\KycController;
+use App\Http\Controllers\Admin\AddressController;
+use App\Http\Controllers\Admin\ChefController;
 use App\Support\RoutePermissions;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +104,16 @@ Route::middleware('auth:admin')
         Route::patch('areas/{id}/deactivate', [AreaController::class, 'deactivate'])
             ->name('areas.deactivate');
 
+        // Addresses
+        Route::resource('addresses', AddressController::class)
+            ->names('addresses');
+
+        Route::patch('addresses/{id}/activate', [AddressController::class, 'activate'])
+            ->name('addresses.activate');
+
+        Route::patch('addresses/{id}/deactivate', [AddressController::class, 'deactivate'])
+            ->name('addresses.deactivate');
+
         // Users
         Route::resource('users', UserController::class)
             ->names('users');
@@ -114,7 +126,15 @@ Route::middleware('auth:admin')
         Route::resource('kycs', KycController::class)
             ->names('kycs');
 
-        
+            // Chefs
+        Route::resource('chefs', ChefController::class)
+            ->names('chefs');
+
+        Route::patch('chefs/{id}/activate', [ChefController::class, 'activate'])
+            ->name('chefs.activate');
+
+        Route::patch('chefs/{id}/deactivate', [ChefController::class, 'deactivate'])
+            ->name('chefs.deactivate');
 
         // Admins (managers of the system)
         Route::resource('admins', AdminController::class)

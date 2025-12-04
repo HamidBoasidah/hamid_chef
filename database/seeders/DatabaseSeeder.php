@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
             RolesPermissionsSeeder::class,
             AdminSeeder::class,
             UserSeeder::class,
-            // initial data for new chef marketplace tables
-            InitialDataSeeder::class,
             GovernorateSeeder::class,
             DistrictSeeder::class,
             AreaSeeder::class,
+            // initial data for new chef marketplace tables
+            InitialDataSeeder::class,
         ]);
     }
 }

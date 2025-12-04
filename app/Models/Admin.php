@@ -57,4 +57,15 @@ class Admin extends Authenticatable
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+
+    public function getNameAttribute()
+    {
+        $parts = array_filter([
+            $this->first_name ?? null,
+            $this->last_name ?? null,
+        ], fn($p) => !is_null($p) && $p !== '');
+
+        return $parts ? implode(' ', $parts) : null;
+    }
 }
