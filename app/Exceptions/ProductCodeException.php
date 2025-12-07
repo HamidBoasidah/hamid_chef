@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class ProductCodeException extends StationManagementException
+class ProductCodeException extends ApplicationException
 {
     public function __construct(string $message = 'رمز المنتج غير صحيح')
     {

@@ -35,7 +35,8 @@ class ChefWalletService
 
     public function update($id, array $attributes)
     {
-        return $this->wallets->update($id, $attributes);
+        $wallet = $this->wallets->findOrFail($id);
+        return $this->wallets->update($wallet, $attributes);
     }
 
     public function delete($id)

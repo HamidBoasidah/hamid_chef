@@ -38,9 +38,10 @@ class AddressController extends Controller
 
     public function create()
     {
+        // include relation keys so frontend can filter by governorate/district when needed
         $governorates = Governorate::all(['id', 'name_ar', 'name_en']);
-        $districts = District::all(['id', 'name_ar', 'name_en']);
-        $areas = Area::all(['id', 'name_ar', 'name_en']);
+        $districts = District::all(['id', 'name_ar', 'name_en', 'governorate_id']);
+        $areas = Area::all(['id', 'name_ar', 'name_en', 'district_id']);
         return Inertia::render('Admin/Address/Create', [
             'governorates' => $governorates,
             'districts' => $districts,
@@ -67,8 +68,9 @@ class AddressController extends Controller
     public function edit(Address $address)
     {
         $governorates = Governorate::all(['id', 'name_ar', 'name_en']);
-        $districts = District::where('governorate_id', $address->governorate_id)->get(['id','name_ar','name_en']);
-        $areas = Area::where('district_id', $address->district_id)->get(['id','name_ar','name_en']);
+        // include relation keys so the frontend computed filters work correctly
+        $districts = District::where('governorate_id', $address->governorate_id)->get(['id','name_ar','name_en','governorate_id']);
+        $areas = Area::where('district_id', $address->district_id)->get(['id','name_ar','name_en','district_id']);
         $dto = AddressDTO::fromModel($address)->toArray();
         return Inertia::render('Admin/Address/Edit', [
             'address' => $dto,

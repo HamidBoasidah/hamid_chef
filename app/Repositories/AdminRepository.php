@@ -27,9 +27,9 @@ class AdminRepository extends BaseRepository
         return $admin;
     }
 
-    public function update($id, array $data)
+    /*public function updateById(int|string $id, array $data): Admin
     {
-        $admin = parent::update($id, $data);
+        $admin = parent::updateById($id, $data);
 
         if (isset($data['role_id'])) {
             $role = Role::find($data['role_id']);
@@ -39,7 +39,7 @@ class AdminRepository extends BaseRepository
         }
 
         return $admin;
-    }
+    }*/
 
     public function assignRoleByName($id, string $roleName)
     {

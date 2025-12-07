@@ -54,8 +54,8 @@ class Handler extends ExceptionHandler
      */
     protected function handleApiException(Request $request, Throwable $e): JsonResponse
     {
-        // Handle custom exceptions
-        if ($e instanceof \App\Exceptions\StationManagementException) {
+        // Handle custom exceptions (new base name + legacy alias)
+        if ($e instanceof \App\Exceptions\ApplicationException || $e instanceof \App\Exceptions\StationManagementException) {
             return $e->render($request);
         }
 
@@ -95,18 +95,8 @@ class Handler extends ExceptionHandler
 
         // Handle query exceptions
         if ($e instanceof QueryException) {
-            // Check for duplicate entry errors
+            // Handle duplicate entry / unique constraint violations generically
             if ($e->getCode() == 23000 && str_contains($e->getMessage(), 'Duplicate entry')) {
-                if (str_contains($e->getMessage(), 'fuel_disbursement_periods_name_unique')) {
-                    return response()->json([
-                        'success' => false,
-                        'message' => 'اسم الفترة موجود بالفعل، يرجى اختيار اسم آخر',
-                        'error_code' => 'DUPLICATE_NAME',
-                        'status_code' => 422,
-                        'timestamp' => now()->toISOString(),
-                    ], 422);
-                }
-                
                 return response()->json([
                     'success' => false,
                     'message' => 'البيانات المراد إدخالها موجودة بالفعل',
@@ -115,7 +105,7 @@ class Handler extends ExceptionHandler
                     'timestamp' => now()->toISOString(),
                 ], 422);
             }
-            
+
             return response()->json([
                 'success' => false,
                 'message' => 'خطأ في قاعدة البيانات',

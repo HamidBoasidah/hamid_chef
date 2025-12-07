@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class BusinessLogicException extends StationManagementException
+class BusinessLogicException extends ApplicationException
 {
     public function __construct(string $message = 'خطأ في منطق الأعمال')
     {

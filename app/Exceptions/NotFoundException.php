@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class NotFoundException extends StationManagementException
+class NotFoundException extends ApplicationException
 {
     public function __construct(string $message = 'المورد المطلوب غير موجود')
     {

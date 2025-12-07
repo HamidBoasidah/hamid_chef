@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class UnauthorizedException extends StationManagementException
+class UnauthorizedException extends ApplicationException
 {
     public function __construct(string $message = 'غير مصرح لك بالوصول لهذا المورد')
     {

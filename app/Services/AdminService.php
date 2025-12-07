@@ -47,7 +47,8 @@ class AdminService
             $attributes['password'] = bcrypt($attributes['password']);
         }
 
-        return $this->admins->update($id, $attributes);
+        $admin = $this->admins->findOrFail($id);
+        return $this->admins->update($admin, $attributes);
     }
 
     public function delete($id)

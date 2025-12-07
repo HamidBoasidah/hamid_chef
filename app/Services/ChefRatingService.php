@@ -35,7 +35,8 @@ class ChefRatingService
 
     public function update($id, array $attributes)
     {
-        return $this->ratings->update($id, $attributes);
+        $rating = $this->ratings->findOrFail($id);
+        return $this->ratings->update($rating, $attributes);
     }
 
     public function delete($id)

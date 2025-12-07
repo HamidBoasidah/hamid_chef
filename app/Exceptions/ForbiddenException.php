@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class ForbiddenException extends StationManagementException
+class ForbiddenException extends ApplicationException
 {
     public function __construct(string $message = 'ممنوع الوصول لهذا المورد')
     {

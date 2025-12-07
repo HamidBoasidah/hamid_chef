@@ -6,10 +6,10 @@ use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class StationManagementException extends Exception
+class ApplicationException extends Exception
 {
     protected $statusCode = 500;
-    protected $errorCode = 'STATION_ERROR';
+    protected $errorCode = 'APPLICATION_ERROR';
 
     public function __construct(string $message = '', int $statusCode = 500, string $errorCode = 'STATION_ERROR')
     {

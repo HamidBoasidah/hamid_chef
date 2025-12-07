@@ -35,7 +35,8 @@ class CategoryService
 
     public function update($id, array $attributes)
     {
-        return $this->categories->update($id, $attributes);
+        $category = $this->categories->findOrFail($id);
+        return $this->categories->update($category, $attributes);
     }
 
     public function delete($id)

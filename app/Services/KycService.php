@@ -38,7 +38,8 @@ class KycService
 
     public function update($id, array $attributes)
     {
-        return $this->kycs->update($id, $attributes);
+        $kyc = $this->kycs->findOrFail($id);
+        return $this->kycs->update($kyc, $attributes);
     }
 
     public function delete($id)

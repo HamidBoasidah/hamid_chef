@@ -35,7 +35,8 @@ class GovernorateService
 
     public function update($id, array $attributes)
     {
-        return $this->governorates->update($id, $attributes);
+        $governorate = $this->governorates->findOrFail($id);
+        return $this->governorates->update($governorate, $attributes);
     }
 
     public function delete($id)

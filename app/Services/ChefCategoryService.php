@@ -35,7 +35,8 @@ class ChefCategoryService
 
     public function update($id, array $attributes)
     {
-        return $this->chefCategories->update($id, $attributes);
+        $chefCategory = $this->chefCategories->findOrFail($id);
+        return $this->chefCategories->update($chefCategory, $attributes);
     }
 
     public function delete($id)

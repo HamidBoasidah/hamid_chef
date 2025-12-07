@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class DataIntegrityException extends StationManagementException
+class DataIntegrityException extends ApplicationException
 {
     public function __construct(string $message = 'خطأ في سلامة البيانات')
     {

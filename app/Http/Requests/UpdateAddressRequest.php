@@ -22,7 +22,6 @@ class UpdateAddressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'sometimes|nullable|exists:users,id',
             'label' => 'sometimes|nullable|string|max:50',
             'address' => 'sometimes|required|string|max:1000',
             'governorate_id' => 'sometimes|nullable|exists:governorates,id',

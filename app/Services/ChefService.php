@@ -35,7 +35,8 @@ class ChefService
 
     public function update($id, array $attributes)
     {
-        return $this->chefs->update($id, $attributes);
+        $chef = $this->chefs->findOrFail($id);
+        return $this->chefs->update($chef, $attributes);
     }
 
     /*public function createOrUpdate(array $attributes)

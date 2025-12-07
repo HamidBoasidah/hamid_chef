@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class ResourceInUseException extends StationManagementException
+class ResourceInUseException extends ApplicationException
 {
     public function __construct(string $message = 'المورد مستخدم ولا يمكن حذفه')
     {

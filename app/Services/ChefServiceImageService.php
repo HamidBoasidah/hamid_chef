@@ -35,7 +35,8 @@ class ChefServiceImageService
 
     public function update($id, array $attributes)
     {
-        return $this->images->update($id, $attributes);
+        $image = $this->images->findOrFail($id);
+        return $this->images->update($image, $attributes);
     }
 
     public function delete($id)

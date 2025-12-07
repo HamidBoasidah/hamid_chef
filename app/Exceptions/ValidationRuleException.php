@@ -2,7 +2,7 @@
 
 namespace App\Exceptions;
 
-class ValidationRuleException extends StationManagementException
+class ValidationRuleException extends ApplicationException
 {
     public function __construct(string $message = 'قاعدة التحقق غير صحيحة')
     {

@@ -45,7 +45,8 @@ class RoleService
     public function update($id, array $attributes)
     {
         return DB::transaction(function () use ($id, $attributes) {
-            $role = $this->roles->update($id, $attributes);
+            $role = $this->roles->findOrFail($id);
+            $role = $this->roles->update($role, $attributes);
 
             if (array_key_exists('permissions', $attributes)) {
                 $role->syncPermissions((array) ($attributes['permissions'] ?? []));

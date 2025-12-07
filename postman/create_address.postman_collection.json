@@ -1,0 +1,65 @@
+{
+  "info": {
+    "_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "name": "MoonChef - Address API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for testing Address endpoints (store)"
+  },
+  "item": [
+    {
+      "name": "Create Address (store)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text",
+            "disabled": false
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"label\": \"المنزل\",\n  \"address\": \"شارع المثال 123\",\n  \"street\": \"شارع الاختبار\",\n  \"building_number\": \"12\",\n  \"floor_number\": \"3\",\n  \"apartment_number\": \"301\",\n  \"governorate_id\": 1,\n  \"district_id\": 2,\n  \"area_id\": 3,\n  \"is_default\": true,\n  \"is_active\": true\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/addresses",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "addresses"
+          ]
+        },
+        "description": "Create a new address for the authenticated user. The server sets the `user_id` automatically. Replace the path values and body values as needed."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "<YOUR_SANCTUM_TOKEN>",
+      "type": "string"
+    }
+  ]
+}

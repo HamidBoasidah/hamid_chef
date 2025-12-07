@@ -39,7 +39,9 @@ class UserService
         if (array_key_exists('password', $attributes) && empty($attributes['password'])) {
             unset($attributes['password']);
         }
-        return $this->users->update($id, $attributes);
+        
+        $user = $this->users->findOrFail($id);
+        return $this->users->update($user, $attributes);
     }
 
     public function delete($id)

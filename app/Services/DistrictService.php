@@ -35,7 +35,8 @@ class DistrictService
 
     public function update($id, array $attributes)
     {
-        return $this->districts->update($id, $attributes);
+        $district = $this->districts->findOrFail($id);
+        return $this->districts->update($district, $attributes);
     }
 
     public function delete($id)

@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\AddressRepository;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AddressService
 {
@@ -13,7 +15,7 @@ class AddressService
         $this->addresses = $addresses;
     }
 
-    public function all(array $with = [])
+     public function all(array $with = [])
     {
         return $this->addresses->all($with);
     }
@@ -30,12 +32,18 @@ class AddressService
 
     public function create(array $attributes)
     {
+        // Ensure the address is associated with the currently authenticated user
+        if (empty($attributes['user_id'])) {
+            $attributes['user_id'] = Auth::id();
+        }
+
         return $this->addresses->create($attributes);
     }
 
     public function update($id, array $attributes)
     {
-        return $this->addresses->update($id, $attributes);
+        $chef = $this->addresses->findOrFail($id);
+        return $this->addresses->update($chef, $attributes);
     }
 
     public function delete($id)

@@ -35,7 +35,8 @@ class ChefServiceTagService
 
     public function update($id, array $attributes)
     {
-        return $this->serviceTags->update($id, $attributes);
+        $serviceTag = $this->serviceTags->findOrFail($id);
+        return $this->serviceTags->update($serviceTag, $attributes);
     }
 
     public function delete($id)

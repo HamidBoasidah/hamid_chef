@@ -426,6 +426,15 @@
     "addressUpdateFailed": "فشل تحديث العنوان",
     "addressDeletedSuccessfully": "تم حذف العنوان بنجاح",
     "addressDeletionFailed": "فشل حذف العنوان"
+    ,
+    "showAddress": "عرض العنوان",
+    "activate": "تفعيل",
+    "deactivate": "تعطيل",
+    "addressActivatedSuccessfully": "تم تفعيل العنوان بنجاح",
+    "addressDeactivatedSuccessfully": "تم تعطيل العنوان بنجاح",
+    "isDefault": "افتراضي",
+    "setAsDefault": "تعيين كعناوين افتراضية",
+    "addressSetAsDefaultSuccessfully": "تم تعيين العنوان كافتراضي بنجاح"
   },
 
   "buttons": {

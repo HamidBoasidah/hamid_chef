@@ -35,7 +35,8 @@ class TagService
 
     public function update($id, array $attributes)
     {
-        return $this->tags->update($id, $attributes);
+        $tag = $this->tags->findOrFail($id);
+        return $this->tags->update($tag, $attributes);
     }
 
     public function delete($id)
