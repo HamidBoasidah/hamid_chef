@@ -2,19 +2,23 @@
 
 namespace App\Repositories\Eloquent;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Contracts\BaseRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
+    /**
+     * الموديل الأساسي للـ Repository
+     */
     protected Model $model;
 
     /**
      * العلاقات التي تُحمَّل تلقائيًا مع كل استعلام على هذا الـ Repository
+     * إذا كانت null في الدوال العامة ⇒ تُستخدم هذه العلاقات
      */
     protected array $defaultWith = [];
 
@@ -29,6 +33,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
      * - []    => بدون علاقات
      * - array => استعمل هذه العلاقات فقط
      */
+
     /*
     استعلام خفيف بدون أي علاقات (مثلاً count):
     $count = $this->addresses->query([])->count();
@@ -39,8 +44,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
     $addresses = $this->addresses->paginate(10, ['governorate', 'district']);
     // هنا ستُستخدم العلاقات هذه فقط، بدون defaultWith (لأننا حدّدناها يدويًا)
     */
-
-
     protected function makeQuery(?array $with = null): Builder
     {
         if ($with === null) {
@@ -50,48 +53,48 @@ abstract class BaseRepository implements BaseRepositoryInterface
             // المستخدم يحدد بالضبط ما يريد (أو لا شيء)
             $relations = $with;
         }
-    
+
         $query = $this->model->newQuery();
-    
-        if (! empty($relations)) {
+
+        if (!empty($relations)) {
             $query->with($relations);
         }
-    
+
         return $query;
     }
 
     /**
      * إن احتجت Query خام (تستخدمه في أماكن أخرى)
      */
-    public function query(array $with = []): Builder
+    public function query(?array $with = null): Builder
     {
         return $this->makeQuery($with);
     }
 
-    public function all(array $with = [])
+    public function all(?array $with = null)
     {
         return $this->makeQuery($with)->latest()->get();
     }
 
-    public function paginate(int $perPage = 15, array $with = [])
+    public function paginate(int $perPage = 10, ?array $with = null)
     {
         return $this->makeQuery($with)->latest()->paginate($perPage);
     }
 
-    public function find(int|string $id, array $with = [])
+    public function find(int|string $id, ?array $with = null)
     {
         return $this->makeQuery($with)->find($id);
     }
 
-    public function findOrFail(int|string $id, array $with = [])
+    public function findOrFail(int|string $id, ?array $with = null)
     {
         return $this->makeQuery($with)->findOrFail($id);
     }
 
     /**
-     * سجلات خاصة بمستخدم معيّن (يعتمد على وجود user_id)
+     * سجلات خاصة بمستخدم معيّن (يعتمد على وجود user_id في الجدول)
      */
-    public function forUser(int $userId, array $with = []): Builder
+    public function forUser(int $userId, ?array $with = null): Builder
     {
         return $this->makeQuery($with)->where('user_id', $userId);
     }
@@ -99,7 +102,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     /**
      * جلب سجل واحد يخص مستخدم معيّن أو يرمي ModelNotFoundException
      */
-    public function findForUser(int|string $id, int $userId, array $with = [])
+    public function findForUser(int|string $id, int $userId, ?array $with = null)
     {
         return $this->forUser($userId, $with)->findOrFail($id);
     }
@@ -148,15 +151,19 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $record;
     }
 
-    // handleFileUploads + storePrivateFile + deletePrivateFile كما هي
+    /**
+     * يعالج رفع الملفات ويستبدل كائن الملف بالمسار.
+     */
     protected function handleFileUploads(array $attributes, ?Model $record = null): array
     {
         foreach ($attributes as $key => &$value) {
             if ($value instanceof UploadedFile) {
+                // في حالة التحديث، احذف الملف القديم إذا كان موجودًا
                 if ($record && $record->{$key} && Storage::disk('public')->exists($record->{$key})) {
                     Storage::disk('public')->delete($record->{$key});
                 }
 
+                // تخزين الملف باسم UUID داخل مجلد باسم جدول الموديل
                 $filename = (string) Str::uuid() . '.' . $value->getClientOriginalExtension();
                 $path = $value->storeAs($this->model->getTable(), $filename, 'public');
 
@@ -167,6 +174,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $attributes;
     }
 
+    /**
+     * تخزين ملف خاص على disk local (storage/app)
+     */
     protected function storePrivateFile(UploadedFile $file, ?string $oldPath = null, string $directory = 'private'): ?string
     {
         if (!$file->isValid()) {
@@ -186,6 +196,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $storedPath;
     }
 
+    /**
+     * حذف ملف من التخزين الخاص (local disk) إن وجد.
+     */
     protected function deletePrivateFile(?string $path): bool
     {
         if (!$path) {
