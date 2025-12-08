@@ -7,6 +7,9 @@ use App\Repositories\Eloquent\BaseRepository;
 
 class AddressRepository extends BaseRepository
 {
+    /**
+     * العلاقات التي نحتاجها تقريبًا في كل مكان (Admin + API)
+     */
     protected array $defaultWith = [
         'user:id,first_name,last_name',
         'governorate:id,name_ar,name_en',
@@ -19,5 +22,5 @@ class AddressRepository extends BaseRepository
         parent::__construct($model);
     }
 
-    // ما نحتاج نضيف أي شيء آخر هنا
+    // لا حاجة لأي دوال إضافية هنا الآن
 }
