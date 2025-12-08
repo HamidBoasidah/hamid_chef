@@ -19,4 +19,5 @@ class AddressRepository extends BaseRepository
         parent::__construct($model);
     }
 
+    // ما نحتاج نضيف أي شيء آخر هنا
 }
