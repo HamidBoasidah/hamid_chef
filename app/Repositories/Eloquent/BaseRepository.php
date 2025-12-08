@@ -100,6 +100,26 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
+     * جميع السجلات الخاصة بمستخدم معيّن
+     */
+    public function allForUser(int $userId, ?array $with = null)
+    {
+        return $this->forUser($userId, $with)
+            ->latest()
+            ->get();
+    }
+    
+    /**
+     * ترقيم (paginate) لسجلات مستخدم معيّن
+     */
+    public function paginateForUser(int $userId, int $perPage = 10, ?array $with = null)
+    {
+        return $this->forUser($userId, $with)
+            ->latest()
+            ->paginate($perPage);
+    }
+
+    /**
      * جلب سجل واحد يخص مستخدم معيّن أو يرمي ModelNotFoundException
      */
     public function findForUser(int|string $id, int $userId, ?array $with = null)
