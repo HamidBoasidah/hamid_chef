@@ -1,0 +1,58 @@
+{
+  "info": {
+    "name": "Set Default Address",
+    "_postman_id": "set-default-address-collection",
+    "description": "Postman request to set an address as default for the authenticated user.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Set Default Address (API)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/addresses/{{addressId}}/set-default",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "addresses",
+            "{{addressId}}",
+            "set-default"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": "<YOUR_BEARER_TOKEN>"
+    },
+    {
+      "key": "addressId",
+      "value": "1"
+    }
+  ]
+}

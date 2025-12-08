@@ -105,4 +105,14 @@ class AddressController extends Controller
         $addressService->deactivate($id);
         return back()->with('success', 'Address deactivated successfully');
     }
+
+    public function setDefault(AddressService $addressService, $id)
+    {
+        // Admin can set any address as default for its owner
+        $address = $addressService->find($id);
+
+        $addressService->setDefaultForUser($id, $address->user_id);
+
+        return back()->with('success', 'Address set as default successfully');
+    }
 }

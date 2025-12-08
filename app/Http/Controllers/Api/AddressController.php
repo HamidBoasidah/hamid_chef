@@ -203,6 +203,27 @@ class AddressController extends Controller
     }
 
     /**
+     * تعيين عنوان افتراضي للمستخدم الحالي
+     */
+    public function setDefault(AddressService $addressService, Request $request, $id)
+    {
+        try {
+            $address = $addressService->findForUser($id, $request->user()->id);
+
+            $this->authorize('update', $address);
+
+            $updated = $addressService->setDefaultForUser($id, $request->user()->id);
+
+            return $this->updatedResponse(
+                AddressDTO::fromModel($updated)->toArray(),
+                'تم تعيين العنوان كافتراضي'
+            );
+        } catch (ModelNotFoundException) {
+            $this->throwNotFoundException('العنوان المطلوب غير موجود');
+        }
+    }
+
+    /**
      * الحقول النصّية التي يمكن البحث فيها عبر CanFilter
      */
     protected function getSearchableFields(): array

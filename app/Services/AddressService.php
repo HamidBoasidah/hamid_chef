@@ -56,7 +56,17 @@ class AddressService
             $attributes['user_id'] = Auth::id();
         }
 
-        return $this->addresses->create($attributes);
+        $created = $this->addresses->create($attributes);
+
+        // If the new address should be default, ensure it's set as default for the user
+        if (!empty($attributes['is_default'])) {
+            // Use the created record's user_id (in case it was injected)
+            $this->setDefaultForUser($created->id, $created->user_id);
+            // reload the created model with default relations
+            return $this->addresses->findOrFail($created->id);
+        }
+
+        return $created;
     }
 
     /**
@@ -72,6 +82,13 @@ class AddressService
      */
     public function updateModel(Model $address, array $attributes)
     {
+        // If the update requests this address to become the default,
+        // perform the atomic default flip using the service method so other
+        // addresses are unset. Otherwise perform a normal update.
+        if (array_key_exists('is_default', $attributes) && $attributes['is_default']) {
+            return $this->setDefaultForUser($address->id, $address->user_id);
+        }
+
         return $this->addresses->updateModel($address, $attributes);
     }
 
@@ -119,5 +136,32 @@ class AddressService
     public function findForUser(int|string $id, int $userId, ?array $with = null)
     {
         return $this->addresses->findForUser($id, $userId, $with);
+    }
+
+    /**
+     * Set the given address as the default for the specified user.
+     * This will unset is_default on all other addresses of the user and
+     * mark the target address as default. Throws ModelNotFoundException
+     * if the address does not belong to the user.
+     *
+     * @param int|string $id
+     * @param int $userId
+     * @return \App\Models\Address
+     */
+    public function setDefaultForUser(int|string $id, int $userId)
+    {
+        return DB::transaction(function () use ($id, $userId) {
+            // unset default flag for all this user's addresses
+            $this->addresses->forUser($userId)->update(['is_default' => false]);
+
+            // ensure the address belongs to this user (will throw ModelNotFoundException if not)
+            $address = $this->addresses->findForUser($id, $userId);
+
+            // mark the chosen address as default
+            $this->addresses->updateModel($address, ['is_default' => true]);
+
+            // return fresh model
+            return $this->addresses->findOrFail($address->id);
+        });
     }
 }

@@ -181,7 +181,7 @@
         <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ t('common.status') }}</h2>
       </div>
       <div class="p-4 sm:p-6">
-        <label for="toggle-active" class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400">
+          <label for="toggle-active" class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400">
           <div class="relative">
             <input type="checkbox" id="toggle-active" class="sr-only" v-model="form.is_active" />
             <div class="block h-6 w-11 rounded-full" :class="form.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
@@ -197,6 +197,14 @@
             {{ form.is_active ? t('common.active') : t('common.inactive') }}
           </span>
         </label>
+          <label for="toggle-default" class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400 mt-3">
+            <div class="relative">
+              <input type="checkbox" id="toggle-default" class="sr-only" v-model="form.is_default" />
+              <div class="block h-6 w-11 rounded-full" :class="form.is_default ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
+              <div :class="form.is_default ? 'translate-x-full' : 'translate-x-0'" class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-theme-sm duration-300 ease-linear"></div>
+            </div>
+            <span class="text-sm text-gray-700 dark:text-gray-400">{{ t('addresses.setAsDefault') }}</span>
+          </label>
       </div>
     </div>
 
@@ -249,6 +257,7 @@ const form = useForm({
   floor_number: '',
   apartment_number: '',
   is_active: true,
+  is_default: false,
 })
 
 const availableDistricts = computed(() => {

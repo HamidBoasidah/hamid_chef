@@ -1,0 +1,57 @@
+{
+  "info": {
+    "name": "Update Address",
+    "_postman_id": "update-address-collection",
+    "description": "A small Postman collection to update an address via the API.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Update Address (API)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Authorization",
+            "value": "Bearer {{token}}",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"label\": \"Home - updated\",\n  \"address\": \"123 New Street, Apt 4\",\n  \"governorate_id\": 5,\n  \"district_id\": 12,\n  \"area_id\": 34,\n  \"street\": \"New Street\",\n  \"building_number\": 10,\n  \"floor_number\": 2,\n  \"apartment_number\": 4,\n  \"is_active\": true\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/addresses/{{addressId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "addresses",
+            "{{addressId}}"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000"
+    },
+    {
+      "key": "token",
+      "value": "<YOUR_BEARER_TOKEN>"
+    },
+    {
+      "key": "addressId",
+      "value": "1"
+    }
+  ]
+}

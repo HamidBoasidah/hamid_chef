@@ -8,6 +8,7 @@
     "deleteConfirmation": "Are you sure you want to delete this user?",
     "deleteKycConfirmation": "Are you sure you want to delete this KYC record?",
     "deleteChefConfirmation": "Are you sure you want to delete this chef?",
+    "deleteAddressConfirmation": "Are you sure you want to delete this address?",
     "notAuthorized": "You are not authorized to perform this action.",
     "notAuthorizedDelete": "You are not authorized to perform delete operation."
   },
@@ -329,6 +330,7 @@
     "addressUpdateFailed": "Failed to update address",
     "addressDeletedSuccessfully": "Address deleted successfully",
     "addressDeletionFailed": "Failed to delete address"
+    ,"setAsDefault": "Set as default"
   },
 
   "buttons": {

@@ -114,6 +114,9 @@ Route::middleware('auth:admin')
         Route::patch('addresses/{id}/deactivate', [AddressController::class, 'deactivate'])
             ->name('addresses.deactivate');
 
+        Route::patch('addresses/{id}/set-default', [AddressController::class, 'setDefault'])
+            ->name('addresses.setDefault');
+
         // Users
         Route::resource('users', UserController::class)
             ->names('users');

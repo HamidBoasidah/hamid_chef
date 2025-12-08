@@ -58,6 +58,7 @@
     "deleteGovernorateConfirmation": "هل أنت متأكد أنك تريد حذف هذه المحافظة؟",
     "deleteDistrictConfirmation": "هل أنت متأكد أنك تريد حذف هذه المديرية؟",
     "deleteAreaConfirmation": "هل أنت متأكد أنك تريد حذف هذه المنطقة؟",
+    "deleteAddressConfirmation": "هل أنت متأكد أنك تريد حذف هذا العنوان؟",
     "deleteRoleConfirmation": "هل أنت متأكد أنك تريد حذف هذا الدور؟",
     "notAuthorized": "غير مصرح لك"
     ,"deleteChefConfirmation": "هل أنت متأكد أنك تريد حذف هذا الطاهي؟"
@@ -384,7 +385,8 @@
     "status": "الحالة",
     "active": "نشطة",
     "inactive": "غير نشطة",
-    "area": "المنطقة"
+    "area": "المنطقة",
+    "setAsDefault": "تعيين كافتراضي"
   },
   "profile": {
     "edit": "تعديل",
