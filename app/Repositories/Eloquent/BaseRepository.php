@@ -24,19 +24,39 @@ abstract class BaseRepository implements BaseRepositoryInterface
     }
 
     /**
-     * يبني Query مع دمج العلاقات الافتراضية + أي علاقات إضافية تُمرَّر
+     * يبني Query مع تحكم كامل في العلاقات:
+     * - null  => استخدم defaultWith
+     * - []    => بدون علاقات
+     * - array => استعمل هذه العلاقات فقط
      */
-    protected function makeQuery(array $with = []): Builder
+    /*
+    استعلام خفيف بدون أي علاقات (مثلاً count):
+    $count = $this->addresses->query([])->count();
+    // هنا [] تعني "لا تستخدِم defaultWith"
+    */
+    /*
+    استعلام بعلاقات مختلفة عن الافتراضية:
+    $addresses = $this->addresses->paginate(10, ['governorate', 'district']);
+    // هنا ستُستخدم العلاقات هذه فقط، بدون defaultWith (لأننا حدّدناها يدويًا)
+    */
+
+
+    protected function makeQuery(?array $with = null): Builder
     {
-        // دمج defaultWith مع العلاقات الإضافية بدون تكرار
-        $relations = array_values(array_unique(array_merge($this->defaultWith, $with)));
-
+        if ($with === null) {
+            // استخدم العلاقات الافتراضية
+            $relations = $this->defaultWith;
+        } else {
+            // المستخدم يحدد بالضبط ما يريد (أو لا شيء)
+            $relations = $with;
+        }
+    
         $query = $this->model->newQuery();
-
+    
         if (! empty($relations)) {
             $query->with($relations);
         }
-
+    
         return $query;
     }
 
