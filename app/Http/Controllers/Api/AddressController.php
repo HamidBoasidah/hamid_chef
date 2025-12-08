@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Services\AddressService;
 use App\DTOs\AddressDTO;
 use App\Http\Requests\StoreAddressRequest;
@@ -11,6 +10,9 @@ use App\Http\Requests\UpdateAddressRequest;
 use App\Http\Traits\ExceptionHandler;
 use App\Http\Traits\SuccessResponse;
 use App\Http\Traits\CanFilter;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\QueryException;
 
 class AddressController extends Controller
 {
@@ -21,13 +23,18 @@ class AddressController extends Controller
         $this->middleware('auth:sanctum');
     }
 
+    /**
+     * عرض قائمة عناوين المستخدم الحالي مع فلاتر وترقيم
+     */
     public function index(Request $request, AddressService $addressService)
     {
         $perPage = (int) $request->get('per_page', 10);
-        $userId = $request->user()->id;
+        $userId  = $request->user()->id;
 
+        // Query لعناوين هذا المستخدم فقط (يستفيد من defaultWith في AddressRepository)
         $query = $addressService->getQueryForUser($userId);
 
+        // تطبيق الفلاتر العامة (بحث + مفاتيح خارجية)
         $query = $this->applyFilters(
             $query,
             $request,
@@ -36,6 +43,8 @@ class AddressController extends Controller
         );
 
         $addresses = $query->latest()->paginate($perPage);
+
+        // تحويل النتائج إلى DTO خفيفة للـ index
         $addresses->getCollection()->transform(function ($address) {
             return AddressDTO::fromModel($address)->toIndexArray();
         });
@@ -43,9 +52,15 @@ class AddressController extends Controller
         return $this->collectionResponse($addresses, 'تم جلب قائمة العناوين بنجاح');
     }
 
+    /**
+     * إنشاء عنوان جديد للمستخدم الحالي
+     */
     public function store(StoreAddressRequest $request, AddressService $addressService)
     {
         $data = $request->validated();
+
+        // إجبارياً نربط العنوان بالمستخدم الحالي حتى لو أرسل user_id من العميل
+        $data['user_id'] = $request->user()->id;
 
         $address = $addressService->create($data);
 
@@ -55,109 +70,141 @@ class AddressController extends Controller
         );
     }
 
+    /**
+     * عرض عنوان واحد للمستخدم الحالي
+     */
     public function show(AddressService $addressService, Request $request, $id)
     {
         try {
-            $address = $addressService->findForUser($id, $request->user()->id, [
-                'governorate', 'district', 'area'
-            ]);
-            
+            $address = $addressService->findForUser(
+                $id,
+                $request->user()->id,
+                // ممكن تمرّر null وتخلي defaultWith يتكفل بالباقي
+                ['governorate', 'district', 'area']
+            );
+
             $this->authorize('view', $address);
+
             return $this->resourceResponse(
                 AddressDTO::fromModel($address)->toArray(),
                 'تم جلب بيانات العنوان بنجاح'
             );
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+        } catch (ModelNotFoundException) {
             $this->throwNotFoundException('العنوان المطلوب غير موجود');
         }
     }
 
+    /**
+     * تحديث عنوان يخص المستخدم الحالي
+     */
     public function update(UpdateAddressRequest $request, AddressService $addressService, $id)
     {
         try {
             $data = $request->validated();
-            $address = $addressService->findForUser($id, $request->user()->id, [
-                'governorate', 'district', 'area'
-            ]);
-            
+
+            // أولاً: نجلب العنوان المملوك للمستخدم الحالي
+            $address = $addressService->findForUser(
+                $id,
+                $request->user()->id,
+                ['governorate', 'district', 'area']
+            );
+
+            // ثانياً: نتحقق من الـ Policy
             $this->authorize('update', $address);
-            
+
+            // نتأكد أن العنوان سيبقى منسوباً للمستخدم الحالي
             $data['user_id'] = $request->user()->id;
 
+            // ثالثاً: نحدّث نفس الـ Model (بدون إعادة استعلام جديد)
             $updated = $addressService->updateModel($address, $data);
 
             return $this->updatedResponse(
                 AddressDTO::fromModel($updated)->toArray(),
                 'تم تحديث العنوان بنجاح'
             );
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+        } catch (ModelNotFoundException) {
             $this->throwNotFoundException('العنوان المطلوب غير موجود');
         }
     }
 
+    /**
+     * حذف عنوان يخص المستخدم الحالي (مع التحقق من الحجوزات)
+     */
     public function destroy(AddressService $addressService, Request $request, $id)
     {
         $address = null;
-        
+
         try {
             $address = $addressService->findForUser($id, $request->user()->id);
-            
+
             $this->authorize('delete', $address);
 
-            // Check if address has related bookings
+            // منع حذف عنوان مرتبط بحجوزات
             if (method_exists($address, 'bookings') && $address->bookings()->exists()) {
                 $this->throwResourceInUseException('لا يمكن حذف عنوان مرتبط بحجوزات');
             }
 
-            $addressService->delete($id);
+            $addressService->delete($address->id);
+
             return $this->deletedResponse('تم حذف العنوان بنجاح');
-            
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+        } catch (ModelNotFoundException) {
             $this->throwNotFoundException('العنوان المطلوب غير موجود');
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             if ($address) {
                 $this->handleDatabaseException($e, $address, [
-                    'bookings' => 'حجوزات'
+                    'bookings' => 'حجوزات',
                 ]);
             }
+
             throw $e;
         }
     }
 
+    /**
+     * تفعيل عنوان يخص المستخدم الحالي
+     */
     public function activate(AddressService $addressService, Request $request, $id)
     {
         try {
             $address = $addressService->findForUser($id, $request->user()->id);
-            
+
             $this->authorize('activate', $address);
 
-            $activated = $addressService->activate($id);
+            $activated = $addressService->activate($address->id);
+
             return $this->activatedResponse(
-                AddressDTO::fromModel($activated)->toArray(), 
+                AddressDTO::fromModel($activated)->toArray(),
                 'تم تفعيل العنوان بنجاح'
             );
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+        } catch (ModelNotFoundException) {
             $this->throwNotFoundException('العنوان المطلوب غير موجود');
         }
     }
 
+    /**
+     * تعطيل عنوان يخص المستخدم الحالي
+     */
     public function deactivate(AddressService $addressService, Request $request, $id)
     {
         try {
             $address = $addressService->findForUser($id, $request->user()->id);
-            
+
             $this->authorize('deactivate', $address);
 
-            $deactivated = $addressService->deactivate($id);
+            $deactivated = $addressService->deactivate($address->id);
+
             return $this->deactivatedResponse(
-                AddressDTO::fromModel($deactivated)->toArray(), 
+                AddressDTO::fromModel($deactivated)->toArray(),
                 'تم تعطيل العنوان بنجاح'
             );
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException) {
+        } catch (ModelNotFoundException) {
             $this->throwNotFoundException('العنوان المطلوب غير موجود');
         }
     }
 
+    /**
+     * الحقول النصّية التي يمكن البحث فيها عبر CanFilter
+     */
     protected function getSearchableFields(): array
     {
         return [
@@ -170,14 +217,17 @@ class AddressController extends Controller
         ];
     }
 
+    /**
+     * الفلاتر الخاصة بالمفاتيح الخارجية والقيم المنطقية
+     */
     protected function getForeignKeyFilters(): array
     {
         return [
             'governorate_id' => 'governorate_id',
-            'district_id' => 'district_id',
-            'area_id' => 'area_id',
-            'is_default' => 'is_default',
-            'is_active' => 'is_active',
+            'district_id'    => 'district_id',
+            'area_id'        => 'area_id',
+            'is_default'     => 'is_default',
+            'is_active'      => 'is_active',
         ];
     }
 }
