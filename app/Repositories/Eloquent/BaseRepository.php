@@ -3,6 +3,7 @@
 namespace App\Repositories\Eloquent;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use App\Repositories\Contracts\BaseRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -12,34 +13,75 @@ abstract class BaseRepository implements BaseRepositoryInterface
 {
     protected Model $model;
 
+    /**
+     * العلاقات التي تُحمَّل تلقائيًا مع كل استعلام على هذا الـ Repository
+     */
+    protected array $defaultWith = [];
+
     public function __construct(Model $model)
     {
         $this->model = $model;
     }
 
-    public function query()
+    /**
+     * يبني Query مع دمج العلاقات الافتراضية + أي علاقات إضافية تُمرَّر
+     */
+    protected function makeQuery(array $with = []): Builder
     {
-        return $this->model->newQuery();
+        // دمج defaultWith مع العلاقات الإضافية بدون تكرار
+        $relations = array_values(array_unique(array_merge($this->defaultWith, $with)));
+
+        $query = $this->model->newQuery();
+
+        if (! empty($relations)) {
+            $query->with($relations);
+        }
+
+        return $query;
+    }
+
+    /**
+     * إن احتجت Query خام (تستخدمه في أماكن أخرى)
+     */
+    public function query(array $with = []): Builder
+    {
+        return $this->makeQuery($with);
     }
 
     public function all(array $with = [])
     {
-        return $this->query()->with($with)->latest()->get();
+        return $this->makeQuery($with)->latest()->get();
     }
 
     public function paginate(int $perPage = 15, array $with = [])
     {
-        return $this->query()->with($with)->latest()->paginate($perPage);
+        return $this->makeQuery($with)->latest()->paginate($perPage);
     }
 
     public function find(int|string $id, array $with = [])
     {
-        return $this->query()->with($with)->find($id);
+        return $this->makeQuery($with)->find($id);
     }
 
     public function findOrFail(int|string $id, array $with = [])
     {
-        return $this->query()->with($with)->findOrFail($id);
+        return $this->makeQuery($with)->findOrFail($id);
+    }
+
+    /**
+     * سجلات خاصة بمستخدم معيّن (يعتمد على وجود user_id)
+     */
+    public function forUser(int $userId, array $with = []): Builder
+    {
+        return $this->makeQuery($with)->where('user_id', $userId);
+    }
+
+    /**
+     * جلب سجل واحد يخص مستخدم معيّن أو يرمي ModelNotFoundException
+     */
+    public function findForUser(int|string $id, int $userId, array $with = [])
+    {
+        return $this->forUser($userId, $with)->findOrFail($id);
     }
 
     public function create(array $attributes)
@@ -51,6 +93,16 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function update(int|string $id, array $attributes)
     {
         $record = $this->findOrFail($id);
+        $attributes = $this->handleFileUploads($attributes, $record);
+        $record->update($attributes);
+        return $record;
+    }
+
+    /**
+     * مفيد للـ API لما يكون الـ Model جاهز عندك
+     */
+    public function updateModel(Model $record, array $attributes)
+    {
         $attributes = $this->handleFileUploads($attributes, $record);
         $record->update($attributes);
         return $record;
@@ -76,41 +128,25 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $record;
     }
 
-    /**
-     * يعالج رفع الملفات ويستبدل كائن الملف بالمسار.
-     *
-     * @param array $attributes
-     * @param Model|null $record السجل الحالي (يستخدم في التحديث لحذف الملف القديم)
-     * @return array
-     */
+    // handleFileUploads + storePrivateFile + deletePrivateFile كما هي
     protected function handleFileUploads(array $attributes, ?Model $record = null): array
     {
         foreach ($attributes as $key => &$value) {
             if ($value instanceof UploadedFile) {
-                // في حالة التحديث، احذف الملف القديم إذا كان موجودًا
                 if ($record && $record->{$key} && Storage::disk('public')->exists($record->{$key})) {
                     Storage::disk('public')->delete($record->{$key});
                 }
 
-                // قم بتخزين الملف الجديد في مجلد يعتمد على اسم جدول النموذج باستخدام اسم ملف فريد UUID
                 $filename = (string) Str::uuid() . '.' . $value->getClientOriginalExtension();
                 $path = $value->storeAs($this->model->getTable(), $filename, 'public');
 
-                $value = $path; // استبدل كائن الملف بالمسار
+                $value = $path;
             }
         }
 
         return $attributes;
     }
 
-    /**
-     * يخزن ملفًا خاصًا في تخزين محلي (storage/app) باستخدام اسم ملف UUID.
-     *
-     * @param UploadedFile $file
-     * @param string|null $oldPath
-     * @param string $directory مجلد داخل storage/app، مثال: 'private' أو 'private/kyc'
-     * @return string|null
-     */
     protected function storePrivateFile(UploadedFile $file, ?string $oldPath = null, string $directory = 'private'): ?string
     {
         if (!$file->isValid()) {
@@ -130,9 +166,6 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $storedPath;
     }
 
-    /**
-     * يحذف ملفًا من التخزين الخاص (local disk) إن وجد.
-     */
     protected function deletePrivateFile(?string $path): bool
     {
         if (!$path) {
