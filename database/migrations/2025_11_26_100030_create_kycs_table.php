@@ -27,7 +27,9 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique('user_id');
+            // Unique per user for active records only (deleted_at NULL). Allow multiple
+            // historical records once soft-deleted by including deleted_at in index.
+            $table->unique(['user_id', 'deleted_at']);
         });
     }
 

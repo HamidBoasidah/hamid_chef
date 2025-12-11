@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use App\Exceptions\ValidationException as AppValidationException;
 
 class UpdateKycRequest extends FormRequest
 {
@@ -22,8 +24,8 @@ class UpdateKycRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'nullable|in:pending,approved,rejected',
-            'rejected_reason' => 'nullable|string|required_if:status,rejected',
+            // status is managed by admins only and must not be accepted from API users
+            // Do not include 'status' or 'rejected_reason' here so clients cannot set it.
             'is_verified' => 'nullable|boolean',
             'verified_at' => 'nullable|date',
             'full_name' => 'nullable|string|max:255',
@@ -36,5 +38,14 @@ class UpdateKycRequest extends FormRequest
             'created_by' => 'nullable|exists:users,id',
             'updated_by' => 'nullable|exists:users,id',
         ];
+    }
+
+    /**
+     * Convert failed validation into our application ValidationException so
+     * API responses keep a consistent JSON shape.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw AppValidationException::withMessages($validator->errors()->toArray());
     }
 }

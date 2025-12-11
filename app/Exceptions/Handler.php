@@ -55,7 +55,7 @@ class Handler extends ExceptionHandler
     protected function handleApiException(Request $request, Throwable $e): JsonResponse
     {
         // Handle custom exceptions (new base name + legacy alias)
-        if ($e instanceof \App\Exceptions\ApplicationException || $e instanceof \App\Exceptions\StationManagementException) {
+        if ($e instanceof \App\Exceptions\ApplicationException || $e instanceof \App\Exceptions\ApplicationException) {
             return $e->render($request);
         }
 

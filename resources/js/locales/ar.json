@@ -60,8 +60,9 @@
     "deleteAreaConfirmation": "هل أنت متأكد أنك تريد حذف هذه المنطقة؟",
     "deleteAddressConfirmation": "هل أنت متأكد أنك تريد حذف هذا العنوان؟",
     "deleteRoleConfirmation": "هل أنت متأكد أنك تريد حذف هذا الدور؟",
-    "notAuthorized": "غير مصرح لك"
-    ,"deleteChefConfirmation": "هل أنت متأكد أنك تريد حذف هذا الطاهي؟"
+    "notAuthorized": "غير مصرح لك",
+    "deleteKycConfirmation": "هل أنت متأكد أنك تريد حذف سجل KYC هذا؟",
+    "deleteChefConfirmation": "هل أنت متأكد أنك تريد حذف هذا الطاهي؟"
   },
   "charts": {
     "lineChart": "مخطط خطي",
@@ -265,6 +266,10 @@
     "noEmail": "لا يوجد بريد إلكتروني",
     "noPhone": "لا يوجد رقم جوال",
     "noAddressProvided": "لا يوجد عنوان"
+    ,
+    "errors": {
+      "already_has_pending_or_approved": "لديك طلب KYC سابق قيد الانتظار أو مُوافق عليه. لا يمكنك تقديم طلب جديد إلا إذا رُفض الطلب السابق."
+    }
   },
   "activitylogs": {
     "add": "إضافة سجل نشاط",
@@ -435,7 +440,7 @@
     "addressActivatedSuccessfully": "تم تفعيل العنوان بنجاح",
     "addressDeactivatedSuccessfully": "تم تعطيل العنوان بنجاح",
     "isDefault": "افتراضي",
-    "setAsDefault": "تعيين كعناوين افتراضية",
+    "setAsDefault": "تعيين كعنوان افتراضي",
     "addressSetAsDefaultSuccessfully": "تم تعيين العنوان كافتراضي بنجاح"
   },
 

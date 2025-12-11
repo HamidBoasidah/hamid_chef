@@ -27,6 +27,15 @@ class Kyc extends BaseModel
     protected $casts = [
         'verified_at' => 'datetime',
         'date_of_birth' => 'date',
+        'is_verified' => 'boolean',
+    ];
+
+    /**
+     * Specify which file attributes should be stored privately (local storage).
+     * The BaseRepository will use this to decide between public vs private storage.
+     */
+    public array $privateFiles = [
+        'document_scan_copy',
     ];
 
     public function user(): BelongsTo

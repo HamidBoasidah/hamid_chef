@@ -13,6 +13,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('addresses/{address}/deactivate', [App\Http\Controllers\Api\AddressController::class, 'deactivate']);
     Route::post('addresses/{address}/set-default', [App\Http\Controllers\Api\AddressController::class, 'setDefault']);
 
+    // KYCs API
+    Route::apiResource('kycs', App\Http\Controllers\Api\KycController::class);
+    Route::get('kycs/{kyc}/document/view', [App\Http\Controllers\Api\KycController::class, 'viewDocument']);
+    Route::get('kycs/{kyc}/document/download', [App\Http\Controllers\Api\KycController::class, 'downloadDocument']);
+
 });
 
 

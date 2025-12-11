@@ -178,20 +178,82 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         foreach ($attributes as $key => &$value) {
             if ($value instanceof UploadedFile) {
-                // في حالة التحديث، احذف الملف القديم إذا كان موجودًا
-                if ($record && $record->{$key} && Storage::disk('public')->exists($record->{$key})) {
-                    Storage::disk('public')->delete($record->{$key});
+                // Determine storage strategy per-model / per-attribute:
+                // Priority:
+                // 1. If model defines method fileStorage(string $attribute) -> returns 'private'|'public'
+                // 2. If model has array $privateFiles and attribute is listed -> 'private'
+                // 3. If model has property $fileStorage = 'private' -> 'private'
+                // 4. Default: 'public'
+                $strategy = $this->getFileStorageForAttribute($key);
+
+                // capture previous path (if any) for cross-disk cleanup
+                $oldPath = $record && $record->{$key} ? $record->{$key} : null;
+
+                if ($strategy === 'private') {
+                    // If previous file existed on the public disk (previous strategy was public),
+                    // remove it so we don't leave orphaned files when switching strategies.
+                    if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+
+                    // storePrivateFile will remove the old private file if it exists
+                    $stored = $this->storePrivateFile($value, $oldPath, $this->model->getTable());
+                    $value = $stored;
+                } else {
+                    // public disk behavior (backwards-compatible)
+
+                    // If previous file existed on the local (private) disk, delete it to avoid orphaning.
+                    if ($oldPath && Storage::disk('local')->exists($oldPath)) {
+                        $this->deletePrivateFile($oldPath);
+                    }
+
+                    if ($oldPath && Storage::disk('public')->exists($oldPath)) {
+                        Storage::disk('public')->delete($oldPath);
+                    }
+
+                    // تخزين الملف باسم UUID داخل مجلد باسم جدول الموديل
+                    $filename = (string) Str::uuid() . '.' . $value->getClientOriginalExtension();
+                    $path = $value->storeAs($this->model->getTable(), $filename, 'public');
+
+                    $value = $path;
                 }
-
-                // تخزين الملف باسم UUID داخل مجلد باسم جدول الموديل
-                $filename = (string) Str::uuid() . '.' . $value->getClientOriginalExtension();
-                $path = $value->storeAs($this->model->getTable(), $filename, 'public');
-
-                $value = $path;
             }
         }
 
         return $attributes;
+    }
+
+    /**
+     * Determine storage strategy for a given attribute on the model.
+     * Returns 'private' or 'public'.
+     */
+    protected function getFileStorageForAttribute(string $attribute): string
+    {
+        // 1) model method
+        if (method_exists($this->model, 'fileStorage')) {
+            try {
+                $res = $this->model->fileStorage($attribute);
+                if (in_array($res, ['private', 'public'], true)) {
+                    return $res;
+                }
+            } catch (\Throwable $e) {
+                // ignore and fall back
+            }
+        }
+
+        // 2) per-attribute array on model
+        if (property_exists($this->model, 'privateFiles') && is_array($this->model->privateFiles)) {
+            if (in_array($attribute, $this->model->privateFiles, true)) {
+                return 'private';
+            }
+        }
+
+        // 3) global model preference
+        if (property_exists($this->model, 'fileStorage') && $this->model->fileStorage === 'private') {
+            return 'private';
+        }
+
+        return 'public';
     }
 
     /**

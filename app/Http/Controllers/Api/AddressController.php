@@ -13,6 +13,7 @@ use App\Http\Traits\CanFilter;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
+use App\Exceptions\ValidationException as AppValidationException;
 
 class AddressController extends Controller
 {
@@ -57,17 +58,21 @@ class AddressController extends Controller
      */
     public function store(StoreAddressRequest $request, AddressService $addressService)
     {
-        $data = $request->validated();
+        try {
+            $data = $request->validated();
 
-        // إجبارياً نربط العنوان بالمستخدم الحالي حتى لو أرسل user_id من العميل
-        $data['user_id'] = $request->user()->id;
+            // إجبارياً نربط العنوان بالمستخدم الحالي حتى لو أرسل user_id من العميل
+            $data['user_id'] = $request->user()->id;
 
-        $address = $addressService->create($data);
+            $address = $addressService->create($data);
 
-        return $this->createdResponse(
-            AddressDTO::fromModel($address)->toArray(),
-            'تم إنشاء العنوان بنجاح'
-        );
+            return $this->createdResponse(
+                AddressDTO::fromModel($address)->toArray(),
+                'تم إنشاء العنوان بنجاح'
+            );
+        } catch (AppValidationException $e) {
+            return $e->render($request);
+        }
     }
 
     /**
@@ -122,6 +127,8 @@ class AddressController extends Controller
                 AddressDTO::fromModel($updated)->toArray(),
                 'تم تحديث العنوان بنجاح'
             );
+        } catch (AppValidationException $e) {
+            return $e->render($request);
         } catch (ModelNotFoundException) {
             $this->throwNotFoundException('العنوان المطلوب غير موجود');
         }

@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use App\Exceptions\ValidationException as AppValidationException;
 
 class StoreAddressRequest extends FormRequest
 {
@@ -36,5 +38,14 @@ class StoreAddressRequest extends FormRequest
             'created_by' => 'nullable|exists:users,id',
             'updated_by' => 'nullable|exists:users,id',
         ];
+    }
+
+    /**
+     * Convert failed validation into our application ValidationException so API
+     * responses keep a consistent JSON shape.
+     */
+    protected function failedValidation(Validator $validator)
+    {
+        throw AppValidationException::withMessages($validator->errors()->toArray());
     }
 }

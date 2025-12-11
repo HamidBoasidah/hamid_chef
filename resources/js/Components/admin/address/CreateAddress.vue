@@ -22,6 +22,7 @@
               class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
             />
             <p v-if="form.errors.label" class="mt-1 text-sm text-error-500">{{ form.errors.label }}</p>
+            
           </div>
 
           <div>
@@ -181,30 +182,41 @@
         <h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ t('common.status') }}</h2>
       </div>
       <div class="p-4 sm:p-6">
-          <label for="toggle-active" class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400">
-          <div class="relative">
-            <input type="checkbox" id="toggle-active" class="sr-only" v-model="form.is_active" />
-            <div class="block h-6 w-11 rounded-full" :class="form.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
-            <div :class="form.is_active ? 'translate-x-full' : 'translate-x-0'" class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-theme-sm duration-300 ease-linear"></div>
+          <div class="flex items-center gap-6">
+            <label for="toggle-active" class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400">
+              <div class="relative">
+                <input type="checkbox" id="toggle-active" class="sr-only" v-model="form.is_active" />
+                <div class="block h-6 w-11 rounded-full" :class="form.is_active ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
+                <div :class="form.is_active ? 'translate-x-full' : 'translate-x-0'" class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-theme-sm duration-300 ease-linear"></div>
+              </div>
+              <span
+                class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
+                :class="{
+                  'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500': form.is_active,
+                  'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500': !form.is_active,
+                }"
+              >
+                {{ form.is_active ? t('common.active') : t('common.inactive') }}
+              </span>
+            </label>
+
+            <label for="is_default" class="flex gap-2 cursor-pointer select-none items-center text-sm font-medium text-gray-700 dark:text-gray-400">
+              <div class="relative">
+                <input type="checkbox" id="is_default" v-model="form.is_default" class="sr-only" />
+                <div
+                  :class="form.is_default ? 'border-brand-500 bg-brand-500' : 'bg-transparent border-gray-300 dark:border-gray-700'"
+                  class="flex h-5 w-5 items-center justify-center rounded-md border-[1.25px] hover:border-brand-500 dark:hover:border-brand-500"
+                >
+                  <span :class="form.is_default ? '' : 'opacity-0'">
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M11.6666 3.5L5.24992 9.91667L2.33325 7" stroke="white" stroke-width="1.94437" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+              {{ t('addresses.setAsDefault') }}
+            </label>
           </div>
-          <span
-            class="inline-flex items-center justify-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium"
-            :class="{
-              'bg-green-50 text-green-600 dark:bg-green-500/15 dark:text-green-500': form.is_active,
-              'bg-error-50 text-error-600 dark:bg-error-500/15 dark:text-error-500': !form.is_active,
-            }"
-          >
-            {{ form.is_active ? t('common.active') : t('common.inactive') }}
-          </span>
-        </label>
-          <label for="toggle-default" class="flex cursor-pointer select-none items-center gap-3 text-sm font-medium text-gray-700 dark:text-gray-400 mt-3">
-            <div class="relative">
-              <input type="checkbox" id="toggle-default" class="sr-only" v-model="form.is_default" />
-              <div class="block h-6 w-11 rounded-full" :class="form.is_default ? 'bg-brand-500 dark:bg-brand-500' : 'bg-gray-200 dark:bg-white/10'"></div>
-              <div :class="form.is_default ? 'translate-x-full' : 'translate-x-0'" class="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow-theme-sm duration-300 ease-linear"></div>
-            </div>
-            <span class="text-sm text-gray-700 dark:text-gray-400">{{ t('addresses.setAsDefault') }}</span>
-          </label>
       </div>
     </div>
 

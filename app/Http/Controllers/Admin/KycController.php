@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\DTOs\KycDTO;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreKycRequest;
-use App\Http\Requests\UpdateKycRequest;
+use App\Http\Requests\Admin\StoreKycRequest;
+use App\Http\Requests\Admin\UpdateKycRequest;
 use App\Models\Kyc;
 use App\Models\User;
 use App\Services\KycService;
@@ -63,7 +63,20 @@ class KycController extends Controller
             $data['document_scan_copy'] = $request->file('document_scan_copy');
         }
 
-        $kycService->create($data);
+        try {
+            $kycService->create($data);
+        } catch (\App\Exceptions\ValidationException $e) {
+            // For admin (Inertia/web) convert validation exception to redirect with errors
+            // so the UI can display the message similar to form validation.
+            $errors = [];
+            if (method_exists($e, 'errors')) {
+                $errors = $e->errors();
+            } else {
+                $errors = ['user_id' => $e->getMessage()];
+            }
+
+            return back()->withErrors($errors)->withInput();
+        }
 
         return redirect()->route('admin.kycs.index');
     }
