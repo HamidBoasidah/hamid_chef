@@ -94,7 +94,6 @@ trait SuccessResponse
         string $message = 'تم جلب البيانات بنجاح'
     ): JsonResponse {
         // إذا كانت البيانات عبارة عن Paginator أو LengthAwarePaginator.
-        // Hamid Update
         if ($collection instanceof \Illuminate\Pagination\Paginator || $collection instanceof \Illuminate\Pagination\LengthAwarePaginator) {
             $response = [
                 'success' => true,

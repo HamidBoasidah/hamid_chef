@@ -322,7 +322,7 @@ const menuGroups = computed(() =>
         {
           icon: UserCircleIcon,
           name: t('menu.profile'),
-          path: '/profile',
+          path: route('admin.profile'),
           permission: 'profile.view',
         },
         {

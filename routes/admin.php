@@ -64,7 +64,7 @@ Route::middleware('auth:admin')
     ->as('admin.')
     ->group(function () {
 
-                // Dashboard
+        // Dashboard
         Route::get('/dashboard', fn () => Inertia('Dashboard'))
             ->name('dashboard')
             ->middleware(RoutePermissions::can('dashboard.view'));

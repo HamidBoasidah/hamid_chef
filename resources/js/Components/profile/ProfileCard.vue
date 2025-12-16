@@ -4,22 +4,22 @@
       <div class="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div class="flex flex-col items-center w-full gap-6 xl:flex-row">
           <div
-            class="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800"
+            class="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800 flex items-center justify-center"
           >
-            <img src="/images/user/owner.jpg" alt="user" />
+            <img :src="user?.avatar ? `/storage/${rawUser.avatar}` : '/images/user/owner.jpg'" alt="User" class="w-full h-full object-cover object-center" />
           </div>
           <div class="order-3 xl:order-2">
             <h4
               class="mb-2 text-lg font-semibold text-center text-gray-800 dark:text-white/90 xl:text-left"
             >
-              {{ user?.name || t('user.name', { default: 'Hamid Boasidah' }) }}
+              {{ user?.name || t('user.name', { default: 'Code Brains' }) }}
             </h4>
             <div
               class="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left"
             >
               <p class="text-sm text-gray-500 dark:text-gray-400">{{ user?.bio || t('profile.labels.bio') }}</p>
               <div class="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ user?.location || t('profile.address.cityPlaceholder') }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ user?.address || t('profile.address.cityPlaceholder') }}</p>
             </div>
           </div>
           <div class="flex items-center order-2 gap-2 grow xl:order-3 xl:justify-end">
@@ -170,7 +170,7 @@
                     </label>
                     <input
                       type="text"
-                      value="https://www.facebook.com/PimjoHQ"
+                      v-model="form.facebook"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -183,7 +183,7 @@
                     </label>
                     <input
                       type="text"
-                      value="https://x.com/PimjoHQ"
+                      v-model="form.x"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -196,7 +196,7 @@
                     </label>
                     <input
                       type="text"
-                      value="https://www.linkedin.com/company/pimjo/posts/?feedView=all"
+                      v-model="form.linkedin"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -209,7 +209,7 @@
                     </label>
                     <input
                       type="text"
-                      value="https://instagram.com/PimjoHQ"
+                      v-model="form.instagram"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -229,7 +229,7 @@
                     </label>
                     <input
                       type="text"
-                      value="Musharof"
+                      v-model="form.first_name"
                       class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -242,7 +242,7 @@
                     </label>
                     <input
                       type="text"
-                      value="Chowdhury"
+                      v-model="form.last_name"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -255,7 +255,7 @@
                     </label>
                     <input
                       type="text"
-                      value="randomuser@pimjo.com"
+                      v-model="form.email"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -268,7 +268,7 @@
                     </label>
                     <input
                       type="text"
-                      value="+09 363 398 46"
+                      v-model="form.phone_number"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -281,7 +281,7 @@
                     </label>
                     <input
                       type="text"
-                      value="Team Manager"
+                      v-model="form.bio"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -312,14 +312,48 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import Modal from './Modal.vue'
 import { useI18n } from 'vue-i18n'
 import { usePage } from '@inertiajs/vue3'
 
 const { t } = useI18n()
 const page = usePage()
-const user = page.props.value?.auth?.user || null
+const rawUser = page.props.value?.auth?.user || page.props.auth?.user || null
+
+const user = computed(() => {
+  if (!rawUser) return null
+  return {
+    // prefer name attribute if model provides it, otherwise join first/last
+    name: rawUser.name || [rawUser.first_name, rawUser.last_name].filter(Boolean).join(' ') || null,
+    avatar: rawUser.avatar || null,
+    bio: rawUser.bio || null,
+    address: rawUser.address || null,
+    email: rawUser.email || null,
+    phone_number: rawUser.phone_number || null,
+    social: {
+      facebook: rawUser.facebook || null,
+      x: rawUser.x_url || null,
+      linkedin: rawUser.linkedin || null,
+      instagram: rawUser.instagram || null,
+    },
+    first_name: rawUser.first_name || null,
+    last_name: rawUser.last_name || null,
+  }
+})
+
+const form = reactive({
+  facebook: rawUser?.facebook || '',
+  x: rawUser?.x_url || '',
+  linkedin: rawUser?.linkedin || '',
+  instagram: rawUser?.instagram || '',
+  first_name: rawUser?.first_name || '',
+  last_name: rawUser?.last_name || '',
+  email: rawUser?.email || '',
+  phone_number: rawUser?.phone_number || '',
+  bio: rawUser?.bio || '',
+  address: rawUser?.address || '',
+})
 
 const isProfileInfoModal = ref(false)
 

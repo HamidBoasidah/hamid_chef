@@ -71,6 +71,7 @@
 								<option :value="null">{{ t('common.select') }}</option>
 								<option v-for="g in governorates" :key="g.id" :value="g.id">{{ locale === 'ar' ? (g.name_ar ?? g.name_en) : (g.name_en ?? g.name_ar) }}</option>
 							</select>
+							<p v-if="form.errors.governorate_id" class="mt-1 text-sm text-error-500">{{ form.errors.governorate_id }}</p>
 						</div>
 
 						<div>
@@ -79,6 +80,7 @@
 								<option :value="null">{{ t('common.select') }}</option>
 								<option v-for="d in availableDistricts" :key="d.id" :value="d.id">{{ locale === 'ar' ? (d.name_ar ?? d.name_en) : (d.name_en ?? d.name_ar) }}</option>
 							</select>
+							<p v-if="form.errors.district_id" class="mt-1 text-sm text-error-500">{{ form.errors.district_id }}</p>
 						</div>
 
 						<div>
@@ -87,6 +89,7 @@
 								<option :value="null">{{ t('common.select') }}</option>
 								<option v-for="a in filteredAreas" :key="a.id" :value="a.id">{{ locale === 'ar' ? (a.name_ar ?? a.name_en) : (a.name_en ?? a.name_ar) }}</option>
 							</select>
+							<p v-if="form.errors.area_id" class="mt-1 text-sm text-error-500">{{ form.errors.area_id }}</p>
 						</div>
 
 						<div>
@@ -97,10 +100,12 @@
 
 						<div class="md:col-span-1">
 							<ImageUploadBox v-model="form.logo" input-id="logo-upload" label="chefs.logo" />
+							<p v-if="form.errors.logo" class="mt-1 text-sm text-error-500">{{ form.errors.logo }}</p>
 						</div>
 
 						<div class="md:col-span-1">
 							<ImageUploadBox v-model="form.banner" input-id="banner-upload" label="chefs.banner" />
+							<p v-if="form.errors.banner" class="mt-1 text-sm text-error-500">{{ form.errors.banner }}</p>
 						</div>
 
 						<div class="md:col-span-2">
@@ -183,7 +188,18 @@ watch(() => form.district_id, () => {
 })
 
 function update() {
-	form.post(route('admin.chefs.update', props.chef.id), {
+	// إنشاء نسخة من البيانات للتعديل
+	const formData = { ...form.data() }
+	
+	// إذا كانت الصورة URL وليس ملف جديد، لا نرسلها
+	if (typeof formData.logo === 'string' && formData.logo.startsWith('/storage/')) {
+		delete formData.logo
+	}
+	if (typeof formData.banner === 'string' && formData.banner.startsWith('/storage/')) {
+		delete formData.banner
+	}
+	
+	form.transform(() => formData).post(route('admin.chefs.update', props.chef.id), {
 		onSuccess: () => success(t('chefs.chefUpdatedSuccessfully')),
 		onError: () => error(t('chefs.chefUpdateFailed')),
 		preserveScroll: true,

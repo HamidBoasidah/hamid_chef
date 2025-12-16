@@ -13,7 +13,7 @@
         </template>
       </span>
 
-      <span class="block font-medium text-theme-sm ltr:mr-1 rtl:ml-1">{{ user?.name || t('user.name', { default: 'Hamid Boasidah' }) }}</span>
+      <span class="block font-medium text-theme-sm ltr:mr-1 rtl:ml-1">{{ user?.name || t('user.name', { default: 'Code Brains' }) }}</span>
 
       <ChevronDownIcon :class="{ 'rotate-180': dropdownOpen }" />
     </button>
@@ -25,7 +25,7 @@
     >
           <div>
             <span class="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
-              {{ user?.name || t('user.name', { default: 'Hamid Boasidah' }) }}
+              {{ user?.name || t('user.name', { default: 'Code Brains' }) }}
             </span>
             <span class="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
               {{ user?.email || t('user.email', { default: 'randomuser@pimjo.com' }) }}

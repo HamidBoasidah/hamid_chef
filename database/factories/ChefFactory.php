@@ -19,8 +19,6 @@ class ChefFactory extends Factory
             'long_description' => $this->faker->paragraphs(3, true),
             'email' => $this->faker->unique()->safeEmail,
             'phone' => $this->faker->phoneNumber,
-            'logo' => null,
-            'banner' => null,
             'address' => $this->faker->address,
             'governorate_id' => \App\Models\Governorate::factory(),
             'district_id' => \App\Models\District::factory(),

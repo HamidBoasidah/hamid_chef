@@ -24,6 +24,7 @@
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :placeholder="t('profile.labels.firstName')"
               />
+              <p v-if="form.errors.first_name" class="mt-1 text-sm text-error-500">{{ form.errors.first_name }}</p>
             </div>
             <div>
               <label
@@ -38,6 +39,7 @@
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :placeholder="t('profile.labels.lastName')"
               />
+              <p v-if="form.errors.last_name" class="mt-1 text-sm text-error-500">{{ form.errors.last_name }}</p>
             </div>
             <!-- Email Input -->
             <div>
@@ -71,6 +73,7 @@
                   class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 pl-[62px] text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                 />
               </div>
+              <p v-if="form.errors.email" class="mt-1 text-sm text-error-500">{{ form.errors.email }}</p>
             </div>
             <!-- Phone Input with Prepended Country Code -->
             <div>
@@ -117,6 +120,7 @@
                   class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-3 pl-[84px] pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                 />
               </div>
+              <p v-if="form.errors.phone_number" class="mt-1 text-sm text-error-500">{{ form.errors.phone_number }}</p>
             </div>
             <!-- Phone Input with Prepended Country Code -->
             <div>
@@ -180,6 +184,7 @@
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 :placeholder="t('users.addressPlaceholder')"
               />
+              <p v-if="form.errors.address" class="mt-1 text-sm text-error-500">{{ form.errors.address }}</p>
             </div>
             <!-- End User Name Input -->
             <!-- Password Type Input -->
@@ -231,6 +236,7 @@
                   </svg>
                 </span>
               </div>
+              <p v-if="form.errors.password" class="mt-1 text-sm text-error-500">{{ form.errors.password }}</p>
             </div>
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
@@ -256,7 +262,7 @@
                   </svg>
                 </span>
               </div>
-              <p v-if="form.errors.password_confirmation" class="text-sm text-red-600">{{ form.errors.password_confirmation }}</p>
+              <p v-if="form.errors.password_confirmation" class="mt-1 text-sm text-error-500">{{ form.errors.password_confirmation }}</p>
             </div>
             <!-- End Password Type Input -->
           </div>
@@ -377,6 +383,7 @@
         input-id="product-image" 
         :initial-image="props.user.avatar ? `/storage/${props.user.avatar}` : (props.user.avatar_url ?? null)"
         label="users.userImage" />
+    <p v-if="form.errors.avatar" class="mt-1 text-sm text-error-500">{{ form.errors.avatar }}</p>
 
     <!-- Buttons -->
     <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">

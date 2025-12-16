@@ -40,8 +40,7 @@ class UserService
             unset($attributes['password']);
         }
         
-        $user = $this->users->findOrFail($id);
-        return $this->users->update($user, $attributes);
+        return $this->users->update($id, $attributes);
     }
 
     public function delete($id)

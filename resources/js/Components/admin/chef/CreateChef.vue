@@ -10,6 +10,7 @@
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('common.name') }}</label>
               <input v-model="form.name" type="text" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" :placeholder="t('chefs.namePlaceholder')" />
+              <p v-if="form.errors.name" class="mt-1 text-sm text-error-500">{{ form.errors.name }}</p>
             </div>
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('common.user') }}</label>
@@ -17,10 +18,12 @@
                 <option :value="null">{{ t('common.selectUser') }}</option>
                 <option v-for="user in users" :key="user.id" :value="user.id">{{ `${user.first_name} ${user.last_name} - ${user.email}` }}</option>
               </select>
+              <p v-if="form.errors.user_id" class="mt-1 text-sm text-error-500">{{ form.errors.user_id }}</p>
             </div>
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('common.email') }}</label>
               <input v-model="form.email" type="text" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" :placeholder="t('chefs.emailPlaceholder')" />
+              <p v-if="form.errors.email" class="mt-1 text-sm text-error-500">{{ form.errors.email }}</p>
             </div>
 
             <div>
@@ -48,21 +51,25 @@
                   class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent py-3 pl-[84px] pr-4 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                 />
               </div>
+              <p v-if="form.errors.phone" class="mt-1 text-sm text-error-500">{{ form.errors.phone }}</p>
             </div>
 
             <div class="md:col-span-2">
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('common.address') }}</label>
               <input v-model="form.address" type="text" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" :placeholder="t('chefs.addressPlaceholder')" />
+              <p v-if="form.errors.address" class="mt-1 text-sm text-error-500">{{ form.errors.address }}</p>
             </div>
 
             <div class="md:col-span-2">
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('chefs.shortDescription') }}</label>
               <textarea v-model="form.short_description" rows="2" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" :placeholder="t('chefs.shortDescriptionPlaceholder')"></textarea>
+              <p v-if="form.errors.short_description" class="mt-1 text-sm text-error-500">{{ form.errors.short_description }}</p>
             </div>
 
             <div class="md:col-span-2">
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('chefs.longDescription') }}</label>
               <textarea v-model="form.long_description" rows="6" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30" :placeholder="t('chefs.longDescriptionPlaceholder')"></textarea>
+              <p v-if="form.errors.long_description" class="mt-1 text-sm text-error-500">{{ form.errors.long_description }}</p>
             </div>
 
             <div>
@@ -71,6 +78,7 @@
                 <option :value="null">{{ t('common.select') }}</option>
                 <option v-for="g in governorates" :key="g.id" :value="g.id">{{ locale === 'ar' ? (g.name_ar ?? g.name_en) : (g.name_en ?? g.name_ar) }}</option>
               </select>
+              <p v-if="form.errors.governorate_id" class="mt-1 text-sm text-error-500">{{ form.errors.governorate_id }}</p>
             </div>
 
             <div>
@@ -79,6 +87,7 @@
                 <option :value="null">{{ t('common.select') }}</option>
                 <option v-for="d in districts" :key="d.id" :value="d.id">{{ locale === 'ar' ? (d.name_ar ?? d.name_en) : (d.name_en ?? d.name_ar) }}</option>
               </select>
+              <p v-if="form.errors.district_id" class="mt-1 text-sm text-error-500">{{ form.errors.district_id }}</p>
             </div>
 
             <div>
@@ -87,19 +96,23 @@
                 <option :value="null">{{ t('common.select') }}</option>
                 <option v-for="a in areas" :key="a.id" :value="a.id">{{ locale === 'ar' ? (a.name_ar ?? a.name_en) : (a.name_en ?? a.name_ar) }}</option>
               </select>
+              <p v-if="form.errors.area_id" class="mt-1 text-sm text-error-500">{{ form.errors.area_id }}</p>
             </div>
 
             <div>
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('chefs.baseHourlyRate') }}</label>
               <input v-model="form.base_hourly_rate" type="number" step="0.01" class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90" />
+              <p v-if="form.errors.base_hourly_rate" class="mt-1 text-sm text-error-500">{{ form.errors.base_hourly_rate }}</p>
             </div>
 
             <div class="md:col-span-1">
               <ImageUploadBox v-model="form.logo" input-id="logo-upload" label="chefs.logo" />
+              <p v-if="form.errors.logo" class="mt-1 text-sm text-error-500">{{ form.errors.logo }}</p>
             </div>
 
             <div class="md:col-span-1">
               <ImageUploadBox v-model="form.banner" input-id="banner-upload" label="chefs.banner" />
+              <p v-if="form.errors.banner" class="mt-1 text-sm text-error-500">{{ form.errors.banner }}</p>
             </div>
 
             <div class="md:col-span-2">

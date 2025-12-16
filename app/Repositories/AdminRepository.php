@@ -27,6 +27,20 @@ class AdminRepository extends BaseRepository
         return $admin;
     }
 
+    public function update(int|string $id, array $data)
+    {
+        $admin = parent::update($id, $data);
+
+        if (isset($data['role_id'])) {
+            $role = Role::find($data['role_id']);
+            if ($role) {
+                $admin->syncRoles([$role->name]);
+            }
+        }
+
+        return $admin;
+    }
+
     /*public function updateById(int|string $id, array $data): Admin
     {
         $admin = parent::updateById($id, $data);

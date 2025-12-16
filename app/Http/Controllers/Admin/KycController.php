@@ -9,6 +9,7 @@ use App\Http\Requests\Admin\UpdateKycRequest;
 use App\Models\Kyc;
 use App\Models\User;
 use App\Services\KycService;
+use App\Services\MailService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -113,11 +114,25 @@ class KycController extends Controller
     {
         $data = $request->validated();
 
+        // If a new file was uploaded, attach it. Otherwise remove the key
+        // so we don't attempt to write NULL into a non-nullable column.
         if ($request->hasFile('document_scan_copy')) {
             $data['document_scan_copy'] = $request->file('document_scan_copy');
+        } else {
+            if (array_key_exists('document_scan_copy', $data) && empty($data['document_scan_copy'])) {
+                unset($data['document_scan_copy']);
+            }
         }
 
-        $kycService->update($kyc->id, $data);
+        try {
+            $kycService->update($kyc->id, $data);
+        } catch (\Illuminate\Database\QueryException $e) {
+            report($e);
+            return back()->withErrors(['database' => 'حدث خطأ أثناء حفظ البيانات. الرجاء التحقق من الحقول وإعادة المحاولة.'])->withInput();
+        }
+
+        // Delegate notification logic to the service (keeps controller slim)
+        $kycService->notifyUserStatus($kyc, $data);
 
         return redirect()->route('admin.kycs.index');
     }

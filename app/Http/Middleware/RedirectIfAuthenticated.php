@@ -38,7 +38,7 @@ class RedirectIfAuthenticated
     /**
      * Get the path the user should be redirected to when they are authenticated.
      */
-    protected function redirectTo(Request $request , String $guard = 'web'): ?string
+    protected function redirectTo(Request $request , string|null $guard = 'web'): ?string
     {
         return static::$redirectToCallback
             ? call_user_func(static::$redirectToCallback, $request)
@@ -53,7 +53,7 @@ class RedirectIfAuthenticated
         if($guard == 'admin'){
             return route('admin.dashboard');
         }
-        if($guard == 'web'){
+        if($guard == 'web' || $guard == null){
             return route('dashboard');
         }
 

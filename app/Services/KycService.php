@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Exceptions\ValidationException as AppValidationException;
+use App\Services\MailService;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class KycService
@@ -166,6 +167,40 @@ class KycService
     public function findForUser(int|string $id, int $userId, ?array $with = null)
     {
         return $this->kycs->findForUser($id, $userId, $with);
+    }
+
+    /**
+     * Notify the KYC owner by email about status changes (approved/rejected).
+     * Accepts optional incoming data (e.g. rejected_reason) as a fallback.
+     */
+    public function notifyUserStatus(Kyc $kyc, array $data = []): void
+    {
+        // Ensure we have the freshest values
+        $kyc->refresh();
+
+        if ($kyc->status === 'approved') {
+            MailService::send(
+                to: $kyc->user->email,
+                subject: 'تمت الموافقة على طلب التحقق',
+                body: 'تهانينا! تمت الموافقة على طلب التحقق الخاص بك.'
+            );
+            return;
+        }
+
+        if ($kyc->status === 'rejected') {
+            $reason = $kyc->rejected_reason ?? ($data['rejected_reason'] ?? null);
+
+            $body = 'نأسف! تم رفض طلب التحقق الخاص بك.';
+            if (!empty($reason)) {
+                $body .= '<br><br><strong>سبب الرفض:</strong> ' . e($reason);
+            }
+
+            MailService::send(
+                to: $kyc->user->email,
+                subject: 'تم رفض طلب التحقق',
+                body: $body
+            );
+        }
     }
 
 }

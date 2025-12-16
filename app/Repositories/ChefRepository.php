@@ -22,6 +22,8 @@ class ChefRepository extends BaseRepository
         parent::__construct($model);
     }
 
+
+
     /*public function createOrUpdate(array $attributes)
     {
         // نحدد الحقل الذي نريد استخدامه لتفادي تكرار السجلات

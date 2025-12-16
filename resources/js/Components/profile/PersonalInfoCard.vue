@@ -258,7 +258,7 @@ import { usePage } from '@inertiajs/vue3'
 
 const { t } = useI18n()
 const page = usePage()
-const user = page.props.value?.auth?.user || null
+const user = page.props.auth?.user || null
 
 const isProfileInfoModal = ref(false)
 

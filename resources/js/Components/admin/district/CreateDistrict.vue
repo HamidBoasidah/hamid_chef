@@ -126,8 +126,10 @@
 <script setup>
 import { Link, useForm } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
+import { useNotifications } from '@/composables/useNotifications'
 
 const { t, locale } = useI18n()
+const { success, error } = useNotifications()
 
 const props = defineProps({
   governorates: { type: Array, required: true }, // [{id, name_ar, name_en}]

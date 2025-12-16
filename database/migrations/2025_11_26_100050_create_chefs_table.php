@@ -17,8 +17,8 @@ return new class extends Migration
             $table->text('long_description')->nullable();
             $table->text('email')->nullable();
             $table->text('phone')->nullable();
-            $table->string('logo')->nullable();
-            $table->string('banner')->nullable();
+            $table->string('logo')->default('/defaults/chef.png');
+            $table->string('banner')->default('/defaults/banner.png');
             $table->string('address')->nullable();
             $table->foreignId('governorate_id')->constrained('governorates')->onDelete('cascade');
             $table->foreignId('district_id')->constrained('districts')->onDelete('cascade');

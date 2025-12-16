@@ -22,6 +22,7 @@
               class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
               :placeholder="t('roles.roleKeyPlaceholder')"
             />
+            <p v-if="form.errors.name" class="mt-1 text-sm text-error-500">{{ form.errors.name }}</p>
           </div>
 
           <!-- الاسم الظاهر متعدد اللغات -->
@@ -37,6 +38,7 @@
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 placeholder="Super Admin"
               />
+              <p v-if="form.errors['display_name.en']" class="mt-1 text-sm text-error-500">{{ form.errors['display_name.en'] }}</p>
             </div>
 
             <div>
@@ -50,6 +52,7 @@
                 class="dark:bg-dark-900 shadow-theme-xs focus:border-brand-300 focus:ring-brand-500/10 dark:focus:border-brand-800 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 placeholder:text-gray-400 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30"
                 placeholder="مدير النظام"
               />
+              <p v-if="form.errors['display_name.ar']" class="mt-1 text-sm text-error-500">{{ form.errors['display_name.ar'] }}</p>
             </div>
           </div>
         </form>
