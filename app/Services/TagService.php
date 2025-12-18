@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\TagRepository;
+use App\Models\Tag;
+use Illuminate\Support\Str;
 
 class TagService
 {
@@ -30,13 +32,41 @@ class TagService
 
     public function create(array $attributes)
     {
+        // Ensure slug is generated from name when creating
+        if (empty($attributes['slug']) && ! empty($attributes['name'])) {
+            $attributes['slug'] = $this->makeUniqueSlug($attributes['name']);
+        }
+
         return $this->tags->create($attributes);
     }
 
     public function update($id, array $attributes)
     {
-        $tag = $this->tags->findOrFail($id);
-        return $this->tags->update($tag, $attributes);
+        // Generate slug from name on update if name provided
+        if (! empty($attributes['name'])) {
+            $attributes['slug'] = $this->makeUniqueSlug($attributes['name'], $id);
+        }
+
+        return $this->tags->update($id, $attributes);
+    }
+
+    /**
+     * Generate a unique slug for the given name.
+     * If $ignoreId is provided, ignore that record when checking uniqueness (useful on update).
+     */
+    protected function makeUniqueSlug(string $name, $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base;
+        $i = 1;
+
+        while (Tag::where('slug', $slug)->when($ignoreId, function ($q) use ($ignoreId) {
+            $q->where('id', '!=', $ignoreId);
+        })->exists()) {
+            $slug = $base.'-'.++$i;
+        }
+
+        return $slug;
     }
 
     public function delete($id)

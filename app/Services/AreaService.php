@@ -35,8 +35,7 @@ class AreaService
 
     public function update($id, array $attributes)
     {
-        $area = $this->areas->findOrFail($id);
-        return $this->areas->update($area, $attributes);
+        return $this->areas->update($id, $attributes);
     }
 
     public function delete($id)

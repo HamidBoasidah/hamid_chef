@@ -46,8 +46,10 @@ return [
     'profile'      => ['view'],
     'activitylogs'  => ['view'],
     'kycs'         => ['view', 'create', 'update', 'delete'],
+    'tags'         => ['view', 'create', 'update', 'delete'],
     'addresses'         => ['view', 'create', 'update', 'delete'],
     'chefs'         => ['view', 'create', 'update', 'delete'],
+    'categories'         => ['view', 'create', 'update', 'delete'],
     ],
 
     /*

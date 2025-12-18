@@ -44,8 +44,10 @@
     "signin": "Signin",
     "signup": "Signup",
     "activityLog": "Activity Log",
-    "addresses": "Addresses"
-    ,"chefs": "Chefs",
+    "addresses": "Addresses",
+    "chefs": "Chefs",
+    "tags": "Tags",
+    "categories": "Categories",
     "createChef": "Create Chef"
   },
   "pages": {
@@ -314,6 +316,28 @@
       "country": "Country",
       "cityState": "City/State",
       "postalCode": "Postal Code",
+    "categories": {
+      "categoryInformation": "Category Information",
+      "name": "Name",
+      "nameAr": "Name (AR)",
+      "nameEn": "Name (EN)",
+      "nameArPlaceholder": "Enter name in Arabic",
+      "nameEnPlaceholder": "Enter name in English",
+      "slug": "Slug",
+      "addCategory": "Add Category",
+      "createCategory": "Create Category",
+      "editCategory": "Edit Category",
+      "showCategory": "Show Category",
+      "noCategory": "No categories found",
+      "categoryCreatedSuccessfully": "Category created successfully",
+      "categoryCreationFailed": "Failed to create category",
+      "categoryUpdatedSuccessfully": "Category updated successfully",
+      "categoryUpdateFailed": "Failed to update category",
+      "categoryDeletedSuccessfully": "Category deleted successfully",
+      "categoryDeleteFailed": "Failed to delete category",
+      "categoryStatusUpdated": "Category status updated",
+      "categoryStatusUpdateFailed": "Failed to update category status"
+    },
       "cityPlaceholder": "Phoenix, United States",
       "taxId": "TAX ID"
     }

@@ -215,6 +215,7 @@ import {
   HistoryIcon,
   AddressIcon,
   ChefIcon,
+  TagIcon,
 } from "../../icons"
 import { useSidebar } from "@/composables/useSidebar"
 import { usePermissions } from "@/composables/usePermissions"
@@ -318,6 +319,18 @@ const menuGroups = computed(() =>
           name: t('menu.chefs'),
           path: route('admin.chefs.index'),
           permission: 'chefs.view',
+        },
+        {
+          icon: TagIcon,
+          name: t('menu.tags'),
+          path: route('admin.tags.index'),
+          permission: 'tags.view',
+        },
+        {
+          icon: GridIcon,
+          name: t('menu.categories'),
+          path: route('admin.categories.index'),
+          permission: 'categories.view',
         },
         {
           icon: UserCircleIcon,

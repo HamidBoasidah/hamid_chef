@@ -12,6 +12,7 @@ class Category extends BaseModel
 
     protected $fillable = [
         'name',
+        'slug',
         'is_active',
         'created_by',
         'updated_by',

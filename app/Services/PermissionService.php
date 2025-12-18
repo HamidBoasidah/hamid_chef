@@ -35,8 +35,7 @@ class PermissionService
 
     public function update($id, array $attributes)
     {
-        $permission = $this->permissions->findOrFail($id);
-        return $this->permissions->update($permission, $attributes);
+        return $this->permissions->update($id, $attributes);
     }
 
     public function delete($id)

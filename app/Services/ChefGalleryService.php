@@ -35,8 +35,7 @@ class ChefGalleryService
 
     public function update($id, array $attributes)
     {
-        $gallery = $this->galleries->findOrFail($id);
-        return $this->galleries->update($gallery, $attributes);
+        return $this->galleries->update($id, $attributes);
     }
 
     public function delete($id)

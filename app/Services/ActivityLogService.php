@@ -38,8 +38,7 @@ class ActivityLogService
     public function update($id, array $attributes)
     {
         // عادة لا نعدّل سجلات النشاط، لكن أبقيناه لاتباع نفس النمط
-        $log = $this->logs->findOrFail($id);
-        return $this->logs->update($log, $attributes);
+        return $this->logs->update($id, $attributes);
     }
 
     public function delete($id)

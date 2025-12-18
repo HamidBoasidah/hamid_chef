@@ -35,8 +35,7 @@ class BookingService
 
     public function update($id, array $attributes)
     {
-        $booking = $this->bookings->findOrFail($id);
-        return $this->bookings->update($booking, $attributes);
+        return $this->bookings->update($id, $attributes);
     }
 
     public function delete($id)

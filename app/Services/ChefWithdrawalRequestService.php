@@ -35,8 +35,7 @@ class ChefWithdrawalRequestService
 
     public function update($id, array $attributes)
     {
-        $withdrawal = $this->withdrawals->findOrFail($id);
-        return $this->withdrawals->update($withdrawal, $attributes);
+        return $this->withdrawals->update($id, $attributes);
     }
 
     public function delete($id)

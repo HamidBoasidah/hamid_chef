@@ -35,6 +35,8 @@
     "locations": "المواقع",
     "areas": "المناطق",
     "governorates": "المحافظات",
+    "tags": "الوسوم",
+    "categories": "التصنيفات",
     "districts": "المديريات",
     "activityLogs": "سجل التغييرات",
     "addresses": "العناوين"
@@ -62,7 +64,9 @@
     "deleteRoleConfirmation": "هل أنت متأكد أنك تريد حذف هذا الدور؟",
     "notAuthorized": "غير مصرح لك",
     "deleteKycConfirmation": "هل أنت متأكد أنك تريد حذف سجل KYC هذا؟",
-    "deleteChefConfirmation": "هل أنت متأكد أنك تريد حذف هذا الطاهي؟"
+    "deleteChefConfirmation": "هل أنت متأكد أنك تريد حذف هذا الطاهي؟",
+    "deleteTagConfirmation": "هل أنت متأكد أنك تريد حذف هذا الوسم؟"
+    ,"deleteCategoryConfirmation": "هل أنت متأكد أنك تريد حذف هذا التصنيف؟"
   },
   "charts": {
     "lineChart": "مخطط خطي",
@@ -407,15 +411,59 @@
       "firstName": "الاسم الأول",
       "lastName": "اسم العائلة",
       "bio": "نبذة"
-    },
-    "address": {
-      "title": "العنوان",
-      "country": "البلد",
-      "cityState": "المدينة/الولاية",
-      "postalCode": "الرمز البريدي",
-      "cityPlaceholder": "Phoenix, United States",
-      "taxId": "معرف الضريبة"
     }
+  },
+  "tags": {
+    "tagInformation": "معلومات الوسم",
+    "name": "الاسم",
+    "nameAr": "الاسم بالعربية",
+    "nameEn": "الاسم بالإنجليزية",
+    "nameArPlaceholder": "ادخل الاسم بالعربية",
+    "nameEnPlaceholder": "ادخل الاسم بالإنجليزية",
+    "slug": "الاسم التعريفي (slug)",
+    "addTag": "إضافة وسم",
+    "createTag": "إنشاء وسم",
+    "editTag": "تعديل وسم",
+    "showTag": "عرض وسم",
+    "noTag": "لا توجد وسوم",
+    "tagCreatedSuccessfully": "تم إنشاء الوسم بنجاح",
+    "tagCreationFailed": "فشل إنشاء الوسم",
+    "tagUpdatedSuccessfully": "تم تحديث الوسم بنجاح",
+    "tagUpdateFailed": "فشل تحديث الوسم",
+    "tagDeletedSuccessfully": "تم حذف الوسم بنجاح",
+    "tagDeleteFailed": "فشل حذف الوسم",
+    "tagStatusUpdated": "تم تحديث حالة الوسم",
+    "tagStatusUpdateFailed": "فشل تحديث حالة الوسم"
+  },
+  "categories": {
+    "categoryInformation": "معلومات التصنيف",
+    "name": "الاسم",
+    "nameAr": "الاسم بالعربية",
+    "nameEn": "الاسم بالإنجليزية",
+    "nameArPlaceholder": "ادخل الاسم بالعربية",
+    "nameEnPlaceholder": "ادخل الاسم بالإنجليزية",
+    "slug": "الاسم التعريفي (slug)",
+    "addCategory": "إضافة تصنيف",
+    "createCategory": "إنشاء تصنيف",
+    "editCategory": "تعديل تصنيف",
+    "showCategory": "عرض تصنيف",
+    "noCategory": "لا توجد تصنيفات",
+    "categoryCreatedSuccessfully": "تم إنشاء التصنيف بنجاح",
+    "categoryCreationFailed": "فشل إنشاء التصنيف",
+    "categoryUpdatedSuccessfully": "تم تحديث التصنيف بنجاح",
+    "categoryUpdateFailed": "فشل تحديث التصنيف",
+    "categoryDeletedSuccessfully": "تم حذف التصنيف بنجاح",
+    "categoryDeleteFailed": "فشل حذف التصنيف",
+    "categoryStatusUpdated": "تم تحديث حالة التصنيف",
+    "categoryStatusUpdateFailed": "فشل تحديث حالة التصنيف"
+  },
+  "address": {
+    "title": "العنوان",
+    "country": "البلد",
+    "cityState": "المدينة/الولاية",
+    "postalCode": "الرمز البريدي",
+    "cityPlaceholder": "Phoenix, United States",
+    "taxId": "معرف الضريبة"
   },
   "addresses": {
     "addressInformation": "معلومات العنوان",
@@ -489,7 +537,7 @@
       "withX": "تسجيل الدخول باستخدام X",
       "or": "أو",
       "email": "البريد الإلكتروني",
-      "emailPlaceholder": "name.example.com",
+      "emailPlaceholder": "ادخل البريد الإلكتروني",
       "password": "كلمة المرور",
       "passwordPlaceholder": "أدخل كلمة المرور",
       "keepLoggedIn": "تذكرني",

@@ -35,8 +35,7 @@ class WithdrawalMethodService
 
     public function update($id, array $attributes)
     {
-        $method = $this->methods->findOrFail($id);
-        return $this->methods->update($method, $attributes);
+        return $this->methods->update($id, $attributes);
     }
 
     public function delete($id)

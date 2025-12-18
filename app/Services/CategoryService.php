@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Repositories\CategoryRepository;
+use App\Models\Category;
+use Illuminate\Support\Str;
 
 class CategoryService
 {
@@ -30,13 +32,41 @@ class CategoryService
 
     public function create(array $attributes)
     {
+        // Ensure slug is generated from name when creating
+        if (empty($attributes['slug']) && ! empty($attributes['name'])) {
+            $attributes['slug'] = $this->makeUniqueSlug($attributes['name']);
+        }
+
         return $this->categories->create($attributes);
     }
 
     public function update($id, array $attributes)
     {
-        $category = $this->categories->findOrFail($id);
-        return $this->categories->update($category, $attributes);
+        // Generate slug from name on update if name provided
+        if (! empty($attributes['name'])) {
+            $attributes['slug'] = $this->makeUniqueSlug($attributes['name'], $id);
+        }
+
+        return $this->categories->update($id, $attributes);
+    }
+
+    /**
+     * Generate a unique slug for the given name.
+     * If $ignoreId is provided, ignore that record when checking uniqueness (useful on update).
+     */
+    protected function makeUniqueSlug(string $name, $ignoreId = null): string
+    {
+        $base = Str::slug($name);
+        $slug = $base;
+        $i = 1;
+
+        while (Category::where('slug', $slug)->when($ignoreId, function ($q) use ($ignoreId) {
+            $q->where('id', '!=', $ignoreId);
+        })->exists()) {
+            $slug = $base.'-'.++$i;
+        }
+
+        return $slug;
     }
 
     public function delete($id)

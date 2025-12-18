@@ -49,6 +49,7 @@ import BuildingIcon from "./BuildingIcon.vue";
 import HistoryIcon from "./HistoryIcon.vue";
 import AddressIcon from "./AddressIcon.vue";
 import ChefIcon from "./ChefIcon.vue";
+import TagIcon from "./TagIcon.vue";
 
 export {
   BellIcon,
@@ -56,6 +57,7 @@ export {
   BuildingIcon,
   HistoryIcon,
   ChefIcon,
+  TagIcon,
   LayoutDashboardIcon,
   UserGroupIcon,
   FolderIcon,
