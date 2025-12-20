@@ -175,9 +175,6 @@ const props = defineProps({
 	tags: { type: Array, required: true }
 })
 
-// Track if user has interacted with the feature image
-const featureImageChanged = ref(false)
-
 const form = useForm({
 	_method: 'PUT',
 	chef_id: props.service.chef_id ?? null,
@@ -191,7 +188,7 @@ const form = useForm({
 	allow_extra_guests: !!props.service.allow_extra_guests,
 	extra_guest_price: props.service.extra_guest_price ?? 0,
 	is_active: !!props.service.is_active,
-	feature_image: null,
+	feature_image: props.service.feature_image ? `/storage/${props.service.feature_image}` : null,
 	tags: props.service.tags ? props.service.tags.map(tag => tag.id) : [],
 	service_images: [],
 	delete_service_image_ids: [],
@@ -203,11 +200,11 @@ const existingServiceImages = computed(() => {
 })
 
 function update() {
-	// إذا لم يتم رفع صورة جديدة، لا نرسل حقل feature_image
+	// إنشاء نسخة من البيانات للتعديل
 	const formData = { ...form.data() }
 	
-	// إذا لم يتم رفع صورة جديدة، احذف الحقل
-	if (!form.feature_image) {
+	// إذا كانت الصورة المميزة URL وليس ملف جديد، لا نرسلها
+	if (typeof formData.feature_image === 'string' && formData.feature_image.startsWith('/storage/')) {
 		delete formData.feature_image
 	}
 	

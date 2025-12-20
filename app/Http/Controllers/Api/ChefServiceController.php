@@ -87,8 +87,6 @@ class ChefServiceController extends Controller
                 }
             ]);
 
-            $this->authorize('view', $service);
-
             return $this->resourceResponse(
                 ChefServiceDTO::fromModel($service)->toArray(),
                 'تم جلب بيانات الخدمة بنجاح'
@@ -113,8 +111,6 @@ class ChefServiceController extends Controller
                 }
             ]);
 
-            // ثانياً: نتحقق من الـ Policy
-            $this->authorize('update', $service);
 
             // ثالثاً: نحدّث نفس الـ Model (بدون إعادة استعلام جديد)
             $updated = $serviceService->updateModel($service, $data);
@@ -147,8 +143,6 @@ class ChefServiceController extends Controller
         try {
             $service = $serviceService->find($id);
 
-            $this->authorize('delete', $service);
-
             // منع حذف خدمة مرتبطة بحجوزات
             if (method_exists($service, 'bookings') && $service->bookings()->exists()) {
                 $this->throwResourceInUseException('لا يمكن حذف خدمة مرتبطة بحجوزات');
@@ -178,8 +172,6 @@ class ChefServiceController extends Controller
         try {
             $service = $serviceService->find($id);
 
-            $this->authorize('activate', $service);
-
             $activated = $serviceService->activate($service->id);
 
             return $this->activatedResponse(
@@ -198,8 +190,6 @@ class ChefServiceController extends Controller
     {
         try {
             $service = $serviceService->find($id);
-
-            $this->authorize('deactivate', $service);
 
             $deactivated = $serviceService->deactivate($service->id);
 

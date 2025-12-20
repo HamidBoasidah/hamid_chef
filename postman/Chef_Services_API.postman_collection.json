@@ -1,0 +1,175 @@
+{
+  "info": {
+    "_postman_id": "8f2c7d3e-4b5a-4c6d-9e1f-0123456789cd",
+    "name": "MoonChef - Chef Services API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for testing Chef Services endpoints (public index/show and protected actions under /api/chef)"
+  },
+  "item": [
+    {
+      "name": "List Chef Services (index)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef-services?per_page=10",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef-services"],
+          "query": [
+            { "key": "per_page", "value": "10" },
+            { "key": "search", "value": "" },
+            { "key": "chef_id", "value": "" },
+            { "key": "service_type", "value": "" },
+            { "key": "is_active", "value": "1" }
+          ]
+        },
+        "description": "Public - list active chef services with optional filters (search, chef_id, service_type, etc.). Authorization optional."
+      },
+      "response": []
+    },
+    {
+      "name": "Show Chef Service (show)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef-services/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef-services","1"]
+        },
+        "description": "Public - get a single chef service by id. Authorization optional. Replace 1 with the desired service id."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Chef Service (store)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "name", "value": "خدمة طبخ منزلي", "type": "text" },
+            { "key": "description", "value": "خدمة طبخ وجبات منزلية شهية", "type": "text" },
+            { "key": "service_type", "value": "hourly", "type": "text" },
+            { "key": "hourly_rate", "value": "150.00", "type": "text" },
+            { "key": "min_hours", "value": "2", "type": "text" },
+            { "key": "max_guests_included", "value": "4", "type": "text" },
+            { "key": "allow_extra_guests", "value": "1", "type": "text" },
+            { "key": "extra_guest_price", "value": "25.00", "type": "text" },
+            { "key": "is_active", "value": "1", "type": "text" },
+            { "key": "tags[]", "value": "1", "type": "text" },
+            { "key": "tags[]", "value": "2", "type": "text" },
+            { "key": "feature_image", "type": "file", "src": "" },
+            { "key": "service_images[]", "type": "file", "src": "" }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/chef/chef-services",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef","chef-services"]
+        },
+        "description": "Protected - create a chef service for the authenticated chef user. Provide a valid {{token}}. The API attaches the current chef as owner."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Chef Service (update)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "name", "value": "خدمة طبخ منزلي محدثة", "type": "text" },
+            { "key": "description", "value": "وصف محدث للخدمة", "type": "text" },
+            { "key": "service_type", "value": "package", "type": "text" },
+            { "key": "package_price", "value": "500.00", "type": "text" },
+            { "key": "max_guests_included", "value": "6", "type": "text" },
+            { "key": "allow_extra_guests", "value": "0", "type": "text" },
+            { "key": "is_active", "value": "1", "type": "text" },
+            { "key": "tags[]", "value": "1", "type": "text" },
+            { "key": "tags[]", "value": "3", "type": "text" },
+            { "key": "feature_image", "type": "file", "src": "" },
+            { "key": "service_images[]", "type": "file", "src": "" },
+            { "key": "delete_service_image_ids[]", "value": "1", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/chef/chef-services/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef","chef-services","1"]
+        },
+        "description": "Protected - update chef service ID 1 owned by the authenticated chef user. Uses valid token for testing."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Chef Service (destroy)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef/chef-services/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef","chef-services","1"]
+        },
+        "description": "Protected - delete a chef service owned by the authenticated chef user. Replace 1 with the service id."
+      },
+      "response": []
+    },
+    {
+      "name": "Activate Chef Service",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef/chef-services/1/activate",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef","chef-services","1","activate"]
+        },
+        "description": "Protected - activate a chef service owned by the authenticated chef user. Replace 1 with the service id."
+      },
+      "response": []
+    },
+    {
+      "name": "Deactivate Chef Service",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef/chef-services/1/deactivate",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef","chef-services","1","deactivate"]
+        },
+        "description": "Protected - deactivate a chef service owned by the authenticated chef user. Replace 1 with the service id."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "token", "value": "5|93udQuo7CPRzpqb32MsyAoXcizRmopmIJCgsBsx7217bbb59", "type": "string" }
+  ]
+}
