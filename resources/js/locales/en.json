@@ -8,6 +8,7 @@
     "deleteConfirmation": "Are you sure you want to delete this user?",
     "deleteKycConfirmation": "Are you sure you want to delete this KYC record?",
     "deleteChefConfirmation": "Are you sure you want to delete this chef?",
+    "deleteChefServiceConfirmation": "Are you sure you want to delete this chef service?",
     "deleteAddressConfirmation": "Are you sure you want to delete this address?",
     "notAuthorized": "You are not authorized to perform this action.",
     "notAuthorizedDelete": "You are not authorized to perform delete operation."
@@ -48,7 +49,8 @@
     "chefs": "Chefs",
     "tags": "Tags",
     "categories": "Categories",
-    "createChef": "Create Chef"
+    "createChef": "Create Chef",
+    "chef_services": "Chef Services"
   },
   "pages": {
     "welcomeLoggedIn": "You're logged in!",
@@ -88,7 +90,29 @@
     "delete": "Delete",
     "backToList": "Back to list"
     ,"select": "Select",
-    "selectUser": "Select user"
+    "selectUser": "Select user",
+    "galleryImages": "Gallery Images",
+    "maxImages": "Maximum {max} images",
+    "maxImagesReached": "Maximum images reached",
+    "selectedImages": "Selected Images",
+    "totalImages": "Total Images: {current}/{max}",
+    "existingImages": "Existing Images",
+    "addNewImages": "Add New Images",
+    "deleteExistingToAddNew": "Delete existing images to add new ones",
+    "pendingChanges": "Pending Changes",
+    "newImagesToAdd": "New images to add: {count}",
+    "imagesToDelete": "Images to delete: {count}",
+    "markedForDeletion": "Marked for deletion",
+    "existingImage": "Existing image",
+    "removeImage": "Remove image",
+    "restoreImage": "Restore image",
+    "markForDeletion": "Mark for deletion",
+    "willBeDeleted": "Will be deleted",
+    "gallery": "Gallery",
+    "imagesCount": "{count} images",
+    "noGalleryImages": "No images in gallery",
+    "uploading": "Uploading...",
+    "sar": "SAR"
   },
   "user": {
     "name": "Code Brains",
@@ -156,7 +180,41 @@
     ,"logo": "Logo",
     "banner": "Banner"
     ,"noBanner": "No banner image",
-    "noChefsFound": "No chefs found."
+    "noChefsFound": "No chefs found.",
+    "galleryImages": "Gallery Images"
+  },
+  "chef_services": {
+    "serviceInformation": "Service Information",
+    "namePlaceholder": "Enter service name",
+    "descriptionPlaceholder": "Enter service description",
+    "serviceType": "Service Type",
+    "hourlyRate": "Hourly Rate",
+    "packagePrice": "Package Price",
+    "addChefService": "Add Chef Service",
+    "editChefService": "Edit Chef Service",
+    "showChefService": "Show Chef Service",
+    "serviceCreatedSuccessfully": "Service created successfully",
+    "serviceCreationFailed": "Failed to create service",
+    "serviceUpdatedSuccessfully": "Service updated successfully",
+    "serviceUpdateFailed": "Failed to update service",
+    "serviceDeletedSuccessfully": "Service deleted successfully",
+    "serviceDeletionFailed": "Failed to delete service",
+    "noServicesFound": "No services found.",
+    "serviceImages": "Service Images",
+    "minHours": "Minimum Hours",
+    "maxGuestsIncluded": "Max Guests Included",
+    "maxGuests": "Maximum Guests",
+    "allowExtraGuests": "Allow Extra Guests",
+    "allowExtraGuestsYes": "Allowed",
+    "allowExtraGuestsNo": "Not Allowed",
+    "extraGuestPrice": "Extra Guest Price",
+    "maxGuestsAllowed": "Maximum Guests Allowed",
+    "featureImage": "Feature Image",
+    "noChefAssigned": "Not Assigned",
+    "hourlyService": "Hourly Service",
+    "packageService": "Package",
+    "perHour": "SAR/hour",
+    "hours": "hours"
   },
   "admins": {
     "userNamePlaceholder": "Enter admin name",
@@ -336,7 +394,17 @@
       "categoryDeletedSuccessfully": "Category deleted successfully",
       "categoryDeleteFailed": "Failed to delete category",
       "categoryStatusUpdated": "Category status updated",
-      "categoryStatusUpdateFailed": "Failed to update category status"
+      "categoryStatusUpdateFailed": "Failed to update category status",
+      "categories": "Categories",
+      "selectCategories": "Select Categories",
+      "categoriesSelected": "categories selected",
+      "noCategories": "No categories",
+      "searchCategories": "Search categories...",
+      "noSearchResults": "No search results found",
+      "selected": "selected",
+      "total": "total",
+      "showing": "showing",
+      "clearAll": "Clear All"
     },
       "cityPlaceholder": "Phoenix, United States",
       "taxId": "TAX ID"
@@ -422,6 +490,11 @@
     "requestsPermission": "requests permission to change",
     "project": "Project - {name}",
     "typeProject": "Project"
+  }
+  ,"validation": {
+    "invalidFileType": "File type {name} is not supported. Supported types: {types}",
+    "fileTooLarge": "File {name} is too large. Maximum size {maxSize} MB",
+    "tooManyFiles": "Too many files. Maximum {max} images (current: {current}, adding: {adding})"
   }
   ,"datatable": {
     "show": "Show",

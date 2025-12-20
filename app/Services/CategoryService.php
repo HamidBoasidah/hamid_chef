@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Repositories\CategoryRepository;
 use App\Models\Category;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class CategoryService
 {
@@ -23,6 +24,15 @@ class CategoryService
     public function paginate(int $perPage = 15, array $with = [])
     {
         return $this->categories->paginate($perPage, $with);
+    }
+
+    /**
+     * Expose an Eloquent query builder for controllers that need to apply
+     * additional constraints or filters before pagination.
+     */
+    public function query(?array $with = null): Builder
+    {
+        return $this->categories->query($with);
     }
 
     public function find($id, array $with = [])

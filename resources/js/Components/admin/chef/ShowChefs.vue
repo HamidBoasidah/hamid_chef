@@ -55,8 +55,26 @@
               <p class="max-w-xs text-sm text-gray-500 dark:text-gray-400">
                 {{ chef.address || t('kyc.noAddressProvided') }}
               </p>
+              <!-- Categories -->
+              <div v-if="chef.categories && chef.categories.length > 0" class="mt-2 flex flex-wrap gap-1">
+                <span
+                  v-for="category in chef.categories.slice(0, 3)"
+                  :key="category.id"
+                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400"
+                >
+                  {{ category.name }}
+                </span>
+                <span
+                  v-if="chef.categories.length > 3"
+                  class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                >
+                  +{{ chef.categories.length - 3 }}
+                </span>
+              </div>
             </div>
           </div>
+          
+
         </div>
 
         <div class="flex items-center justify-between border-t border-gray-200 px-5 py-4 dark:border-gray-800">
@@ -267,5 +285,7 @@ const prevPage = () => { if (currentPage.value > 1) fetchPage(currentPage.value 
 const sortBy = (column) => { if (sortColumn.value === column) sortDirection.value = sortDirection.value === 'asc' ? 'desc' : 'asc'; else { sortDirection.value = 'asc'; sortColumn.value = column } }
 
 watch(perPage, (val, oldVal) => { if (val !== oldVal) fetchPage(1) })
+
+
 
 </script>

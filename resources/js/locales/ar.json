@@ -41,7 +41,8 @@
     "activityLogs": "سجل التغييرات",
     "addresses": "العناوين"
     ,"chefs": "الطهاة",
-    "createChef": "إضافة طاهٍ"
+    "createChef": "إضافة طاهٍ",
+    "chef_services": "خدمات الطهاة"
   },
   "pages": {
     "welcomeLoggedIn": "لقد قمت بتسجيل الدخول!",
@@ -66,7 +67,8 @@
     "deleteKycConfirmation": "هل أنت متأكد أنك تريد حذف سجل KYC هذا؟",
     "deleteChefConfirmation": "هل أنت متأكد أنك تريد حذف هذا الطاهي؟",
     "deleteTagConfirmation": "هل أنت متأكد أنك تريد حذف هذا الوسم؟"
-    ,"deleteCategoryConfirmation": "هل أنت متأكد أنك تريد حذف هذا التصنيف؟"
+    ,"deleteCategoryConfirmation": "هل أنت متأكد أنك تريد حذف هذا التصنيف؟",
+    "deleteChefServiceConfirmation": "هل أنت متأكد أنك تريد حذف هذه الخدمة؟"
   },
   "charts": {
     "lineChart": "مخطط خطي",
@@ -75,6 +77,7 @@
   "common": {
     "switchToRTL": "تحويل إلى الاتجاه من اليمين لليسار",
     "switchToLTR": "تحويل إلى الاتجاه من اليسار لليمين",
+    "description": "الوصف",
     "home": "الرئيسية",
     "new": "جديد",
     "user": "المستخدم",
@@ -94,6 +97,27 @@
     "attachment": "المرفق",
     "clickToUpload": "اضغط للرفع",
     "orDragDrop": "أو اسحب وأسقط SVG, PNG, JPG أو GIF (الحد الأقصى 800x400px)",
+    "galleryImages": "صور المعرض",
+    "maxImages": "الحد الأقصى {max} صور",
+    "maxImagesReached": "تم الوصول للحد الأقصى من الصور",
+    "selectedImages": "الصور المختارة",
+    "totalImages": "إجمالي الصور: {current}/{max}",
+    "existingImages": "الصور الموجودة",
+    "addNewImages": "إضافة صور جديدة",
+    "deleteExistingToAddNew": "احذف صور موجودة لإضافة صور جديدة",
+    "pendingChanges": "التغييرات المعلقة",
+    "newImagesToAdd": "صور جديدة للإضافة: {count}",
+    "imagesToDelete": "صور للحذف: {count}",
+    "markedForDeletion": "محدد للحذف",
+    "existingImage": "صورة موجودة",
+    "removeImage": "إزالة الصورة",
+    "restoreImage": "استعادة الصورة",
+    "markForDeletion": "تحديد للحذف",
+    "willBeDeleted": "سيتم حذفها",
+    "gallery": "المعرض",
+    "imagesCount": "{count} صورة",
+    "noGalleryImages": "لا توجد صور في المعرض",
+    "uploading": "جاري الرفع...",
     "cancel": "إلغاء",
     "create": "إنشاء",
     "update" : "تحديث",
@@ -106,7 +130,8 @@
     "write": "كتابة",
     "view": "عرض"
     ,"select": "اختر",
-    "selectUser": "اختر المستخدم"
+    "selectUser": "اختر المستخدم",
+    "sar": "ر.س"
   },
   "user": {
     "name": "حميد بوعصيدة",
@@ -173,7 +198,43 @@
     ,"logo": "الشعار",
     "banner": "الخلفية",
     "noBanner": "لا يوجد صورة خلفية",
-    "noChefsFound": "لا يوجد طهاة حالياً."
+    "noChefsFound": "لا يوجد طهاة حالياً.",
+    "galleryImages": "صور المعرض"
+  },
+  "chef_services": {
+    "serviceInformation": "معلومات الخدمة",
+    "additionalSettings": "الإعدادات الإضافية",
+    "serviceImages": "صور الخدمة",
+    "namePlaceholder": "ادخل اسم الخدمة",
+    "descriptionPlaceholder": "ادخل وصف الخدمة",
+    "serviceType": "نوع الخدمة",
+    "hourlyRate": "سعر الساعة",
+    "packagePrice": "سعر الباقة",
+    "addChefService": "إضافة خدمة طاهي",
+    "editChefService": "تعديل خدمة الطاهي",
+    "showChefService": "عرض خدمة الطاهي",
+    "serviceCreatedSuccessfully": "تم إنشاء الخدمة بنجاح",
+    "serviceCreationFailed": "فشل إنشاء الخدمة",
+    "serviceUpdatedSuccessfully": "تم تحديث الخدمة بنجاح",
+    "serviceUpdateFailed": "فشل تحديث الخدمة",
+    "serviceDeletedSuccessfully": "تم حذف الخدمة بنجاح",
+    "serviceDeletionFailed": "فشل حذف الخدمة",
+    "noServicesFound": "لا توجد خدمات حالياً.",
+    "serviceImages": "صور الخدمة",
+    "minHours": "الحد الأدنى للساعات",
+    "maxGuestsIncluded": "عدد الضيوف المشمولين",
+    "maxGuests": "الحد الأقصى للضيوف",
+    "allowExtraGuests": "السماح بضيوف إضافيين",
+    "allowExtraGuestsYes": "مسموح",
+    "allowExtraGuestsNo": "غير مسموح",
+    "extraGuestPrice": "سعر الضيف الإضافي",
+    "maxGuestsAllowed": "الحد الأقصى المسموح للضيوف",
+    "featureImage": "الصورة المميزة",
+    "noChefAssigned": "غير محدد",
+    "hourlyService": "خدمة بالساعة",
+    "packageService": "باقة",
+    "perHour": "ر.س/ساعة",
+    "hours": "ساعات"
   },
   "admins": {
     "userNamePlaceholder": "ادخل اسم المشرف",
@@ -455,7 +516,17 @@
     "categoryDeletedSuccessfully": "تم حذف التصنيف بنجاح",
     "categoryDeleteFailed": "فشل حذف التصنيف",
     "categoryStatusUpdated": "تم تحديث حالة التصنيف",
-    "categoryStatusUpdateFailed": "فشل تحديث حالة التصنيف"
+    "categoryStatusUpdateFailed": "فشل تحديث حالة التصنيف",
+    "categories": "الأقسام",
+    "selectCategories": "اختر الأقسام",
+    "categoriesSelected": "أقسام محددة",
+    "noCategories": "لا توجد أقسام",
+    "searchCategories": "البحث في الأقسام...",
+    "noSearchResults": "لا توجد نتائج للبحث",
+    "selected": "محدد",
+    "total": "الإجمالي",
+    "showing": "معروض",
+    "clearAll": "مسح الكل"
   },
   "address": {
     "title": "العنوان",
@@ -507,6 +578,11 @@
     "requestsPermission": "يطلب إذنًا للتغيير",
     "project": "المشروع - {name}",
     "typeProject": "مشروع"
+  },
+  "validation": {
+    "invalidFileType": "نوع الملف {name} غير مدعوم. الأنواع المدعومة: {types}",
+    "fileTooLarge": "حجم الملف {name} كبير جداً. الحد الأقصى {maxSize} ميغابايت",
+    "tooManyFiles": "عدد الصور كبير جداً. الحد الأقصى {max} صور (الحالي: {current}، المضاف: {adding})"
   },
   "datatable": {
     "show": "عرض",

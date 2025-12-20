@@ -8,9 +8,35 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+
 class Chef extends BaseModel
 {
     use HasFactory;
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        // يتم تشغيل هذا الحدث عند delete() (soft delete)
+        static::deleting(function ($chef) {
+            // حذف جميع صور المعرض المرتبطة بالطاهي
+            $chef->gallery()->delete();
+            
+            // حذف جميع التصنيفات المرتبطة بالطاهي من جدول الوسيط
+            $chef->categories()->detach();
+        });
+
+        // يتم تشغيل هذا الحدث عند forceDelete() (hard delete)
+        static::forceDeleting(function ($chef) {
+            // حذف جميع صور المعرض نهائياً
+            $chef->gallery()->forceDelete();
+            
+            // حذف جميع التصنيفات المرتبطة بالطاهي من جدول الوسيط
+            $chef->categories()->detach();
+        });
+    }
+
+
 
     protected $fillable = [
         'user_id',
@@ -77,7 +103,9 @@ class Chef extends BaseModel
 
     public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'chef_categories', 'chef_id', 'cuisine_id');
+        return $this->belongsToMany(Category::class, 'chef_categories', 'chef_id', 'cuisine_id')
+            ->withPivot(['is_active', 'created_by', 'updated_by'])
+            ->withTimestamps();
     }
 
     public function wallet(): HasOne

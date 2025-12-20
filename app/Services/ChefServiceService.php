@@ -3,53 +3,343 @@
 namespace App\Services;
 
 use App\Repositories\ChefServiceRepository;
+use App\Services\ChefServiceImageService;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Exceptions\ValidationException;
+use Exception;
 
 class ChefServiceService
 {
     protected ChefServiceRepository $services;
+    protected ChefServiceImageService $imageService;
 
-    public function __construct(ChefServiceRepository $services)
+    public function __construct(ChefServiceRepository $services, ChefServiceImageService $imageService)
     {
         $this->services = $services;
+        $this->imageService = $imageService;
     }
 
-    public function all(array $with = [])
+    /**
+     * Query عام (لو احتجته في حالات خاصة)
+     */
+    public function query(?array $with = null): Builder
+    {
+        return $this->services->query($with);
+    }
+
+    /**
+     * تستخدم في لوحة التحكم أو أي مكان عام
+     * - $with = null  => يستعمل defaultWith في ChefServiceRepository
+     * - $with = []    => بدون علاقات
+     * - $with = ['..']=> علاقات مخصصة
+     */
+    public function all(?array $with = null)
     {
         return $this->services->all($with);
     }
 
-    public function paginate(int $perPage = 15, array $with = [])
+    public function paginate(int $perPage = 15, ?array $with = null)
     {
         return $this->services->paginate($perPage, $with);
     }
 
-    public function find($id, array $with = [])
+    public function find(int|string $id, ?array $with = null)
     {
         return $this->services->findOrFail($id, $with);
     }
 
+    /**
+     * إنشاء خدمة جديدة
+     */
     public function create(array $attributes)
     {
-        return $this->services->create($attributes);
+        $attributes = $this->normalizeFileAttributes($attributes);
+
+        // Extract tags and images before creating service
+        $tags = $attributes['tags'] ?? [];
+        $serviceImages = $attributes['service_images'] ?? [];
+        unset($attributes['tags'], $attributes['service_images']);
+
+        DB::beginTransaction();
+        
+        try {
+            $service = $this->services->create($attributes);
+
+            // Sync tags if provided
+            if (!empty($tags)) {
+                $this->syncServiceTags($service, $tags);
+            }
+
+            // Create images if provided
+            if (!empty($serviceImages)) {
+                $this->imageService->createMultiple($service->id, $serviceImages);
+            }
+
+            DB::commit();
+            return $service;
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
-    public function update($id, array $attributes)
+    /**
+     * تحديث بالـ id (مناسب للـ Admin)
+     */
+    public function update(int|string $id, array $attributes)
     {
-        return $this->services->update($id, $attributes);
+        $attributes = $this->normalizeFileAttributes($attributes);
+
+        // Extract tags and images data before updating service
+        $tags = $attributes['tags'] ?? null;
+        $serviceImages = $attributes['service_images'] ?? null;
+        $deleteImageIds = $attributes['delete_service_image_ids'] ?? [];
+        unset($attributes['tags'], $attributes['service_images'], $attributes['delete_service_image_ids']);
+
+        DB::beginTransaction();
+        
+        try {
+            $service = $this->services->update($id, $attributes);
+
+            // Sync tags if provided
+            if ($tags !== null) {
+                $this->syncServiceTags($service, $tags);
+            }
+
+            // Update images if provided
+            if ($serviceImages !== null || !empty($deleteImageIds)) {
+                $this->imageService->updateGallery($service->id, $serviceImages ?? [], $deleteImageIds);
+            }
+
+            DB::commit();
+            return $service;
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
-    public function delete($id)
+    /**
+     * تحديث Model جاهز (مناسب للـ API بعد find + Policy)
+     */
+    public function updateModel(Model $service, array $attributes)
+    {
+        $attributes = $this->normalizeFileAttributes($attributes);
+
+        // Extract tags and images data before updating service
+        $tags = $attributes['tags'] ?? null;
+        $serviceImages = $attributes['service_images'] ?? null;
+        $deleteImageIds = $attributes['delete_service_image_ids'] ?? [];
+        unset($attributes['tags'], $attributes['service_images'], $attributes['delete_service_image_ids']);
+
+        DB::beginTransaction();
+        
+        try {
+            $updatedService = $this->services->updateModel($service, $attributes);
+
+            // Sync tags if provided
+            if ($tags !== null) {
+                $this->syncServiceTags($updatedService, $tags);
+            }
+
+            // Update images if provided
+            if ($serviceImages !== null || !empty($deleteImageIds)) {
+                $this->imageService->updateGallery($updatedService->id, $serviceImages ?? [], $deleteImageIds);
+            }
+
+            DB::commit();
+            return $updatedService;
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+    }
+
+    public function delete(int|string $id): bool
     {
         return $this->services->delete($id);
     }
 
-    public function activate($id)
+    public function activate(int|string $id)
     {
         return $this->services->activate($id);
     }
 
-    public function deactivate($id)
+    public function deactivate(int|string $id)
     {
         return $this->services->deactivate($id);
+    }
+
+    /**
+     * 🔹 API: Query لخدمات طاهي معيّن (index مع فلاتر)
+     * - يرجع Builder عشان تقدر تطبق CanFilter و باقي الفلاتر
+     * - يستفيد من defaultWith في ChefServiceRepository لما $with = null
+     */
+    public function getQueryForChef(int $chefId, ?array $with = null): Builder
+    {
+        return $this->services->query($with)->where('chef_id', $chefId);
+    }
+
+    /**
+     * 🔹 API: جلب خدمة مملوكة لطاهي معيّن (show / update / delete / activate / deactivate)
+     */
+    public function findForChef(int|string $id, int $chefId, ?array $with = null)
+    {
+        return $this->services->query($with)->where('id', $id)->where('chef_id', $chefId)->firstOrFail();
+    }
+
+    /**
+     * 🔹 API: جلب الخدمات النشطة فقط (للعرض العام)
+     */
+    public function getActiveServices(?array $with = null): Builder
+    {
+        return $this->services->query($with)->where('is_active', true);
+    }
+
+    /**
+     * 🔹 API: البحث في الخدمات حسب العلامة
+     */
+    public function getServicesByTag(int $tagId, ?array $with = null): Builder
+    {
+        return $this->services->query($with)
+            ->whereHas('tags', function ($query) use ($tagId) {
+                $query->where('tag_id', $tagId)->where('chef_service_tags.is_active', true);
+            })
+            ->where('is_active', true);
+    }
+
+    /**
+     * 🔹 API: البحث في الخدمات حسب نوع الخدمة
+     */
+    public function getServicesByType(string $serviceType, ?array $with = null): Builder
+    {
+        return $this->services->query($with)
+            ->where('service_type', $serviceType)
+            ->where('is_active', true);
+    }
+
+    /**
+     * Normalize file-related attributes before passing to repository.
+     * - remove keys that are present but null/empty to allow DB defaults
+     * - convert frontend `/storage/...` public URLs back to relative storage path
+     * - keep UploadedFile instances so BaseRepository handles storing them
+     */
+    protected function normalizeFileAttributes(array $attributes): array
+    {
+        // Only handle file keys that exist on the chef_services table
+        $fileKeys = ['feature_image']; // Add file keys if any exist in the future
+
+        foreach ($fileKeys as $key) {
+            if (!array_key_exists($key, $attributes)) {
+                continue;
+            }
+
+            $value = $attributes[$key];
+
+            // If it's an UploadedFile, leave it for BaseRepository to handle
+            if ($value instanceof UploadedFile) {
+                continue;
+            }
+
+            // If explicitly null or empty string, remove the key so DB default applies
+            if ($value === null || $value === '') {
+                unset($attributes[$key]);
+                continue;
+            }
+
+            // If frontend passed full public path like '/storage/services/..', convert to 'services/...'
+            if (is_string($value) && str_starts_with($value, '/storage/')) {
+                $attributes[$key] = ltrim(substr($value, strlen('/storage/')), '/');
+            }
+        }
+
+        return $attributes;
+    }
+
+    /**
+     * مزامنة علامات الخدمة
+     * 
+     * @param Model $service
+     * @param array $tagIds
+     * @return void
+     */
+    protected function syncServiceTags(Model $service, array $tagIds): void
+    {
+        // Prepare sync data with additional pivot data
+        $syncData = [];
+        foreach ($tagIds as $tagId) {
+            $syncData[$tagId] = [
+                'is_active' => true,
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        $service->tags()->sync($syncData);
+    }
+
+    /**
+     * إضافة علامة للخدمة
+     * 
+     * @param int|string $serviceId
+     * @param int $tagId
+     * @return void
+     */
+    public function addTag(int|string $serviceId, int $tagId): void
+    {
+        $service = $this->find($serviceId);
+        
+        if (!$service->tags()->where('tag_id', $tagId)->exists()) {
+            $service->tags()->attach($tagId, [
+                'is_active' => true,
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+    }
+
+    /**
+     * إزالة علامة من الخدمة
+     * 
+     * @param int|string $serviceId
+     * @param int $tagId
+     * @return void
+     */
+    public function removeTag(int|string $serviceId, int $tagId): void
+    {
+        $service = $this->find($serviceId);
+        $service->tags()->detach($tagId);
+    }
+
+    /**
+     * تفعيل/إلغاء تفعيل علامة للخدمة
+     * 
+     * @param int|string $serviceId
+     * @param int $tagId
+     * @param bool $isActive
+     * @return void
+     */
+    public function toggleTagStatus(int|string $serviceId, int $tagId, bool $isActive): void
+    {
+        $service = $this->find($serviceId);
+        
+        $service->tags()->updateExistingPivot($tagId, [
+            'is_active' => $isActive,
+            'updated_by' => Auth::id(),
+            'updated_at' => now(),
+        ]);
     }
 }

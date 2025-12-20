@@ -7,7 +7,8 @@
         :governorates="governorates" 
         :districts="districts" 
         :areas="areas" 
-        :users="users" />
+        :users="users"
+        :categories="categories" />
       </ComponentCard>
     </div>
   </AdminLayout>
@@ -30,5 +31,6 @@ const governorates = computed(() => usePage().props.governorates)
 const districts = computed(() => usePage().props.districts)
 const areas = computed(() => usePage().props.areas)
 const users = computed(() => usePage().props.users)
+const categories = computed(() => usePage().props.categories)
 
 </script>

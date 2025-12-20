@@ -16,13 +16,11 @@ class ChefServiceFactory extends Factory
         return [
             'chef_id' => Chef::factory(),
             'name' => $this->faker->sentence(3),
-            'slug' => $this->faker->unique()->slug,
             'description' => $this->faker->paragraph,
             'service_type' => $type,
             'hourly_rate' => $type === 'hourly' ? $this->faker->randomFloat(2, 20, 200) : null,
             'package_price' => $type === 'package' ? $this->faker->randomFloat(2, 50, 1000) : null,
             'min_hours' => $type === 'hourly' ? $this->faker->numberBetween(1,8) : null,
-            'max_guests' => $this->faker->numberBetween(1,50),
             'is_active' => true,
             'created_by' => null,
             'updated_by' => null,

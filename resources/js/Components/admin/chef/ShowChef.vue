@@ -84,11 +84,34 @@
 						<label class="mb-1.5 block text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('chefs.longDescription') }}</label>
 						<p class="text-base text-gray-800 dark:text-white/90">{{ chef.long_description ?? '—' }}</p>
 					</div>
+
+					<div class="md:col-span-2">
+						<label class="mb-1.5 block text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('categories.categories') }}</label>
+						<div v-if="chef.categories && chef.categories.length > 0" class="flex flex-wrap gap-2">
+							<span
+								v-for="category in chef.categories"
+								:key="category.id"
+								class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+								:class="category.is_active ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400' : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400'"
+							>
+								{{ category.name }}
+								<span v-if="!category.is_active" class="ml-1 text-xs opacity-60">({{ t('common.inactive') }})</span>
+							</span>
+						</div>
+						<p v-else class="text-base text-gray-800 dark:text-white/90">{{ t('categories.noCategories') }}</p>
+					</div>
 				</div>
 			</div>
 		</div>
 
-			<div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
+		<!-- Gallery Section -->
+		<ChefGalleryViewer 
+			:images="chef.gallery || []"
+			:loading="false"
+			label="chefs.galleryImages"
+		/>
+
+		<div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
 			<Link :href="route('admin.chefs.index')" class="shadow-theme-xs inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03]">
 				{{ t('buttons.backToList') }}
 			</Link>
@@ -104,6 +127,7 @@
 import { Link } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
 import { ChefIcon } from '@/icons'
+import ChefGalleryViewer from '@/Components/common/ChefGalleryViewer.vue'
 
 const { t, locale } = useI18n()
 

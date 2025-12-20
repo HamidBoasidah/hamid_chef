@@ -141,6 +141,18 @@ Route::middleware('auth:admin')
         Route::patch('chefs/{id}/deactivate', [ChefController::class, 'deactivate'])
             ->name('chefs.deactivate');
 
+        // Chef Services
+        Route::resource('chef-services', App\Http\Controllers\Admin\ChefServiceController::class)
+            ->names('chef-services');
+
+        Route::patch('chef-services/{id}/activate', [App\Http\Controllers\Admin\ChefServiceController::class, 'activate'])
+            ->name('chef-services.activate');
+
+        Route::patch('chef-services/{id}/deactivate', [App\Http\Controllers\Admin\ChefServiceController::class, 'deactivate'])
+            ->name('chef-services.deactivate');
+
+
+
         // Tags
         Route::resource('tags', TagController::class)
             ->names('tags');

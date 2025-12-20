@@ -34,6 +34,8 @@ class ChefDTO extends BaseDTO
     public $updated_by;
     public $created_at;
     public $deleted_at;
+    public $categories;
+    public $gallery;
 
     public function __construct(
         $id,
@@ -63,7 +65,9 @@ class ChefDTO extends BaseDTO
         $email = null,
         $phone = null,
         $created_at = null,
-        $deleted_at = null
+        $deleted_at = null,
+        $categories = [],
+        $gallery = []
     ) {
         $this->id = $id;
         $this->user_id = $user_id;
@@ -93,6 +97,8 @@ class ChefDTO extends BaseDTO
         $this->updated_by = $updated_by;
         $this->created_at = $created_at;
         $this->deleted_at = $deleted_at;
+        $this->categories = $categories;
+        $this->gallery = $gallery;
     }
 
     public static function fromModel(Chef $chef): self
@@ -132,6 +138,24 @@ class ChefDTO extends BaseDTO
             $chef->phone ?? null,
             $chef->created_at?->toDateTimeString() ?? null,
             $chef->deleted_at?->toDateTimeString() ?? null,
+            // categories (if relation loaded)
+            $chef->relationLoaded('categories') ? $chef->categories->map(function ($category) {
+                return [
+                    'id' => $category->id,
+                    'name' => $category->name,
+                    'slug' => $category->slug,
+                    'is_active' => $category->pivot?->is_active ?? true,
+                ];
+            })->toArray() : [],
+            // gallery (if relation loaded)
+            $chef->relationLoaded('gallery') ? $chef->gallery->map(function ($image) {
+                return [
+                    'id' => $image->id,
+                    'image' => $image->image,
+                    'is_active' => $image->is_active,
+                    'created_at' => $image->created_at?->toDateTimeString(),
+                ];
+            })->toArray() : [],
         );
     }
 
@@ -166,6 +190,8 @@ class ChefDTO extends BaseDTO
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
             'deleted_at' => $this->deleted_at,
+            'categories' => $this->categories,
+            'gallery' => $this->gallery,
         ];
     }
 
@@ -175,6 +201,7 @@ class ChefDTO extends BaseDTO
             'id' => $this->id,
             'name' => $this->name,
             'address' => $this->address,
+            'base_hourly_rate' => $this->base_hourly_rate,
             'logo' => $this->logo,
             'governorate_id' => $this->governorate_id,
             'governorate_name_ar' => $this->governorate_name_ar,
@@ -187,6 +214,8 @@ class ChefDTO extends BaseDTO
             'area_name_en' => $this->area_name_en,
             'rating_avg' => $this->rating_avg,
             'is_active' => $this->is_active,
+            'categories' => $this->categories,
+            // gallery excluded from index for performance
         ];
     }
 }

@@ -17,6 +17,26 @@ class ChefServiceImage extends BaseModel
         'updated_by',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
+    /**
+     * Scope for active images ordered by creation date
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true)->orderBy('created_at');
+    }
+
+    /**
+     * Scope for ordered images by creation date
+     */
+    public function scopeOrdered($query)
+    {
+        return $query->orderBy('created_at');
+    }
+
     public function service(): BelongsTo
     {
         return $this->belongsTo(ChefService::class, 'chef_service_id');

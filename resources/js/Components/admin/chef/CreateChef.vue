@@ -116,6 +116,24 @@
             </div>
 
             <div class="md:col-span-2">
+              <CategorySelector 
+                v-model="form.categories"
+                :categories="categories"
+                :error="form.errors.categories"
+              />
+            </div>
+
+            <div class="md:col-span-2">
+              <MultiImageUpload 
+                v-model="form.gallery_images"
+                input-id="gallery-upload" 
+                label="chefs.galleryImages"
+                :max-images="10"
+              />
+              <p v-if="form.errors.gallery_images" class="mt-1 text-sm text-error-500">{{ form.errors.gallery_images }}</p>
+            </div>
+
+            <div class="md:col-span-2">
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('common.status') }}</label>
               <div class="mb-6 flex flex-wrap items-center gap-6 sm:gap-8">
                 <div>
@@ -165,11 +183,13 @@ import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
 import { useNotifications } from '@/composables/useNotifications'
 import ImageUploadBox from '@/Components/common/ImageUploadBox.vue'
+import MultiImageUpload from '@/Components/common/MultiImageUpload.vue'
+import CategorySelector from '@/Components/CategorySelector.vue'
 
 const { t, locale } = useI18n()
 const { success, error } = useNotifications()
 
-const props = defineProps({ roles: Array, users: Array, governorates: Array, districts: Array, areas: Array })
+const props = defineProps({ roles: Array, users: Array, governorates: Array, districts: Array, areas: Array, categories: Array })
 
 const form = useForm({
   user_id: null,
@@ -186,6 +206,8 @@ const form = useForm({
   governorate_id: null,
   district_id: null,
   area_id: null,
+  categories: [],
+  gallery_images: [],
 })
 
 function create() {

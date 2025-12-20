@@ -20,7 +20,9 @@ class Category extends BaseModel
 
     public function chefs(): BelongsToMany
     {
-        return $this->belongsToMany(Chef::class, 'chef_categories', 'cuisine_id', 'chef_id');
+        return $this->belongsToMany(Chef::class, 'chef_categories', 'cuisine_id', 'chef_id')
+            ->withPivot(['is_active', 'created_by', 'updated_by'])
+            ->withTimestamps();
     }
 
     public function chefCategories(): HasMany

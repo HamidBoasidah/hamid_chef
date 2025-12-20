@@ -109,6 +109,26 @@
 						</div>
 
 						<div class="md:col-span-2">
+							<CategorySelector 
+								v-model="form.categories"
+								:categories="categories"
+								:error="form.errors.categories"
+							/>
+						</div>
+
+						<div class="md:col-span-2">
+							<GalleryManager 
+								v-model:new-images="form.gallery_images"
+								v-model:delete-ids="form.delete_gallery_ids"
+								:existing-images="existingGalleryImages"
+								:max-images="10"
+								label="chefs.galleryImages"
+							/>
+							<p v-if="form.errors.gallery_images" class="mt-1 text-sm text-error-500">{{ form.errors.gallery_images }}</p>
+							<p v-if="form.errors.delete_gallery_ids" class="mt-1 text-sm text-error-500">{{ form.errors.delete_gallery_ids }}</p>
+						</div>
+
+						<div class="md:col-span-2">
 							<label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('common.status') }}</label>
 							<div class="mb-6 flex flex-wrap items-center gap-6 sm:gap-8">
 								<div>
@@ -142,11 +162,13 @@ import { useI18n } from 'vue-i18n'
 import { ref, computed, watch, toRefs } from 'vue'
 import { useNotifications } from '@/composables/useNotifications'
 import ImageUploadBox from '@/Components/common/ImageUploadBox.vue'
+import GalleryManager from '@/Components/common/GalleryManager.vue'
+import CategorySelector from '@/Components/CategorySelector.vue'
 
 const { t, locale } = useI18n()
 const { success, error } = useNotifications()
 
-const props = defineProps({ chef: { type: Object, required: true }, users: { type: Array, required: true }, governorates: { type: Array, required: true }, districts: { type: Array, required: false, default: () => [] }, areas: { type: Array, required: false, default: () => [] } })
+const props = defineProps({ chef: { type: Object, required: true }, users: { type: Array, required: true }, governorates: { type: Array, required: true }, districts: { type: Array, required: false, default: () => [] }, areas: { type: Array, required: false, default: () => [] }, categories: { type: Array, required: false, default: () => [] } })
 
 const { districts, areas } = toRefs(props)
 
@@ -166,6 +188,14 @@ const form = useForm({
 	governorate_id: props.chef.governorate_id ?? (props.chef.governorate ? props.chef.governorate.id : null),
 	district_id: props.chef.district_id ?? (props.chef.district ? props.chef.district.id : null),
 	area_id: props.chef.area_id ?? (props.chef.area ? props.chef.area.id : null),
+	categories: props.chef.categories ? props.chef.categories.map(cat => cat.id) : [],
+	gallery_images: [],
+	delete_gallery_ids: [],
+})
+
+// Existing gallery images for display
+const existingGalleryImages = computed(() => {
+	return props.chef.gallery || []
 })
 
 const availableDistricts = computed(() => {

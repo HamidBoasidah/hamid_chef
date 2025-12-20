@@ -3,22 +3,27 @@
 namespace App\Services;
 
 use App\Repositories\ChefRepository;
+use App\Services\ChefGalleryService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+
+use Illuminate\Support\Facades\DB;
 use App\Exceptions\ValidationException;
+use Exception;
 
 class ChefService
 {
     protected ChefRepository $chefs;
+    protected ChefGalleryService $galleryService;
 
-    public function __construct(ChefRepository $chefs)
+    public function __construct(ChefRepository $chefs, ChefGalleryService $galleryService)
     {
         $this->chefs = $chefs;
+        $this->galleryService = $galleryService;
     }
 
     /**
@@ -68,7 +73,33 @@ class ChefService
 
         $attributes = $this->normalizeFileAttributes($attributes);
 
-        return $this->chefs->create($attributes);
+        // Extract categories and gallery images before creating chef
+        $categories = $attributes['categories'] ?? [];
+        $galleryImages = $attributes['gallery_images'] ?? [];
+        unset($attributes['categories'], $attributes['gallery_images']);
+
+        DB::beginTransaction();
+        
+        try {
+            $chef = $this->chefs->create($attributes);
+
+            // Sync categories if provided
+            if (!empty($categories)) {
+                $this->syncChefCategories($chef, $categories);
+            }
+
+            // Create gallery images if provided
+            if (!empty($galleryImages)) {
+                $this->galleryService->createMultiple($chef->id, $galleryImages);
+            }
+
+            DB::commit();
+            return $chef;
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -95,16 +126,7 @@ class ChefService
      */
     public function handleChefCreationDatabaseException(QueryException $e, Request $request)
     {
-        // Log the original error for debugging
-        Log::error('Database exception during chef creation', [
-            'error_code' => $e->getCode(),
-            'error_message' => $e->getMessage(),
-            'sql' => $e->getSql(),
-            'bindings' => $e->getBindings(),
-            'user_id' => $request->user()?->id,
-            'request_data' => $request->all(),
-            'trace' => $e->getTraceAsString()
-        ]);
+
 
         // Check for duplicate entry constraint violation
         if ($e->getCode() == 23000 && $this->isDuplicateChefError($e)) {
@@ -141,7 +163,34 @@ class ChefService
     {
         $attributes = $this->normalizeFileAttributes($attributes);
 
-        return $this->chefs->update($id, $attributes);
+        // Extract categories and gallery data before updating chef
+        $categories = $attributes['categories'] ?? null;
+        $galleryImages = $attributes['gallery_images'] ?? null;
+        $deleteGalleryIds = $attributes['delete_gallery_ids'] ?? [];
+        unset($attributes['categories'], $attributes['gallery_images'], $attributes['delete_gallery_ids']);
+
+        DB::beginTransaction();
+        
+        try {
+            $chef = $this->chefs->update($id, $attributes);
+
+            // Sync categories if provided
+            if ($categories !== null) {
+                $this->syncChefCategories($chef, $categories);
+            }
+
+            // Update gallery if provided
+            if ($galleryImages !== null || !empty($deleteGalleryIds)) {
+                $this->galleryService->updateGallery($chef->id, $galleryImages ?? [], $deleteGalleryIds);
+            }
+
+            DB::commit();
+            return $chef;
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     /**
@@ -151,7 +200,34 @@ class ChefService
     {
         $attributes = $this->normalizeFileAttributes($attributes);
 
-        return $this->chefs->updateModel($chef, $attributes);
+        // Extract categories and gallery data before updating chef
+        $categories = $attributes['categories'] ?? null;
+        $galleryImages = $attributes['gallery_images'] ?? null;
+        $deleteGalleryIds = $attributes['delete_gallery_ids'] ?? [];
+        unset($attributes['categories'], $attributes['gallery_images'], $attributes['delete_gallery_ids']);
+
+        DB::beginTransaction();
+        
+        try {
+            $updatedChef = $this->chefs->updateModel($chef, $attributes);
+
+            // Sync categories if provided
+            if ($categories !== null) {
+                $this->syncChefCategories($updatedChef, $categories);
+            }
+
+            // Update gallery if provided
+            if ($galleryImages !== null || !empty($deleteGalleryIds)) {
+                $this->galleryService->updateGallery($updatedChef->id, $galleryImages ?? [], $deleteGalleryIds);
+            }
+
+            DB::commit();
+            return $updatedChef;
+            
+        } catch (Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
     }
 
     public function delete(int|string $id): bool
@@ -272,4 +348,84 @@ class ChefService
 
         return $attributes;
     }
+
+    /**
+     * مزامنة أقسام الطاهي
+     * 
+     * @param Model $chef
+     * @param array $categoryIds
+     * @return void
+     */
+    protected function syncChefCategories(Model $chef, array $categoryIds): void
+    {
+        // Prepare sync data with additional pivot data
+        $syncData = [];
+        foreach ($categoryIds as $categoryId) {
+            $syncData[$categoryId] = [
+                'is_active' => true,
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+
+        $chef->categories()->sync($syncData);
+    }
+
+    /**
+     * إضافة قسم للطاهي
+     * 
+     * @param int|string $chefId
+     * @param int $categoryId
+     * @return void
+     */
+    public function addCategory(int|string $chefId, int $categoryId): void
+    {
+        $chef = $this->find($chefId);
+        
+        if (!$chef->categories()->where('cuisine_id', $categoryId)->exists()) {
+            $chef->categories()->attach($categoryId, [
+                'is_active' => true,
+                'created_by' => Auth::id(),
+                'updated_by' => Auth::id(),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+        }
+    }
+
+    /**
+     * إزالة قسم من الطاهي
+     * 
+     * @param int|string $chefId
+     * @param int $categoryId
+     * @return void
+     */
+    public function removeCategory(int|string $chefId, int $categoryId): void
+    {
+        $chef = $this->find($chefId);
+        $chef->categories()->detach($categoryId);
+    }
+
+    /**
+     * تفعيل/إلغاء تفعيل قسم للطاهي
+     * 
+     * @param int|string $chefId
+     * @param int $categoryId
+     * @param bool $isActive
+     * @return void
+     */
+    public function toggleCategoryStatus(int|string $chefId, int $categoryId, bool $isActive): void
+    {
+        $chef = $this->find($chefId);
+        
+        $chef->categories()->updateExistingPivot($categoryId, [
+            'is_active' => $isActive,
+            'updated_by' => Auth::id(),
+            'updated_at' => now(),
+        ]);
+    }
+
+
 }

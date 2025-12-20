@@ -50,6 +50,8 @@ return [
     'addresses'         => ['view', 'create', 'update', 'delete'],
     'chefs'         => ['view', 'create', 'update', 'delete'],
     'categories'         => ['view', 'create', 'update', 'delete'],
+    'chef-services'         => ['view', 'create', 'update', 'delete'],
+    
     ],
 
     /*
@@ -71,7 +73,11 @@ return [
     'profile'      => ['en' => 'Profile',            'ar' => 'الملف الشخصي'],
     'activitylogs'  => ['en' => 'Activity Logs',       'ar' => 'سجل التغييرات'],
     'kycs'         => ['en' => 'KYC Requests',  'ar' => 'طلبات KYC'],
-    'addresses'         => ['en' => 'Addresses',  'ar' => 'العناوين'],
+    'addresses'    => ['en' => 'Addresses',  'ar' => 'العناوين'],
+    'tags'         => ['en' => 'Tags',       'ar' => 'الوسوم'],
+    'chefs'        => ['en' => 'Chefs',      'ar' => 'الطهاة'],
+    'categories'   => ['en' => 'Categories', 'ar' => 'التصنيفات'],
+    'chef-services' => ['en' => 'Chef Services', 'ar' => 'خدمات الطهاة'],
 
     ],
 

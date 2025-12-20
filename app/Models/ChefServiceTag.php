@@ -17,6 +17,10 @@ class ChefServiceTag extends BaseModel
         'updated_by',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+    ];
+
     public function service(): BelongsTo
     {
         return $this->belongsTo(ChefService::class, 'chef_service_id');

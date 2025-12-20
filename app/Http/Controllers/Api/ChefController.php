@@ -32,7 +32,7 @@ class ChefController extends Controller
     {
         $perPage = (int) $request->get('per_page', 10);
 
-        // Query للطهاة النشطين العامين (متاحة للعرض العام)
+        // Query للطهاة النشطين العامين (العلاقات محملة تلقائياً من Repository)
         $query = $chefService->getActiveChefs();
 
         // تطبيق الفلاتر العامة (بحث + مفاتيح خارجية)
@@ -85,8 +85,12 @@ class ChefController extends Controller
     public function show(ChefService $chefService, Request $request, $id)
     {
         try {
-            // Use general find so any user (including guests) can view a chef
-            $chef = $chefService->find($id, ['user', 'governorate', 'district', 'area']);
+            // Use general find مع تحميل المعرض للصور النشطة فقط
+            $chef = $chefService->find($id, [
+                'gallery' => function($query) {
+                    $query->where('is_active', true)->orderBy('created_at');
+                }
+            ]);
 
             $this->authorize('view', $chef);
 
@@ -107,12 +111,12 @@ class ChefController extends Controller
         try {
             $data = $request->validated();
 
-            // أولاً: نجلب الطاهي المملوك للمستخدم الحالي
-            $chef = $chefService->findForUser(
-                $id,
-                $request->user()->id,
-                ['user', 'governorate', 'district', 'area']
-            );
+            // أولاً: نجلب الطاهي المملوك للمستخدم الحالي مع المعرض للصور النشطة فقط
+            $chef = $chefService->findForUser($id, $request->user()->id, [
+                'gallery' => function($query) {
+                    $query->where('is_active', true)->orderBy('created_at');
+                }
+            ]);
 
             // ثانياً: نتحقق من الـ Policy
             $this->authorize('update', $chef);
@@ -122,6 +126,13 @@ class ChefController extends Controller
 
             // ثالثاً: نحدّث نفس الـ Model (بدون إعادة استعلام جديد)
             $updated = $chefService->updateModel($chef, $data);
+
+            // إعادة تحميل المعرض بعد التحديث للحصول على البيانات المحدثة
+            $updated->load([
+                'gallery' => function($query) {
+                    $query->where('is_active', true)->orderBy('created_at');
+                }
+            ]);
 
             return $this->updatedResponse(
                 ChefDTO::fromModel($updated)->toArray(),

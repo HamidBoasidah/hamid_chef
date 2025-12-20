@@ -33,6 +33,12 @@ class UpdateChefRequest extends FormRequest
             'area_id' => 'sometimes|nullable|exists:areas,id',
             'logo' => 'sometimes|nullable|image|max:4096',
             'banner' => 'sometimes|nullable|image|max:4096',
+            'categories' => 'sometimes|nullable|array',
+            'categories.*' => 'exists:categories,id',
+            'gallery_images' => 'sometimes|nullable|array|max:10',
+            'gallery_images.*' => 'image|max:5120', // 5MB per image
+            'delete_gallery_ids' => 'sometimes|nullable|array',
+            'delete_gallery_ids.*' => 'integer|exists:chef_gallery,id',
             'created_by' => 'sometimes|nullable|exists:users,id',
             'updated_by' => 'sometimes|nullable|exists:users,id',
         ];

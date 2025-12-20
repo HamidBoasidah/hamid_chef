@@ -33,6 +33,10 @@ class StoreChefRequest extends FormRequest
             'area_id' => 'required|exists:areas,id',
             'logo' => 'nullable|image|max:4096',
             'banner' => 'nullable|image|max:4096',
+            'categories' => 'nullable|array',
+            'categories.*' => 'exists:categories,id',
+            'gallery_images' => 'nullable|array|max:10',
+            'gallery_images.*' => 'image|max:5120', // 5MB per image
             'created_by' => 'nullable|exists:users,id',
             'updated_by' => 'nullable|exists:users,id',
         ];

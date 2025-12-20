@@ -1,0 +1,154 @@
+{
+  "info": {
+    "_postman_id": "b3c2d1e4-5f6a-47b8-9abc-9876543210ab",
+    "name": "MoonChef - Categories API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for testing Categories endpoints (protected under /api/categories)"
+  },
+  "item": [
+    {
+      "name": "List Categories (index)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/categories?per_page=10",
+          "host": ["{{base_url}}"],
+          "path": ["api","categories"],
+          "query": [
+            { "key": "per_page", "value": "10" }
+          ]
+        },
+        "description": "Protected - list categories with optional filters (search, parent_id, is_active, etc.). Provide a valid {{token}}."
+      },
+      "response": []
+    },
+    {
+      "name": "Show Category (show)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/categories/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","categories","1"]
+        },
+        "description": "Protected - get a single category by id. Replace 1 with desired category id."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Category (store)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "name", "value": "تصنيف تجريبي", "type": "text" },
+            { "key": "slug", "value": "test-category", "type": "text" },
+            { "key": "description", "value": "وصف للتصنيف التجريبي", "type": "text" },
+            { "key": "parent_id", "value": "", "type": "text" },
+            { "key": "is_active", "value": "1", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/categories",
+          "host": ["{{base_url}}"],
+          "path": ["api","categories"]
+        },
+        "description": "Protected - create a new category. Provide a valid {{token}}."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Category (update)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "name", "value": "تصنيف محدث", "type": "text" },
+            { "key": "description", "value": "تحديث الوصف", "type": "text" },
+            { "key": "is_active", "value": "1", "type": "text" }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/categories/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","categories","1"]
+        },
+        "description": "Protected - update category with id 1. Replace 1 as needed."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Category (destroy)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/categories/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","categories","1"]
+        },
+        "description": "Protected - delete category by id. Replace 1 with desired id."
+      },
+      "response": []
+    },
+    {
+      "name": "Activate Category",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/categories/1/activate",
+          "host": ["{{base_url}}"],
+          "path": ["api","categories","1","activate"]
+        },
+        "description": "Protected - activate category with id 1."
+      },
+      "response": []
+    },
+    {
+      "name": "Deactivate Category",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/categories/1/deactivate",
+          "host": ["{{base_url}}"],
+          "path": ["api","categories","1","deactivate"]
+        },
+        "description": "Protected - deactivate category with id 1."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "token", "value": "5|93udQuo7CPRzpqb32MsyAoXcizRmopmIJCgsBsx7217bbb59", "type": "string" }
+  ]
+}

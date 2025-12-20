@@ -8,9 +8,9 @@ use App\Repositories\Eloquent\BaseRepository;
 class ChefServiceRepository extends BaseRepository
 {
     protected array $defaultWith = [
-        'chef' => ['id', 'user_id', 'name', 'address'],
-        'images' => ['id', 'chef_service_id', 'image'],
-        'tags' => ['id', 'name', 'slug'],
+        'chef:id,name,logo',
+        'images:id,chef_service_id,image,is_active',
+        'tags:id,name,slug',
     ];
 
     public function __construct(ChefService $model)

@@ -126,12 +126,18 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(BookingService::class, fn($app) => new BookingService($app->make(BookingRepository::class)));
         $this->app->bind(BookingTransactionService::class, fn($app) => new BookingTransactionService($app->make(BookingTransactionRepository::class)));
         $this->app->bind(CategoryService::class, fn($app) => new CategoryService($app->make(CategoryRepository::class)));
-        $this->app->bind(ChefCoreService::class, fn($app) => new ChefCoreService($app->make(ChefRepository::class)));
+        $this->app->bind(ChefCoreService::class, fn($app) => new ChefCoreService(
+            $app->make(ChefRepository::class),
+            $app->make(ChefGalleryService::class)
+        ));
         $this->app->bind(ChefCategoryService::class, fn($app) => new ChefCategoryService($app->make(ChefCategoryRepository::class)));
         $this->app->bind(ChefGalleryService::class, fn($app) => new ChefGalleryService($app->make(ChefGalleryRepository::class)));
         $this->app->bind(ChefRatingService::class, fn($app) => new ChefRatingService($app->make(ChefRatingRepository::class)));
-        $this->app->bind(ChefServiceService::class, fn($app) => new ChefServiceService($app->make(ChefServiceRepository::class)));
         $this->app->bind(ChefServiceImageService::class, fn($app) => new ChefServiceImageService($app->make(ChefServiceImageRepository::class)));
+        $this->app->bind(ChefServiceService::class, fn($app) => new ChefServiceService(
+            $app->make(ChefServiceRepository::class),
+            $app->make(ChefServiceImageService::class)
+        ));
         $this->app->bind(ChefServiceTagService::class, fn($app) => new ChefServiceTagService($app->make(ChefServiceTagRepository::class)));
         $this->app->bind(ChefWalletService::class, fn($app) => new ChefWalletService($app->make(ChefWalletRepository::class)));
         $this->app->bind(ChefWalletTransactionService::class, fn($app) => new ChefWalletTransactionService($app->make(ChefWalletTransactionRepository::class)));
