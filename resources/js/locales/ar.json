@@ -440,6 +440,8 @@
   },
   "areas": {
     "areaInformation": "معلومات المنطقة",
+    "district": "المديرية",
+    "selectDistrict": "اختر المديرية",
     "selectArea": "اختر المنطقة",
     "addArea": "إضافة منطقة",
     "editArea": "تعديل منطقة",

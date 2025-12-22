@@ -229,7 +229,7 @@ Route::middleware('auth:admin')
 
         // Activity Log
         Route::resource('activitylogs', ActivityLogController::class)
-            ->only(['index', 'show' , 'destroy'])
+            ->only(['index', 'show'])
             ->names('activitylogs');
 
 

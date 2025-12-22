@@ -316,8 +316,30 @@
     "noPhone": "No phone number",
     "noAddressProvided": "No address provided"
     ,
-    "errors": {
-      "already_has_pending_or_approved": "You already have a pending or approved KYC request. You cannot create a new one until the previous request is rejected."
+
+    "areas": {
+      "areaInformation": "Area information",
+      "district": "District",
+      "selectDistrict": "Select a district",
+      "selectArea": "Select an area",
+      "addArea": "Add Area",
+      "editArea": "Edit Area",
+      "showArea": "Show Area",
+      "deleteArea": "Delete Area",
+      "areaCreatedSuccessfully": "Area created successfully",
+      "areaCreationFailed": "Failed to create area",
+      "areaUpdatedSuccessfully": "Area updated successfully",
+      "areaUpdateFailed": "Failed to update area",
+      "areaDeletedSuccessfully": "Area deleted successfully",
+      "areaDeletionFailed": "Failed to delete area",
+      "noArea": "No areas found",
+      "nameAr": "Name (AR)",
+      "nameEn": "Name (EN)",
+      "area": "Area",
+      "setAsDefault": "Set as default"
+    },
+
+    "addresses": {
     }
   },
   "activitylogs": {
