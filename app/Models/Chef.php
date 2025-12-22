@@ -130,6 +130,6 @@ class Chef extends BaseModel
 
     public function ratings(): HasMany
     {
-        return $this->hasMany(ChefRating::class);
+        return $this->hasMany(ChefServiceRating::class);
     }
 }

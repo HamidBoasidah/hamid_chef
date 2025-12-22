@@ -22,6 +22,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('addresses/{address}/deactivate', [App\Http\Controllers\Api\AddressController::class, 'deactivate']);
     Route::post('addresses/{address}/set-default', [App\Http\Controllers\Api\AddressController::class, 'setDefault']);
 
+    // Chef Service Ratings API Routes (only allow store, update, destroy via API)
+    Route::apiResource('chef-service-ratings', App\Http\Controllers\Api\ChefServiceRatingController::class)->only(['store', 'update', 'destroy']);
+    
     // Booking API Routes with Rate Limiting
     Route::middleware('App\Http\Middleware\BookingRateLimitMiddleware:general_api')->group(function () {
         Route::get('bookings', [App\Http\Controllers\Api\BookingController::class, 'index']);
@@ -45,6 +48,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // Categories removed from protected routes (only index is exposed publicly)
 
 });
+
+// Public route for chef ratings (anyone can view)
+Route::get('chefs/{chef}/ratings', [App\Http\Controllers\Api\ChefServiceRatingController::class, 'getChefRatings']);
 
 Route::group(['prefix' => 'chef', 'middleware' => ['auth:sanctum', 'user_role:chef']], function () {
 

@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ChefService extends BaseModel
 {
@@ -129,5 +130,17 @@ class ChefService extends BaseModel
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function ratings()
+    {
+        return $this->hasManyThrough(
+            ChefServiceRating::class,
+            Booking::class,
+            'chef_service_id', // Foreign key on bookings table
+            'booking_id',      // Foreign key on ratings table
+            'id',              // Local key on chef_services table
+            'id'               // Local key on bookings table
+        );
     }
 }

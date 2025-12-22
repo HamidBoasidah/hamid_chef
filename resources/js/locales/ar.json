@@ -754,5 +754,28 @@
       "signUp": "إنشاء حساب",
       "tagline": "لوحة تحكم MoonChef لإدارة الطهاة والطلبات"
     }
+  },
+
+  "ratings": {
+    "ratingsAndReviews": "التقييمات والمراجعات",
+    "noRatings": "لا توجد تقييمات حتى الآن",
+    "noReviewText": "لا يوجد نص مراجعة",
+    "bookingDate": "تاريخ الحجز",
+    "confirmActivate": "هل أنت متأكد من تفعيل هذا التقييم؟",
+    "confirmDeactivate": "هل أنت متأكد من تعطيل هذا التقييم؟",
+    "confirmDelete": "هل أنت متأكد من حذف هذا التقييم؟ لا يمكن التراجع عن هذا الإجراء.",
+    "ratingCreated": "تم إنشاء التقييم بنجاح",
+    "ratingUpdated": "تم تحديث التقييم بنجاح",
+    "ratingDeleted": "تم حذف التقييم بنجاح",
+    "ratingActivated": "تم تفعيل التقييم بنجاح",
+    "ratingDeactivated": "تم تعطيل التقييم بنجاح",
+    "canOnlyRateConfirmedBookings": "يمكن تقييم الحجوزات المؤكدة فقط",
+    "alreadyRated": "لقد قمت بتقييم هذا الحجز مسبقاً",
+    "confirmDeleteMessage" : "هل انت متاكد من انك تريد حذف التقييم",
+    "rating": "التقييم",
+    "review": "المراجعة",
+    "customer": "العميل",
+    "chef": "الطاهي",
+    "booking": "الحجز"
   }
 }

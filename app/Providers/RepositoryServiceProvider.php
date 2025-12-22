@@ -15,7 +15,7 @@ use App\Repositories\BookingTransactionRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ChefCategoryRepository;
 use App\Repositories\ChefGalleryRepository;
-use App\Repositories\ChefRatingRepository;
+use App\Repositories\ChefServiceRatingRepository;
 use App\Repositories\ChefRepository;
 use App\Repositories\ChefServiceImageRepository;
 use App\Repositories\ChefServiceRepository;
@@ -43,7 +43,7 @@ use App\Models\Category;
 use App\Models\Chef;
 use App\Models\ChefCategory;
 use App\Models\ChefGallery;
-use App\Models\ChefRating;
+use App\Models\ChefServiceRating;
 use App\Models\ChefService;
 use App\Models\ChefServiceImage;
 use App\Models\ChefServiceTag;
@@ -71,7 +71,7 @@ use App\Services\BookingTransactionService;
 use App\Services\CategoryService;
 use App\Services\ChefCategoryService;
 use App\Services\ChefGalleryService;
-use App\Services\ChefRatingService;
+use App\Services\ChefServiceRatingService;
 use App\Services\ChefService as ChefCoreService;
 use App\Services\ChefServiceImageService;
 use App\Services\ChefServiceService;
@@ -103,7 +103,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ChefRepository::class, fn($app) => new ChefRepository($app->make(Chef::class)));
         $this->app->bind(ChefCategoryRepository::class, fn($app) => new ChefCategoryRepository($app->make(ChefCategory::class)));
         $this->app->bind(ChefGalleryRepository::class, fn($app) => new ChefGalleryRepository($app->make(ChefGallery::class)));
-        $this->app->bind(ChefRatingRepository::class, fn($app) => new ChefRatingRepository($app->make(ChefRating::class)));
+        $this->app->bind(ChefServiceRatingRepository::class, fn($app) => new ChefServiceRatingRepository($app->make(ChefServiceRating::class)));
         $this->app->bind(ChefServiceRepository::class, fn($app) => new ChefServiceRepository($app->make(ChefService::class)));
         $this->app->bind(ChefServiceImageRepository::class, fn($app) => new ChefServiceImageRepository($app->make(ChefServiceImage::class)));
         $this->app->bind(ChefServiceTagRepository::class, fn($app) => new ChefServiceTagRepository($app->make(ChefServiceTag::class)));
@@ -137,7 +137,7 @@ class RepositoryServiceProvider extends ServiceProvider
         ));
         $this->app->bind(ChefCategoryService::class, fn($app) => new ChefCategoryService($app->make(ChefCategoryRepository::class)));
         $this->app->bind(ChefGalleryService::class, fn($app) => new ChefGalleryService($app->make(ChefGalleryRepository::class)));
-        $this->app->bind(ChefRatingService::class, fn($app) => new ChefRatingService($app->make(ChefRatingRepository::class)));
+        $this->app->bind(ChefServiceRatingService::class, fn($app) => new ChefServiceRatingService($app->make(ChefServiceRatingRepository::class)));
         $this->app->bind(ChefServiceImageService::class, fn($app) => new ChefServiceImageService($app->make(ChefServiceImageRepository::class)));
         $this->app->bind(ChefServiceService::class, fn($app) => new ChefServiceService(
             $app->make(ChefServiceRepository::class),

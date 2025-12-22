@@ -5,9 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class ChefRating extends BaseModel
+class ChefServiceRating extends BaseModel
 {
     use HasFactory;
+
+    protected $table = 'chef_service_ratings';
 
     protected $fillable = [
         'booking_id',

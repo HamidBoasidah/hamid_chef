@@ -50,6 +50,9 @@ import HistoryIcon from "./HistoryIcon.vue";
 import AddressIcon from "./AddressIcon.vue";
 import ChefIcon from "./ChefIcon.vue";
 import TagIcon from "./TagIcon.vue";
+import StarIcon from "./StarIcon.vue";
+import EyeIcon from "./EyeIcon.vue";
+import EyeSlashIcon from "./EyeSlashIcon.vue";
 
 export {
   BellIcon,
@@ -58,6 +61,9 @@ export {
   HistoryIcon,
   ChefIcon,
   TagIcon,
+  StarIcon,
+  EyeIcon,
+  EyeSlashIcon,
   LayoutDashboardIcon,
   UserGroupIcon,
   FolderIcon,

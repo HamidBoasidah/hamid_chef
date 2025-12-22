@@ -131,6 +131,9 @@
 			empty-message="لا توجد صور للخدمة"
 		/>
 
+		<!-- Service Ratings Section -->
+		<ShowChefServiceRatings :ratings="service.ratings || []" />
+
 		<div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
 			<Link :href="route('admin.chef-services.index')" class="shadow-theme-xs inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03]">
 				{{ t('buttons.backToList') }}
@@ -148,6 +151,7 @@ import { Link } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
 import { TaskIcon, ChefIcon } from '@/icons'
 import ChefGalleryViewer from '@/Components/common/ChefGalleryViewer.vue'
+import ShowChefServiceRatings from '@/Components/admin/chef-service-rating/ShowChefServiceRatings.vue'
 
 const { t, locale } = useI18n()
 

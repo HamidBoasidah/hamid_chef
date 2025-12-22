@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\KycController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\ChefController;
+use App\Http\Controllers\Admin\ChefServiceRatingController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Support\RoutePermissions;
@@ -163,6 +164,17 @@ Route::middleware('auth:admin')
 
         Route::patch('chef-services/{id}/deactivate', [App\Http\Controllers\Admin\ChefServiceController::class, 'deactivate'])
             ->name('chef-services.deactivate');
+
+        // Chef Service Ratings
+        Route::resource('chef-service-ratings', App\Http\Controllers\Admin\ChefServiceRatingController::class)
+            ->only(['index', 'show', 'destroy'])
+            ->names('chef-service-ratings');
+
+        Route::post('chef-service-ratings/{id}/activate', [App\Http\Controllers\Admin\ChefServiceRatingController::class, 'activate'])
+            ->name('chef-service-ratings.activate');
+
+        Route::post('chef-service-ratings/{id}/deactivate', [App\Http\Controllers\Admin\ChefServiceRatingController::class, 'deactivate'])
+            ->name('chef-service-ratings.deactivate');
 
 
 

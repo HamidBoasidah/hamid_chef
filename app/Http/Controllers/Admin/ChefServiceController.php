@@ -55,9 +55,18 @@ class ChefServiceController extends Controller
 
     public function show(ChefService $chefService)
     {
-        $chefService->load(['tags', 'images' => function($query) {
-            $query->where('is_active', true)->orderBy('created_at');
-        }]);
+        $chefService->load([
+            'chef',
+            'tags', 
+            'images' => function($query) {
+                $query->where('is_active', true)->orderBy('created_at');
+            },
+            'ratings' => function($query) {
+                $query->with(['customer:id,first_name,last_name', 'booking:id,date'])
+                      ->where('chef_service_ratings.is_active', true)
+                      ->orderBy('chef_service_ratings.created_at', 'desc');
+            }
+        ]);
         $dto = ChefServiceDTO::fromModel($chefService)->toArray();
         return Inertia::render('Admin/ChefService/Show', [
             'service' => $dto,

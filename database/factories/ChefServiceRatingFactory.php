@@ -2,15 +2,15 @@
 
 namespace Database\Factories;
 
-use App\Models\ChefRating;
+use App\Models\ChefServiceRating;
 use App\Models\Booking;
 use App\Models\User;
 use App\Models\Chef;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class ChefRatingFactory extends Factory
+class ChefServiceRatingFactory extends Factory
 {
-    protected $model = ChefRating::class;
+    protected $model = ChefServiceRating::class;
 
     public function definition()
     {
@@ -22,6 +22,7 @@ class ChefRatingFactory extends Factory
             'chef_id' => Chef::factory(),
             'rating' => $this->faker->numberBetween(1,5),
             'review' => $this->faker->optional()->sentence,
+            'is_active' => true,
             'created_by' => null,
             'updated_by' => null,
         ];

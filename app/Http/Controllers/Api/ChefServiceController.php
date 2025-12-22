@@ -43,11 +43,22 @@ class ChefServiceController extends Controller
             $this->getForeignKeyFilters()
         );
 
-        $services = $query->latest()->paginate($perPage);
+        // تحميل العلاقات مع التقييمات دائماً
+        $relations = [
+            'chef',
+            'ratings' => function($query) {
+                $query->with(['customer:id,first_name,last_name'])
+                      ->where('chef_service_ratings.is_active', true)
+                      ->orderBy('chef_service_ratings.created_at', 'desc')
+                      ->limit(5); // أحدث 5 تقييمات فقط للقائمة
+            }
+        ];
 
-        // تحويل النتائج إلى DTO خفيفة للـ index
+        $services = $query->with($relations)->latest()->paginate($perPage);
+
+        // تحويل النتائج إلى DTO كاملة مع التقييمات
         $services->getCollection()->transform(function ($service) {
-            return ChefServiceDTO::fromModel($service)->toIndexArray();
+            return ChefServiceDTO::fromModel($service)->toArray();
         });
 
         return $this->collectionResponse($services, 'تم جلب قائمة الخدمات بنجاح');
@@ -80,10 +91,16 @@ class ChefServiceController extends Controller
     public function show(ChefServiceService $serviceService, Request $request, $id)
     {
         try {
-            // Use general find مع تحميل الصور للصور النشطة فقط
+            // Use general find مع تحميل الصور والتقييمات
             $service = $serviceService->find($id, [
+                'chef',
                 'images' => function($query) {
                     $query->where('is_active', true)->orderBy('created_at');
+                },
+                'ratings' => function($query) {
+                    $query->with(['customer:id,first_name,last_name', 'booking:id,date'])
+                          ->where('chef_service_ratings.is_active', true)
+                          ->orderBy('chef_service_ratings.created_at', 'desc');
                 }
             ]);
 

@@ -20,7 +20,7 @@ use App\Models\BookingTransaction;
 use App\Models\ChefWallet;
 use App\Models\ChefWalletTransaction;
 use App\Models\ChefWithdrawalRequest;
-use App\Models\ChefRating;
+use App\Models\ChefServiceRating;
 
 class InitialDataSeeder extends Seeder
 {
@@ -86,7 +86,7 @@ class InitialDataSeeder extends Seeder
 
                 // Optionally add rating for some bookings
                 if (rand(0,1)) {
-                    ChefRating::factory()->create(['booking_id' => $booking->id, 'customer_id' => $booking->customer_id, 'chef_id' => $booking->chef_id]);
+                    ChefServiceRating::factory()->create(['booking_id' => $booking->id, 'customer_id' => $booking->customer_id, 'chef_id' => $booking->chef_id]);
                 }
             }
         }

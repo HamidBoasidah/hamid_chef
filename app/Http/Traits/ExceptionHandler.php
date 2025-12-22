@@ -159,7 +159,7 @@ trait ExceptionHandler
             'Chef' => 'الطاهي',
             'ChefCategory' => 'فئة الطاهي',
             'ChefGallery' => 'معرض الطاهي',
-            'ChefRating' => 'تقييم الطاهي',
+            'ChefServiceRating' => 'تقييم خدمة الطاهي',
             'ChefService' => 'خدمة الطاهي',
             'ChefServiceImage' => 'صورة خدمة الطاهي',
             'ChefServiceTag' => 'وسم خدمة الطاهي',

@@ -64,9 +64,20 @@ class ChefController extends Controller
 
     public function show(Chef $chef)
     {
-        $chef->load(['categories', 'gallery' => function($query) {
-            $query->where('is_active', true)->orderBy('created_at');
-        }]);
+        $chef->load([
+            'categories', 
+            'gallery' => function($query) {
+                $query->where('is_active', true)->orderBy('created_at');
+            }
+        ]);
+        
+        // Calculate average rating from all service ratings
+        $averageRating = $chef->ratings()
+            ->where('chef_service_ratings.is_active', true)
+            ->avg('rating');
+        
+        $chef->rating_avg = $averageRating ? round($averageRating, 2) : 0;
+        
         $dto = ChefDTO::fromModel($chef)->toArray();
         return Inertia::render('Admin/Chef/Show', [
             'chef' => $dto,
