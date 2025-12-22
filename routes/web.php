@@ -13,6 +13,31 @@ Route::middleware(['auth'])
 
 });
 
+// Admin Routes
+Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
+    // Admin Dashboard
+    Route::get('/', function () {
+        return redirect()->route('admin.bookings.index');
+    })->name('home');
+    
+    Route::get('/dashboard', function () {
+        return redirect()->route('admin.bookings.index');
+    })->name('dashboard');
+    
+    // Booking Management Routes
+    Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class);
+    
+    // AJAX Routes for Booking Management
+    Route::post('bookings/bulk-update', [App\Http\Controllers\Admin\BookingController::class, 'bulkUpdate'])
+        ->name('bookings.bulk-update');
+    
+    Route::get('bookings/chef/{chef}/availability', [App\Http\Controllers\Admin\BookingController::class, 'checkAvailability'])
+        ->name('bookings.check-availability');
+    
+    Route::get('bookings/chef/{chef}/bookings', [App\Http\Controllers\Admin\BookingController::class, 'getChefBookings'])
+        ->name('bookings.chef-bookings');
+});
+
 // روابط مصادقة لوحة التحكم (بدون حماية)
 //Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 //Route::post('login', [AuthController::class, 'login'])->name('login');

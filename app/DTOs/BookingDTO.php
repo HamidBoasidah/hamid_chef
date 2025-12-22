@@ -3,6 +3,7 @@
 namespace App\DTOs;
 
 use App\Models\Booking;
+use Carbon\Carbon;
 
 class BookingDTO extends BaseDTO
 {
@@ -29,6 +30,12 @@ class BookingDTO extends BaseDTO
     public $updated_by;
     public $created_at;
     public $deleted_at;
+
+    // Relationships
+    public $customer;
+    public $chef;
+    public $service;
+    public $address;
 
     public function __construct(
         $id,
@@ -82,7 +89,7 @@ class BookingDTO extends BaseDTO
 
     public static function fromModel(Booking $booking): self
     {
-        return new self(
+        $dto = new self(
             $booking->id,
             $booking->customer_id ?? null,
             $booking->chef_id ?? null,
@@ -107,11 +114,27 @@ class BookingDTO extends BaseDTO
             $booking->created_at?->toDateTimeString() ?? null,
             $booking->deleted_at?->toDateTimeString() ?? null,
         );
+
+        // Add relationships if loaded
+        if ($booking->relationLoaded('customer')) {
+            $dto->customer = $booking->customer;
+        }
+        if ($booking->relationLoaded('chef')) {
+            $dto->chef = $booking->chef;
+        }
+        if ($booking->relationLoaded('service')) {
+            $dto->service = $booking->service;
+        }
+        if ($booking->relationLoaded('address')) {
+            $dto->address = $booking->address;
+        }
+
+        return $dto;
     }
 
     public function toArray(): array
     {
-        return [
+        $array = [
             'id' => $this->id,
             'customer_id' => $this->customer_id,
             'chef_id' => $this->chef_id,
@@ -136,6 +159,22 @@ class BookingDTO extends BaseDTO
             'created_at' => $this->created_at,
             'deleted_at' => $this->deleted_at,
         ];
+
+        // Add relationships if they exist
+        if (isset($this->customer)) {
+            $array['customer'] = $this->customer;
+        }
+        if (isset($this->chef)) {
+            $array['chef'] = $this->chef;
+        }
+        if (isset($this->service)) {
+            $array['service'] = $this->service;
+        }
+        if (isset($this->address)) {
+            $array['address'] = $this->address;
+        }
+
+        return $array;
     }
 
     public function toIndexArray(): array
@@ -148,5 +187,37 @@ class BookingDTO extends BaseDTO
             'total_amount' => $this->total_amount,
             'booking_status' => $this->booking_status,
         ];
+    }
+
+    // Time calculation methods for conflict detection
+    public function getEndTime(): Carbon
+    {
+        return Carbon::parse($this->start_time)->addHours($this->hours_count);
+    }
+    
+    public function getStartDateTime(): Carbon
+    {
+        return Carbon::parse($this->date . ' ' . $this->start_time);
+    }
+    
+    public function getEndDateTime(): Carbon
+    {
+        return $this->getStartDateTime()->addHours($this->hours_count);
+    }
+    
+    // Validation methods
+    public function isValidForConflictCheck(): bool
+    {
+        return !empty($this->chef_id) 
+            && !empty($this->date) 
+            && !empty($this->start_time) 
+            && !empty($this->hours_count)
+            && $this->hours_count > 0;
+    }
+    
+    public function isActive(): bool
+    {
+        return $this->is_active 
+            && !in_array($this->booking_status, ['cancelled_by_customer', 'cancelled_by_chef', 'rejected']);
     }
 }

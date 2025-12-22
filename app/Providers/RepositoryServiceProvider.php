@@ -66,6 +66,7 @@ use App\Services\GovernorateService;
 use App\Services\AddressService;
 use App\Services\AdminService;
 use App\Services\BookingService;
+use App\Services\BookingConflictService;
 use App\Services\BookingTransactionService;
 use App\Services\CategoryService;
 use App\Services\ChefCategoryService;
@@ -123,7 +124,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(GovernorateService::class, fn($app) => new GovernorateService($app->make(GovernorateRepository::class)));
         $this->app->bind(AddressService::class, fn($app) => new AddressService($app->make(AddressRepository::class)));
         $this->app->bind(AdminService::class, fn($app) => new AdminService($app->make(AdminRepository::class)));
-        $this->app->bind(BookingService::class, fn($app) => new BookingService($app->make(BookingRepository::class)));
+        $this->app->bind(BookingConflictService::class, fn($app) => new BookingConflictService($app->make(BookingRepository::class)));
+        $this->app->bind(BookingService::class, fn($app) => new BookingService(
+            $app->make(BookingRepository::class),
+            $app->make(BookingConflictService::class)
+        ));
         $this->app->bind(BookingTransactionService::class, fn($app) => new BookingTransactionService($app->make(BookingTransactionRepository::class)));
         $this->app->bind(CategoryService::class, fn($app) => new CategoryService($app->make(CategoryRepository::class)));
         $this->app->bind(ChefCoreService::class, fn($app) => new ChefCoreService(

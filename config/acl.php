@@ -51,6 +51,7 @@ return [
     'chefs'         => ['view', 'create', 'update', 'delete'],
     'categories'         => ['view', 'create', 'update', 'delete'],
     'chef-services'         => ['view', 'create', 'update', 'delete'],
+    'bookings'      => ['view', 'create', 'update', 'delete'],
     
     ],
 
@@ -78,6 +79,7 @@ return [
     'chefs'        => ['en' => 'Chefs',      'ar' => 'الطهاة'],
     'categories'   => ['en' => 'Categories', 'ar' => 'التصنيفات'],
     'chef-services' => ['en' => 'Chef Services', 'ar' => 'خدمات الطهاة'],
+    'bookings' => ['en' => 'Bookings', 'ar' => 'الحجوزات'],
 
     ],
 

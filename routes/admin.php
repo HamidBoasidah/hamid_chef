@@ -141,6 +141,19 @@ Route::middleware('auth:admin')
         Route::patch('chefs/{id}/deactivate', [ChefController::class, 'deactivate'])
             ->name('chefs.deactivate');
 
+        // Bookings
+        Route::resource('bookings', App\Http\Controllers\Admin\BookingController::class)
+            ->names('bookings');
+
+        Route::post('bookings/bulk-update', [App\Http\Controllers\Admin\BookingController::class, 'bulkUpdate'])
+            ->name('bookings.bulk-update');
+
+        Route::get('bookings/chef/{chef}/availability', [App\Http\Controllers\Admin\BookingController::class, 'checkAvailability'])
+            ->name('bookings.check-availability');
+
+        Route::get('bookings/chef/{chef}/bookings', [App\Http\Controllers\Admin\BookingController::class, 'getChefBookings'])
+            ->name('bookings.chef-bookings');
+
         // Chef Services
         Route::resource('chef-services', App\Http\Controllers\Admin\ChefServiceController::class)
             ->names('chef-services');

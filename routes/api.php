@@ -22,6 +22,26 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('addresses/{address}/deactivate', [App\Http\Controllers\Api\AddressController::class, 'deactivate']);
     Route::post('addresses/{address}/set-default', [App\Http\Controllers\Api\AddressController::class, 'setDefault']);
 
+    // Booking API Routes with Rate Limiting
+    Route::middleware('App\Http\Middleware\BookingRateLimitMiddleware:general_api')->group(function () {
+        Route::get('bookings', [App\Http\Controllers\Api\BookingController::class, 'index']);
+        Route::get('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'show']);
+        Route::put('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'update']);
+        Route::delete('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'destroy']);
+        Route::get('chefs/{chef}/bookings', [App\Http\Controllers\Api\BookingController::class, 'getChefBookings']);
+    });
+    
+    // Booking Creation with Stricter Rate Limiting
+    Route::middleware('App\Http\Middleware\BookingRateLimitMiddleware:booking_creation')->group(function () {
+        Route::post('bookings', [App\Http\Controllers\Api\BookingController::class, 'store']);
+        Route::post('bookings/validate', [App\Http\Controllers\Api\BookingController::class, 'validateBooking']);
+    });
+    
+    // Availability Check with Higher Rate Limit
+    Route::middleware('App\Http\Middleware\BookingRateLimitMiddleware:availability_check')->group(function () {
+        Route::get('chefs/{chef}/availability', [App\Http\Controllers\Api\BookingController::class, 'checkAvailability']);
+    });
+
     // Categories removed from protected routes (only index is exposed publicly)
 
 });

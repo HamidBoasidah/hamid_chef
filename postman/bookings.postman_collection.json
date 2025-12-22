@@ -1,0 +1,137 @@
+{
+  "info": {
+    "_postman_id": "booking-collection-0001",
+    "name": "MoonChef - Bookings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection to test Bookings endpoints (list, show, create, update, delete, check-availability). Generated from Chef_Services API collection patterns."
+  },
+  "item": [
+    {
+      "name": "List Bookings",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/bookings?per_page=10",
+          "host": ["{{base_url}}"],
+          "path": ["api","bookings"],
+          "query": [
+            { "key": "per_page", "value": "10" },
+            { "key": "search", "value": "" },
+            { "key": "chef_id", "value": "" },
+            { "key": "date", "value": "" }
+          ]
+        },
+        "description": "List bookings (admin or user depending on auth)."
+      },
+      "response": []
+    },
+    {
+      "name": "Show Booking",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/bookings/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","bookings","1"]
+        },
+        "description": "Get booking by ID. Replace 1 with booking id."
+      },
+      "response": []
+    },
+    {
+      "name": "Create Booking",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"2025-12-21\",\n  \"start_time\": \"08:00\",\n  \"chef_id\": 1,\n  \"service_id\": 2,\n  \"address_id\": 3,\n  \"hours_count\": 3,\n  \"total_amount\": 450.00,\n  \"notes\": \"Customer prefers vegetarian menu\"\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/bookings",
+          "host": ["{{base_url}}"],
+          "path": ["api","bookings"]
+        },
+        "description": "Create a new booking. `date` in YYYY-MM-DD, `start_time` in HH:mm or ISO. Adjust fields to match your API's StoreBookingRequest requirements."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Booking",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"2025-12-22\",\n  \"start_time\": \"10:00\",\n  \"hours_count\": 2\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/bookings/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","bookings","1"]
+        },
+        "description": "Update booking fields. Replace 1 with booking id."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Booking",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/bookings/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","bookings","1"]
+        },
+        "description": "Delete booking by id (replace 1)."
+      },
+      "response": []
+    },
+    {
+      "name": "Check Availability (preview)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"date\": \"2025-12-21\",\n  \"start_time\": \"08:00\",\n  \"chef_id\": 1,\n  \"hours_count\": 3\n}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/bookings/check-availability",
+          "host": ["{{base_url}}"],
+          "path": ["api","bookings","check-availability"]
+        },
+        "description": "Check whether a booking slot is available without creating it. API may return conflicts or suggested alternatives."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "token", "value": "{{token}}", "type": "string" }
+  ]
+}
