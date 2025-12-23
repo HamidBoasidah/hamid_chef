@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 
 class Category extends BaseModel
 {
@@ -14,6 +15,7 @@ class Category extends BaseModel
         'name',
         'slug',
         'is_active',
+        'icon_path',
         'created_by',
         'updated_by',
     ];
@@ -28,5 +30,13 @@ class Category extends BaseModel
     public function chefCategories(): HasMany
     {
         return $this->hasMany(ChefCategory::class, 'cuisine_id');
+    }
+
+    /**
+     * Get the icon URL attribute.
+     */
+    public function getIconUrlAttribute(): ?string
+    {
+        return $this->icon_path ? Storage::url($this->icon_path) : null;
     }
 }

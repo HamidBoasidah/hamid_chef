@@ -5,7 +5,7 @@ namespace App\Traits;
 use App\Exceptions\BookingConflictException;
 use App\Exceptions\BookingValidationException;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
+// Logging removed per project request
 
 trait HandlesBookingErrors
 {
@@ -17,12 +17,7 @@ trait HandlesBookingErrors
         array $conflictingBookings = [],
         string $errorType = 'booking_conflict'
     ): JsonResponse {
-        Log::warning('Booking conflict detected', [
-            'message' => $message,
-            'conflicting_bookings' => $conflictingBookings,
-            'error_type' => $errorType,
-            'user_id' => auth()->id()
-        ]);
+        // Booking conflict detected (logging removed)
 
         return response()->json([
             'success' => false,
@@ -41,12 +36,7 @@ trait HandlesBookingErrors
         array $errors = [],
         string $errorType = 'validation_error'
     ): JsonResponse {
-        Log::warning('Booking validation failed', [
-            'message' => $message,
-            'errors' => $errors,
-            'error_type' => $errorType,
-            'user_id' => auth()->id()
-        ]);
+        // Booking validation failed (logging removed)
 
         return response()->json([
             'success' => false,
@@ -61,11 +51,7 @@ trait HandlesBookingErrors
      */
     protected function handleAuthError(string $message = 'Unauthorized access'): JsonResponse
     {
-        Log::warning('Booking authentication failed', [
-            'message' => $message,
-            'user_id' => auth()->id(),
-            'ip' => request()->ip()
-        ]);
+        // Booking authentication failed (logging removed)
 
         return response()->json([
             'success' => false,
@@ -80,11 +66,7 @@ trait HandlesBookingErrors
      */
     protected function handleAuthorizationError(string $message = 'Access forbidden'): JsonResponse
     {
-        Log::warning('Booking authorization failed', [
-            'message' => $message,
-            'user_id' => auth()->id(),
-            'ip' => request()->ip()
-        ]);
+        // Booking authorization failed (logging removed)
 
         return response()->json([
             'success' => false,
@@ -152,13 +134,7 @@ trait HandlesBookingErrors
             $message = 'Database error occurred';
         }
 
-        Log::error('Booking error occurred', [
-            'message' => $exception->getMessage(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
-            'trace' => $exception->getTraceAsString(),
-            'user_id' => auth()->id()
-        ]);
+        // Booking error occurred (logging removed)
 
         return response()->json([
             'success' => false,

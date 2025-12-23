@@ -9,7 +9,7 @@ use App\Models\Booking;
 use App\Repositories\BookingRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class BookingConflictService
 {
@@ -103,7 +103,7 @@ class BookingConflictService
      */
     public function createBookingWithLocking(BookingDTO $bookingDTO): array
     {
-        return \DB::transaction(function () use ($bookingDTO) {
+        return DB::transaction(function () use ($bookingDTO) {
             // Lock chef bookings for the date to prevent race conditions
             $this->bookingRepository->lockChefBookingsForDate(
                 $bookingDTO->chef_id, 
@@ -135,12 +135,7 @@ class BookingConflictService
             // Create the booking
             $booking = $this->bookingRepository->create($bookingDTO->toArray());
 
-            Log::info('Booking created successfully with conflict prevention', [
-                'booking_id' => $booking->id,
-                'chef_id' => $booking->chef_id,
-                'date' => $booking->date,
-                'start_time' => $booking->start_time
-            ]);
+            // booking created successfully (logging removed)
 
             return [
                 'success' => true,

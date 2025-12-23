@@ -10,17 +10,21 @@ class CategoryDTO extends BaseDTO
     public $name;
     public $slug;
     public $is_active;
+    public $icon_path;
+    public $icon_url;
     public $created_by;
     public $updated_by;
     public $created_at;
     public $deleted_at;
 
-    public function __construct($id, $name, $slug, $is_active, $created_by, $updated_by, $created_at = null, $deleted_at = null)
+    public function __construct($id, $name, $slug, $is_active, $icon_path, $icon_url, $created_by, $updated_by, $created_at = null, $deleted_at = null)
     {
         $this->id = $id;
         $this->name = $name;
         $this->slug = $slug;
         $this->is_active = (bool) $is_active;
+        $this->icon_path = $icon_path;
+        $this->icon_url = $icon_url;
         $this->created_by = $created_by;
         $this->updated_by = $updated_by;
         $this->created_at = $created_at;
@@ -34,6 +38,8 @@ class CategoryDTO extends BaseDTO
             $category->name ?? null,
             $category->slug ?? null,
             $category->is_active ?? false,
+            $category->icon_path ?? null,
+            $category->icon_url ?? null,
             $category->created_by ?? null,
             $category->updated_by ?? null,
             $category->created_at?->toDateTimeString() ?? null,
@@ -48,6 +54,8 @@ class CategoryDTO extends BaseDTO
             'name' => $this->name,
             'slug' => $this->slug,
             'is_active' => $this->is_active,
+            'icon_path' => $this->icon_path,
+            'icon_url' => $this->icon_url,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
@@ -62,6 +70,7 @@ class CategoryDTO extends BaseDTO
             'name' => $this->name,
             'slug' => $this->slug,
             'is_active' => $this->is_active,
+            'icon_url' => $this->icon_url,
         ];
     }
 }

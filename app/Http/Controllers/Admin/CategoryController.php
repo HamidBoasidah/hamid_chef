@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Requests\UploadCategoryIconRequest;
 use App\Services\CategoryService;
 use App\DTOs\CategoryDTO;
 use App\Models\Category;
@@ -17,7 +18,7 @@ class CategoryController extends Controller
     {
         $this->middleware('permission:categories.view')->only(['index', 'show']);
         $this->middleware('permission:categories.create')->only(['create', 'store']);
-        $this->middleware('permission:categories.update')->only(['edit', 'update', 'activate', 'deactivate']);
+        $this->middleware('permission:categories.update')->only(['edit', 'update', 'activate', 'deactivate', 'uploadIcon', 'removeIcon']);
         $this->middleware('permission:categories.delete')->only(['destroy']);
     }
 
@@ -84,5 +85,39 @@ class CategoryController extends Controller
     {
         $categoryService->deactivate($id);
         return back()->with('success', 'Category deactivated successfully');
+    }
+
+    /**
+     * رفع أيقونة للقسم
+     */
+    public function uploadIcon(UploadCategoryIconRequest $request, CategoryService $categoryService, $id)
+    {
+        try {
+            $categoryService->uploadIcon($id, $request->file('icon'));
+            
+            // إرجاع البيانات المحدثة للفئة
+            $category = $categoryService->find($id);
+            
+            return redirect()->back()->with('success', 'تم رفع الأيقونة بنجاح');
+        } catch (\Exception $e) {
+            return back()->with('error', 'حدث خطأ أثناء رفع الأيقونة: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * حذف أيقونة القسم
+     */
+    public function removeIcon(CategoryService $categoryService, $id)
+    {
+        try {
+            $categoryService->removeIcon($id);
+            
+            // إرجاع البيانات المحدثة للفئة
+            $category = $categoryService->find($id);
+            
+            return redirect()->back()->with('success', 'تم حذف الأيقونة بنجاح');
+        } catch (\Exception $e) {
+            return back()->with('error', 'حدث خطأ أثناء حذف الأيقونة: ' . $e->getMessage());
+        }
     }
 }

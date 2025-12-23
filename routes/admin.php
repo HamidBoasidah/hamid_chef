@@ -198,6 +198,13 @@ Route::middleware('auth:admin')
         Route::patch('categories/{id}/deactivate', [CategoryController::class, 'deactivate'])
             ->name('categories.deactivate');
 
+        // Category Icons
+        Route::post('categories/{id}/icon', [CategoryController::class, 'uploadIcon'])
+            ->name('categories.uploadIcon');
+
+        Route::delete('categories/{id}/icon', [CategoryController::class, 'removeIcon'])
+            ->name('categories.removeIcon');
+
         // Admins (managers of the system)
         Route::resource('admins', AdminController::class)
             ->names('admins');

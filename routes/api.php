@@ -17,6 +17,7 @@ Route::get('chef-services', [App\Http\Controllers\Api\ChefServiceController::cla
 Route::get('chef-services/{chefService}', [App\Http\Controllers\Api\ChefServiceController::class, 'show']);
 // Public route for categories index
 Route::get('categories', [App\Http\Controllers\Api\CategoryController::class, 'index']);
+Route::get('categories/{id}', [App\Http\Controllers\Api\CategoryController::class, 'show']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('addresses', App\Http\Controllers\Api\AddressController::class);
@@ -48,6 +49,10 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // Categories removed from protected routes (only index is exposed publicly)
+
+    // Category Icons Management
+    Route::post('categories/{id}/icon', [App\Http\Controllers\Api\CategoryController::class, 'uploadIcon']);
+    Route::delete('categories/{id}/icon', [App\Http\Controllers\Api\CategoryController::class, 'removeIcon']);
 
 });
 

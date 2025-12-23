@@ -4,16 +4,20 @@ namespace App\Services;
 
 use App\Repositories\CategoryRepository;
 use App\Models\Category;
+use App\DTOs\CategoryDTO;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\UploadedFile;
 
 class CategoryService
 {
     protected CategoryRepository $categories;
+    protected SVGIconService $svgIconService;
 
-    public function __construct(CategoryRepository $categories)
+    public function __construct(CategoryRepository $categories, SVGIconService $svgIconService)
     {
         $this->categories = $categories;
+        $this->svgIconService = $svgIconService;
     }
 
     public function all(array $with = [])
@@ -92,5 +96,63 @@ class CategoryService
     public function deactivate($id)
     {
         return $this->categories->deactivate($id);
+    }
+
+    /**
+     * Upload an icon for a category
+     */
+    public function uploadIcon(int $categoryId, UploadedFile $iconFile): CategoryDTO
+    {
+        $category = $this->categories->findOrFail($categoryId);
+        
+        // حذف الأيقونة القديمة إن وجدت
+        if ($category->icon_path) {
+            $this->svgIconService->deleteIcon($category->icon_path);
+        }
+        
+        // رفع الأيقونة الجديدة
+        $iconPath = $this->svgIconService->uploadIcon($iconFile, $categoryId);
+        
+        // تحديث القسم
+        $updatedCategory = $this->categories->update($categoryId, [
+            'icon_path' => $iconPath
+        ]);
+        
+        return CategoryDTO::fromModel($updatedCategory);
+    }
+
+    /**
+     * Remove icon from a category
+     */
+    public function removeIcon(int $categoryId): CategoryDTO
+    {
+        $category = $this->categories->findOrFail($categoryId);
+        
+        if ($category->icon_path) {
+            $this->svgIconService->deleteIcon($category->icon_path);
+            
+            $updatedCategory = $this->categories->update($categoryId, [
+                'icon_path' => null
+            ]);
+            
+            return CategoryDTO::fromModel($updatedCategory);
+        }
+        
+        return CategoryDTO::fromModel($category);
+    }
+
+    /**
+     * Delete category and its associated icon
+     */
+    public function deleteWithIcon($id)
+    {
+        $category = $this->categories->findOrFail($id);
+        
+        // حذف الأيقونة إن وجدت
+        if ($category->icon_path) {
+            $this->svgIconService->deleteIcon($category->icon_path);
+        }
+        
+        return $this->categories->delete($id);
     }
 }

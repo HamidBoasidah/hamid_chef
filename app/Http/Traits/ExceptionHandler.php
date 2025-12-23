@@ -9,7 +9,7 @@ use App\Exceptions\BusinessLogicException;
 use App\Exceptions\ResourceInUseException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Facades\Log;
+// Logging removed per project policy
 
 trait ExceptionHandler
 {
@@ -90,16 +90,7 @@ trait ExceptionHandler
         Model $model, 
         array $relationshipChecks = []
     ): void {
-        // Log the error with full context
-        Log::error('Database exception during operation', [
-            'model' => get_class($model),
-            'model_id' => $model->id ?? null,
-            'error_code' => $e->getCode(),
-            'error_message' => $e->getMessage(),
-            'sql' => $e->getSql(),
-            'bindings' => $e->getBindings(),
-            'trace' => $e->getTraceAsString()
-        ]);
+        // Database exception occurred (logging removed)
         
         // Check for foreign key constraint violation
         if ($e->getCode() == 23000) {

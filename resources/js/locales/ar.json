@@ -530,7 +530,20 @@
     "selected": "محدد",
     "total": "الإجمالي",
     "showing": "معروض",
-    "clearAll": "مسح الكل"
+    "clearAll": "مسح الكل",
+    "icon": "الأيقونة",
+    "iconManagement": "إدارة الأيقونة",
+    "currentIcon": "الأيقونة الحالية",
+    "uploadIcon": "رفع أيقونة",
+    "changeIcon": "تغيير الأيقونة",
+    "selectIcon": "اختيار أيقونة",
+    "removeIcon": "حذف الأيقونة",
+    "iconRequirements": "يجب أن تكون الأيقونة من نوع SVG وأقل من 100KB",
+    "iconUploadedSuccessfully": "تم رفع الأيقونة بنجاح",
+    "iconUploadFailed": "فشل في رفع الأيقونة",
+    "iconRemovedSuccessfully": "تم حذف الأيقونة بنجاح",
+    "iconRemovalFailed": "فشل في حذف الأيقونة",
+    "confirmRemoveIcon": "هل أنت متأكد من حذف الأيقونة؟"
   },
   "address": {
     "title": "العنوان",

@@ -9,7 +9,6 @@ use App\Http\Requests\UpdateBookingRequest;
 use App\Services\BookingService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Http\RedirectResponse;
 
@@ -39,11 +38,6 @@ class BookingController extends Controller
                 'filters' => $request->only(['search', 'status', 'chef_id', 'date_from', 'date_to'])
             ]);
         } catch (\Exception $e) {
-            Log::error('Error retrieving bookings in admin', [
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id()
-            ]);
-            
             return back()->withErrors(['error' => 'Error retrieving bookings: ' . $e->getMessage()]);
         }
     }
@@ -112,21 +106,12 @@ class BookingController extends Controller
                 ])->withInput();
             }
 
-            Log::info('Admin created booking successfully', [
-                'booking_id' => $result['booking']->id,
-                'admin_id' => Auth::id()
-            ]);
+            // Admin created booking successfully (logging removed)
 
             return redirect()->route('admin.bookings.show', $result['booking']->id)
                            ->with('success', 'Booking created successfully');
 
         } catch (\Exception $e) {
-            Log::error('Error creating booking in admin', [
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id(),
-                'request_data' => $request->all()
-            ]);
-
             return back()->withErrors(['error' => 'Error creating booking: ' . $e->getMessage()])
                         ->withInput();
         }
@@ -144,12 +129,6 @@ class BookingController extends Controller
                 'booking' => BookingDTO::fromModel($booking)->toArray()
             ]);
         } catch (\Exception $e) {
-            Log::error('Error retrieving booking in admin', [
-                'booking_id' => $id,
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id()
-            ]);
-
             return back()->withErrors(['error' => 'Booking not found: ' . $e->getMessage()]);
         }
     }
@@ -173,12 +152,6 @@ class BookingController extends Controller
                 'addresses' => $addresses
             ]);
         } catch (\Exception $e) {
-            Log::error('Error retrieving booking for edit in admin', [
-                'booking_id' => $id,
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id()
-            ]);
-
             return back()->withErrors(['error' => 'Booking not found: ' . $e->getMessage()]);
         }
     }
@@ -194,22 +167,12 @@ class BookingController extends Controller
 
             $booking = $bookingService->update($id, $validated);
 
-            Log::info('Admin updated booking successfully', [
-                'booking_id' => $id,
-                'admin_id' => Auth::id()
-            ]);
+            // Admin updated booking successfully (logging removed)
 
             return redirect()->route('admin.bookings.show', $id)
                            ->with('success', 'Booking updated successfully');
 
         } catch (\Exception $e) {
-            Log::error('Error updating booking in admin', [
-                'booking_id' => $id,
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id(),
-                'request_data' => $request->all()
-            ]);
-
             $errorMessage = $e->getCode() === 409 ? 
                 'Booking update conflicts with existing reservations: ' . $e->getMessage() :
                 'Error updating booking: ' . $e->getMessage();
@@ -231,21 +194,12 @@ class BookingController extends Controller
                 return back()->withErrors(['error' => 'Failed to cancel booking']);
             }
 
-            Log::info('Admin cancelled booking successfully', [
-                'booking_id' => $id,
-                'admin_id' => Auth::id()
-            ]);
+            // Admin cancelled booking successfully (logging removed)
 
             return redirect()->route('admin.bookings.index')
                            ->with('success', 'Booking cancelled successfully');
 
         } catch (\Exception $e) {
-            Log::error('Error cancelling booking in admin', [
-                'booking_id' => $id,
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id()
-            ]);
-
             return back()->withErrors(['error' => 'Error cancelling booking: ' . $e->getMessage()]);
         }
     }
@@ -279,12 +233,6 @@ class BookingController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error checking availability in admin', [
-                'error' => $e->getMessage(),
-                'request_data' => $request->all(),
-                'user_id' => Auth::id()
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => 'Error checking availability',
@@ -313,13 +261,6 @@ class BookingController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error('Error retrieving chef bookings in admin', [
-                'chef_id' => $request->chef_id,
-                'date' => $request->date,
-                'error' => $e->getMessage(),
-                'user_id' => Auth::id()
-            ]);
-
             return response()->json([
                 'success' => false,
                 'message' => 'Error retrieving chef bookings',
@@ -370,12 +311,7 @@ class BookingController extends Controller
                 }
             }
 
-            Log::info('Admin bulk updated bookings', [
-                'action' => $request->action,
-                'updated_count' => $updated,
-                'total_requested' => count($request->booking_ids),
-                'admin_id' => Auth::id()
-            ]);
+            // Admin bulk updated bookings (logging removed)
 
             $message = "Successfully updated {$updated} booking(s)";
             if (!empty($errors)) {
@@ -385,12 +321,6 @@ class BookingController extends Controller
             return back()->with('success', $message);
 
         } catch (\Exception $e) {
-            Log::error('Error in bulk update bookings', [
-                'error' => $e->getMessage(),
-                'request_data' => $request->all(),
-                'user_id' => Auth::id()
-            ]);
-
             return back()->withErrors(['error' => 'Error updating bookings: ' . $e->getMessage()]);
         }
     }
