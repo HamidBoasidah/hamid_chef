@@ -33,8 +33,10 @@ class UpdateChefServiceRequest extends FormRequest
             'service_images.*' => 'image|max:5120', // 5MB per image
             'delete_service_image_ids' => 'sometimes|nullable|array',
             'delete_service_image_ids.*' => 'integer|exists:chef_service_images,id',
-            'created_by' => 'sometimes|nullable|exists:users,id',
-            'updated_by' => 'sometimes|nullable|exists:users,id',
+            'equipment' => 'sometimes|nullable|array',
+            'equipment.*.id' => 'sometimes|nullable|integer|exists:chef_service_equipment,id',
+            'equipment.*.name' => 'required_with:equipment.*|string|max:100',
+            'equipment.*.is_included' => 'nullable|boolean',
         ];
     }
 

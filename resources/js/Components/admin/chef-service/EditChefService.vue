@@ -108,6 +108,16 @@
 			</div>
 		</div>
 
+		<!-- Equipment Management Section -->
+		<div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+			<div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+				<h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ $t('equipment.equipment_management') }}</h2>
+			</div>
+			<div class="p-4 sm:p-6">
+				<EquipmentManager v-model="form.equipment" />
+			</div>
+		</div>
+
 		<!-- Status and Extra Guests Section -->
 		<div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
 			<div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
@@ -165,6 +175,7 @@ import { useNotifications } from '@/composables/useNotifications'
 import ImageUploadBox from '@/Components/common/ImageUploadBox.vue'
 import GalleryManager from '@/Components/common/GalleryManager.vue'
 import TagSelector from '@/Components/TagSelector.vue'
+import EquipmentManager from '@/Components/admin/chef-service/EquipmentManager.vue'
 
 const { t } = useI18n()
 const { success, error } = useNotifications()
@@ -192,6 +203,14 @@ const form = useForm({
 	tags: props.service.tags ? props.service.tags.map(tag => tag.id) : [],
 	service_images: [],
 	delete_service_image_ids: [],
+	equipment: props.service.equipment ? props.service.equipment.map(eq => ({
+		id: eq.id,
+		name: eq.name,
+		description: eq.description || '',
+		is_included: eq.is_included,
+		is_active: eq.is_active,
+		errors: {}
+	})) : [],
 })
 
 // Existing service images for display

@@ -15,6 +15,10 @@ Route::get('chefs/{chef}', [App\Http\Controllers\Api\ChefController::class, 'sho
 // Public routes for viewing chef services (list and single) — available to guests
 Route::get('chef-services', [App\Http\Controllers\Api\ChefServiceController::class, 'index']);
 Route::get('chef-services/{chefService}', [App\Http\Controllers\Api\ChefServiceController::class, 'show']);
+
+// Public routes for viewing chef service equipment — available to guests
+Route::get('chef-services/{serviceId}/equipment', [App\Http\Controllers\Api\ChefServiceController::class, 'getEquipment']);
+Route::get('chef-service-equipment/{id}', [App\Http\Controllers\Api\ChefServiceController::class, 'showEquipment']);
 // Public route for categories index
 Route::get('categories', [App\Http\Controllers\Api\CategoryController::class, 'index']);
 Route::get('categories/{id}', [App\Http\Controllers\Api\CategoryController::class, 'show']);
@@ -75,6 +79,13 @@ Route::group(['prefix' => 'chef', 'middleware' => ['auth:sanctum', 'user_role:ch
     Route::apiResource('chef-services', App\Http\Controllers\Api\ChefServiceController::class)->except(['index', 'show']);
     Route::post('chef-services/{chefService}/activate', [App\Http\Controllers\Api\ChefServiceController::class, 'activate']);
     Route::post('chef-services/{chefService}/deactivate', [App\Http\Controllers\Api\ChefServiceController::class, 'deactivate']);
+
+    // Chef Service Equipment API (protected actions only; index/show are public)
+    Route::post('chef-services/{serviceId}/equipment', [App\Http\Controllers\Api\ChefServiceController::class, 'storeEquipment']);
+    Route::put('chef-service-equipment/{id}', [App\Http\Controllers\Api\ChefServiceController::class, 'updateEquipment']);
+    Route::delete('chef-service-equipment/{id}', [App\Http\Controllers\Api\ChefServiceController::class, 'destroyEquipment']);
+    Route::post('chef-service-equipment/bulk-manage', [App\Http\Controllers\Api\ChefServiceController::class, 'bulkManageEquipment']);
+    Route::post('chef-service-equipment/copy-from-service', [App\Http\Controllers\Api\ChefServiceController::class, 'copyEquipmentFromService']);
 });
 
 Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);

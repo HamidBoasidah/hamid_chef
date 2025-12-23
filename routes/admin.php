@@ -165,6 +165,26 @@ Route::middleware('auth:admin')
         Route::patch('chef-services/{id}/deactivate', [App\Http\Controllers\Admin\ChefServiceController::class, 'deactivate'])
             ->name('chef-services.deactivate');
 
+        // Chef Service Equipment
+        Route::get('chef-services/{serviceId}/equipment', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'index'])
+            ->name('chef-service-equipment.index');
+        Route::get('chef-services/{serviceId}/equipment/create', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'create'])
+            ->name('chef-service-equipment.create');
+        Route::post('chef-services/{serviceId}/equipment', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'store'])
+            ->name('chef-service-equipment.store');
+        Route::get('chef-service-equipment/{id}', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'show'])
+            ->name('chef-service-equipment.show');
+        Route::get('chef-service-equipment/{id}/edit', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'edit'])
+            ->name('chef-service-equipment.edit');
+        Route::put('chef-service-equipment/{id}', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'update'])
+            ->name('chef-service-equipment.update');
+        Route::delete('chef-service-equipment/{id}', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'destroy'])
+            ->name('chef-service-equipment.destroy');
+        Route::get('chef-services/{serviceId}/equipment/bulk-manage', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'bulkManage'])
+            ->name('chef-service-equipment.bulk-manage');
+        Route::post('chef-services/{serviceId}/equipment/bulk-manage', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'processBulkManage'])
+            ->name('chef-service-equipment.process-bulk-manage');
+
         // Chef Service Ratings
         Route::resource('chef-service-ratings', App\Http\Controllers\Admin\ChefServiceRatingController::class)
             ->only(['index', 'show', 'destroy'])

@@ -792,5 +792,43 @@
     "customer": "العميل",
     "chef": "الطاهي",
     "booking": "الحجز"
+  },
+  "equipment": {
+    "name": "اسم الأداة",
+    "is_included": "متضمنة في الخدمة",
+    "chef_service_id": "خدمة الطاهي",
+    "included": "متضمنة",
+    "client_provided": "يوفرها العميل",
+    "equipment_list": "قائمة الأدوات",
+    "no_equipment": "لا توجد أدوات مطلوبة",
+    "add_equipment": "إضافة أداة",
+    "edit_equipment": "تعديل الأداة",
+    "delete_equipment": "حذف الأداة",
+    "bulk_manage": "إدارة متعددة",
+    "copy_from_service": "نسخ من خدمة أخرى",
+    "created_successfully": "تم إنشاء الأداة بنجاح",
+    "updated_successfully": "تم تحديث الأداة بنجاح",
+    "deleted_successfully": "تم حذف الأداة بنجاح",
+    "bulk_updated_successfully": "تم تحديث الأدوات بنجاح",
+    "copied_successfully": "تم نسخ الأدوات بنجاح",
+    "equipment_management": "إدارة الأدوات",
+    "equipment_for_service": "أدوات الخدمة",
+    "required_equipment": "الأدوات المطلوبة",
+    "optional_equipment": "الأدوات الاختيارية",
+    "equipment_type": "نوع الأداة",
+    "equipment_details": "تفاصيل الأداة",
+    "manage_equipment": "إدارة الأدوات",
+    "equipment_settings": "إعدادات الأدوات",
+    "save_equipment": "حفظ الأدوات",
+    "cancel_equipment": "إلغاء",
+    "confirm_delete_equipment": "هل أنت متأكد من حذف هذه الأداة؟",
+    "equipment_name_placeholder": "مثال: أطباق، ملاعق، أكواب",
+    "validation": {
+      "name_required": "اسم الأداة مطلوب",
+      "name_max": "اسم الأداة يجب ألا يتجاوز 255 حرف",
+      "name_unique": "اسم الأداة موجود مسبقاً لهذه الخدمة",
+      "is_included_boolean": "حقل متضمنة في الخدمة يجب أن يكون صحيح أو خطأ",
+      "chef_service_exists": "خدمة الطاهي المحددة غير موجودة"
+    }
   }
 }

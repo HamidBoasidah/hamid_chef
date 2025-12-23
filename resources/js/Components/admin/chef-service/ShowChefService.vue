@@ -131,6 +131,48 @@
 			empty-message="لا توجد صور للخدمة"
 		/>
 
+		<!-- Equipment Section -->
+		<div class="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
+			<div class="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+				<h2 class="text-lg font-medium text-gray-800 dark:text-white">{{ $t('equipment.equipment_management') }}</h2>
+			</div>
+			<div class="p-4 sm:p-6">
+				<div v-if="service.equipment && service.equipment.length > 0" class="space-y-4">
+					<div
+						v-for="equipment in service.equipment"
+						:key="equipment.id"
+						class="border border-gray-200 dark:border-gray-700 rounded-lg p-4"
+					>
+						<div class="flex items-start justify-between">
+							<div class="flex-1">
+								<div class="flex items-center gap-3 mb-2">
+									<h3 class="text-base font-medium text-gray-900 dark:text-white">{{ equipment.name }}</h3>
+									<span
+										class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+										:class="equipment.is_included 
+											? 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400' 
+											: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400'"
+									>
+										{{ equipment.is_included ? $t('equipment.included') : $t('equipment.client_provided') }}
+									</span>
+									<!-- equipment.is_active removed: field no longer exists in the equipment table -->
+								</div>
+								<p v-if="equipment.description" class="text-sm text-gray-600 dark:text-gray-400">
+									{{ equipment.description }}
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
+					<svg class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+					</svg>
+					<p class="mt-2">{{ $t('equipment.no_equipment') }}</p>
+				</div>
+			</div>
+		</div>
+
 		<!-- Service Ratings Section -->
 		<ShowChefServiceRatings :ratings="service.ratings || []" />
 

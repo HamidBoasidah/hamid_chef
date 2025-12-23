@@ -61,6 +61,9 @@ class ChefServiceController extends Controller
             'images' => function($query) {
                 $query->where('is_active', true)->orderBy('created_at');
             },
+            'equipment' => function($query) {
+                $query->orderBy('is_included', 'desc')->orderBy('created_at', 'desc');
+            },
             'ratings' => function($query) {
                 $query->with(['customer:id,first_name,last_name', 'booking:id,date'])
                       ->where('chef_service_ratings.is_active', true)
@@ -75,9 +78,15 @@ class ChefServiceController extends Controller
 
     public function edit(ChefService $chefService)
     {
-        $chefService->load(['tags', 'images' => function($query) {
-            $query->where('is_active', true)->orderBy('created_at');
-        }]);
+        $chefService->load([
+            'tags', 
+            'images' => function($query) {
+                $query->where('is_active', true)->orderBy('created_at');
+            },
+            'equipment' => function($query) {
+                $query->orderBy('is_included', 'desc')->orderBy('created_at', 'desc');
+            }
+        ]);
         $chefs = Chef::where('is_active', true)->get(['id', 'name']);
         $tags = Tag::where('is_active', true)->get(['id', 'name', 'slug']);
 

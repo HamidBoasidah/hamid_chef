@@ -486,12 +486,10 @@ function handleFileUpload(event) {
 }
 
 function saveDraft() {
-  console.log('Draft saved:', form.value)
   // Implement draft saving logic here
 }
 
 function publishProduct() {
-  console.log('Product published:', form.value)
   // Implement publish logic here
 }
 

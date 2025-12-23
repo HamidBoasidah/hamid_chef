@@ -32,8 +32,9 @@ class StoreChefServiceRequest extends FormRequest
             'feature_image' => 'nullable|image|max:5120', // 5MB
             'service_images' => 'nullable|array|max:10',
             'service_images.*' => 'image|max:5120', // 5MB per image
-            'created_by' => 'nullable|exists:users,id',
-            'updated_by' => 'nullable|exists:users,id',
+            'equipment' => 'nullable|array',
+            'equipment.*.name' => 'required_with:equipment.*|string|max:100',
+            'equipment.*.is_included' => 'nullable|boolean',
         ];
     }
 

@@ -125,6 +125,13 @@
               <p v-if="form.errors.service_images" class="mt-1 text-sm text-error-500">{{ form.errors.service_images }}</p>
             </div>
 
+            <!-- Equipment Management Section -->
+            <div class="md:col-span-2">
+              <div class="rounded-lg border border-gray-200 dark:border-gray-700 p-4">
+                <EquipmentManager v-model="form.equipment" />
+              </div>
+            </div>
+
             <div class="md:col-span-2">
               <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">{{ t('common.status') }}</label>
               <div class="mb-6 flex flex-wrap items-center gap-6 sm:gap-8">
@@ -176,6 +183,7 @@ import { useNotifications } from '@/composables/useNotifications'
 import MultiImageUpload from '@/Components/common/MultiImageUpload.vue'
 import ImageUploadBox from '@/Components/common/ImageUploadBox.vue'
 import TagSelector from '@/Components/TagSelector.vue'
+import EquipmentManager from '@/Components/admin/chef-service/EquipmentManager.vue'
 
 const { t } = useI18n()
 const { success, error } = useNotifications()
@@ -200,6 +208,7 @@ const form = useForm({
   is_active: true,
   tags: [],
   service_images: [],
+  equipment: [],
 })
 
 function create() {

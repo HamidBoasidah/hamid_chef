@@ -698,5 +698,43 @@
       "signUp": "Sign Up",
       "tagline": "MoonChef admin dashboard for managing chefs and orders"
     }
+  },
+  "equipment": {
+    "name": "Equipment Name",
+    "is_included": "Included in Service",
+    "chef_service_id": "Chef Service",
+    "included": "Included",
+    "client_provided": "Client Provided",
+    "equipment_list": "Equipment List",
+    "no_equipment": "No equipment required",
+    "add_equipment": "Add Equipment",
+    "edit_equipment": "Edit Equipment",
+    "delete_equipment": "Delete Equipment",
+    "bulk_manage": "Bulk Management",
+    "copy_from_service": "Copy from Another Service",
+    "created_successfully": "Equipment created successfully",
+    "updated_successfully": "Equipment updated successfully",
+    "deleted_successfully": "Equipment deleted successfully",
+    "bulk_updated_successfully": "Equipment updated successfully",
+    "copied_successfully": "Equipment copied successfully",
+    "equipment_management": "Equipment Management",
+    "equipment_for_service": "Service Equipment",
+    "required_equipment": "Required Equipment",
+    "optional_equipment": "Optional Equipment",
+    "equipment_type": "Equipment Type",
+    "equipment_details": "Equipment Details",
+    "manage_equipment": "Manage Equipment",
+    "equipment_settings": "Equipment Settings",
+    "save_equipment": "Save Equipment",
+    "cancel_equipment": "Cancel",
+    "confirm_delete_equipment": "Are you sure you want to delete this equipment?",
+    "equipment_name_placeholder": "e.g., Plates, Spoons, Cups",
+    "validation": {
+      "name_required": "Equipment name is required",
+      "name_max": "Equipment name must not exceed 255 characters",
+      "name_unique": "Equipment name already exists for this service",
+      "is_included_boolean": "Included in service field must be true or false",
+      "chef_service_exists": "The specified chef service does not exist"
+    }
   }
 }
