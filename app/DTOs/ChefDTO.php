@@ -37,6 +37,7 @@ class ChefDTO extends BaseDTO
     public $categories;
     public $gallery;
     public $ratings;
+    public $services;
 
     public function __construct(
         $id,
@@ -69,7 +70,8 @@ class ChefDTO extends BaseDTO
         $deleted_at = null,
         $categories = [],
         $gallery = [],
-        $ratings = []
+        $ratings = [],
+        $services = []
     ) {
         $this->id = $id;
         $this->user_id = $user_id;
@@ -102,6 +104,7 @@ class ChefDTO extends BaseDTO
         $this->categories = $categories;
         $this->gallery = $gallery;
         $this->ratings = $ratings;
+        $this->services = $services;
     }
 
     public static function fromModel(Chef $chef): self
@@ -178,6 +181,18 @@ class ChefDTO extends BaseDTO
                     ] : null,
                 ];
             })->toArray() : [],
+            // services (if relation loaded)
+            $chef->relationLoaded('services') ? $chef->services->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'name' => $service->name ?? null,
+                    'description' => $service->description ?? null,
+                    'service_type' => $service->service_type ?? null,
+                    'hourly_rate' => $service->hourly_rate ?? null,
+                    'package_price' => $service->package_price ?? null,
+                    'is_active' => $service->is_active ?? true,
+                ];
+            })->toArray() : [],
         );
     }
 
@@ -215,6 +230,7 @@ class ChefDTO extends BaseDTO
             'categories' => $this->categories,
             'gallery' => $this->gallery,
             'ratings' => $this->ratings,
+            'services' => $this->services,
         ];
     }
 

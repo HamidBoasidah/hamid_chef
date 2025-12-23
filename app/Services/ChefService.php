@@ -312,6 +312,18 @@ class ChefService
     }
 
     /**
+     * جلب الطهاة بحسب القسم (category/cuisine)
+     *
+     * @param int $categoryId
+     * @param array|null $with
+     * @return Builder
+     */
+    public function getChefsByCategory(int $categoryId, ?array $with = null): Builder
+    {
+        return $this->chefs->queryByCategory($categoryId, $with)->where('is_active', true);
+    }
+
+    /**
      * Normalize file-related attributes before passing to repository.
      * - remove keys that are present but null/empty to allow DB defaults
      * - convert frontend `/storage/...` public URLs back to relative storage path

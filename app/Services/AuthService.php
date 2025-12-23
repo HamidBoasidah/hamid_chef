@@ -36,12 +36,8 @@ class AuthService
             'email' => $user->email,
             'phone_number' => $user->phone_number,
             'whatsapp_number' => $user->whatsapp_number,
-            'type' => $user->type,
+            'user_type' => $user->user_type,
             'is_active' => $user->is_active,
-            'created_by' => $user->created_by,
-            'updated_by' => $user->updated_by,
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at,
         ];
 
         return [

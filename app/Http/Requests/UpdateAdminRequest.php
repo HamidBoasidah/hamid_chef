@@ -20,8 +20,9 @@ class UpdateAdminRequest extends FormRequest
             'last_name' => 'nullable|string|max:255',
             'email' => 'sometimes|required|email|unique:admins,email,' . $adminId,
             'avatar' => 'nullable|image|max:2048',
-            'phone_number' => ['nullable', 'regex:/^\d{9}$/'],
-            'whatsapp_number' => ['nullable', 'regex:/^\d{9}$/'],
+            // phone must be exactly 10 digits and start with 05 (e.g. 05XXXXXXXX)
+            'phone_number' => ['nullable', 'regex:/^05[0-9]{8}$/'],
+            'whatsapp_number' => ['nullable', 'regex:/^05[0-9]{8}$/'],
             'address' => 'nullable|string|max:255',
             'password' => 'nullable|string|min:8',
             'facebook' => 'nullable|url',

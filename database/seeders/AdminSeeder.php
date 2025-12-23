@@ -9,12 +9,18 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        // Ensure there's at least one admin role (use app Role model and correct guard/display name)
+        // Determine guard and try to pick the "first" role created for that guard
+        // (RolesPermissionsSeeder runs before this seeder in DatabaseSeeder)
         $guard = config('acl.guard', 'admin');
-        $adminRole = Role::firstOrCreate(
-            ['name' => 'admin', 'guard_name' => $guard],
-            ['display_name' => ['en' => 'Admin', 'ar' => 'مشرف']]
-        );
+        $firstRole = Role::where('guard_name', $guard)->orderBy('id')->first();
+
+        // If no roles exist yet (defensive), ensure there's at least an 'admin' role
+        if (! $firstRole) {
+            $firstRole = Role::firstOrCreate(
+                ['name' => 'admin', 'guard_name' => $guard],
+                ['display_name' => ['en' => 'Admin', 'ar' => 'مشرف']]
+            );
+        }
 
         // Create a main admin account if not exists
         $mainEmail = env('ADMIN_EMAIL', 'admin@example.com');
@@ -28,7 +34,8 @@ class AdminSeeder extends Seeder
                 'password' => 'password',
                 'is_active' => true,
             ]);
-            $main->assignRole($adminRole->name);
+            // Assign the very first role (expected to be Super Admin from RolesPermissionsSeeder)
+            $main->assignRole($firstRole->name);
         }
 
         // Create a few random admins

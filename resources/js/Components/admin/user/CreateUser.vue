@@ -452,9 +452,9 @@ function create() {
   });
 }
 
-const selectedCountry = ref('YE')
+const selectedCountry = ref('SA')
 const countryCodes = {
-  YE: '+967',
+  SA: '+966',
 }
 
 
