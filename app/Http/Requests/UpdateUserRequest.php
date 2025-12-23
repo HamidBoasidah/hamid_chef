@@ -28,8 +28,9 @@ class UpdateUserRequest extends FormRequest
             'last_name' => 'sometimes|required|string|max:255',
             'email' => 'sometimes|required|email|unique:users,email,' . $userId,
             'avatar' => 'nullable|image|max:2048',
-            'phone_number' => ['nullable', 'regex:/^\\d{9,15}$/'],
-            'whatsapp_number' => ['nullable', 'regex:/^\\d{9,15}$/'],
+            // phone must be exactly 10 digits and start with 05 (e.g. 05XXXXXXXX)
+            'phone_number' => ['nullable', 'regex:/^05[0-9]{8}$/'],
+            'whatsapp_number' => ['nullable', 'regex:/^05[0-9]{8}$/'],
             'address' => 'nullable|string|max:255',
             'password' => 'nullable|string|min:8',
             'facebook' => 'nullable|url',

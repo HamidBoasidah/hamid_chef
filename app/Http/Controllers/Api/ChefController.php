@@ -21,8 +21,8 @@ class ChefController extends Controller
 
     public function __construct()
     {
-        // Allow guests to view the chefs list and single chef routes
-        $this->middleware('auth:sanctum')->except(['index', 'show']);
+        // Allow guests to view the chefs list, single chef and by-category routes
+        $this->middleware('auth:sanctum')->except(['index', 'show', 'byCategory']);
     }
 
     /**
@@ -51,6 +51,34 @@ class ChefController extends Controller
         });
 
         return $this->collectionResponse($chefs, 'تم جلب قائمة الطهاة بنجاح');
+    }
+
+    /**
+     * جلب الطهاة بحسب القسم (عام - متاحة للزوار)
+     */
+    public function byCategory(Request $request, ChefService $chefService, $categoryId)
+    {
+        $perPage = (int) $request->get('per_page', 10);
+
+        // Query for chefs in the given category (only active chefs)
+        $query = $chefService->getChefsByCategory($categoryId);
+
+        // Apply generic filters (search + foreign key filters)
+        $query = $this->applyFilters(
+            $query,
+            $request,
+            $this->getSearchableFields(),
+            $this->getForeignKeyFilters()
+        );
+
+        $chefs = $query->latest()->paginate($perPage);
+
+        // Transform results to DTO for index
+        $chefs->getCollection()->transform(function ($chef) {
+            return ChefDTO::fromModel($chef)->toIndexArray();
+        });
+
+        return $this->collectionResponse($chefs, 'تم جلب قائمة الطهاة بالقسم بنجاح');
     }
 
     /**
@@ -87,12 +115,16 @@ class ChefController extends Controller
         try {
             // Use general find مع تحميل المعرض للصور النشطة فقط
             $chef = $chefService->find($id, [
+                // keep categories loaded (defaultWith is overridden when passing $with)
+                'categories:id,name,slug',
                 'gallery' => function($query) {
-                    $query->where('is_active', true)->orderBy('created_at');
-                }
+                        $query->where('is_active', true)->orderBy('created_at');
+                    },
+                    // include active services of the chef
+                'services' => function($query) {
+                        $query->where('is_active', true)->orderBy('created_at');
+                    }
             ]);
-
-            $this->authorize('view', $chef);
 
             return $this->resourceResponse(
                 ChefDTO::fromModel($chef)->toArray(),

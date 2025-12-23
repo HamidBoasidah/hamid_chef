@@ -57,7 +57,13 @@
 
 					<div>
 						<label class="mb-1.5 block text-sm font-medium text-gray-500 dark:text-gray-400">{{ t('chefs.rating') }}</label>
-						<p class="text-base text-gray-800 dark:text-white/90">{{ chef.rating_avg ?? '—' }}</p>
+						<div class="flex items-center gap-2">
+							<span class="text-lg font-semibold text-gray-900 dark:text-white">{{ chef.rating_avg || '0' }}</span>
+							<div class="flex items-center">
+								<StarIcon class="h-5 w-5 text-yellow-400" />
+								<span class="text-sm text-gray-500 dark:text-gray-400 ml-1">متوسط التقييم</span>
+							</div>
+						</div>
 					</div>
 
 					<div>
@@ -126,7 +132,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
 import { useI18n } from 'vue-i18n'
-import { ChefIcon } from '@/icons'
+import { ChefIcon, StarIcon } from '@/icons'
 import ChefGalleryViewer from '@/Components/common/ChefGalleryViewer.vue'
 
 const { t, locale } = useI18n()

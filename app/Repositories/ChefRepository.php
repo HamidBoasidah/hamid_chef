@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Chef;
 use App\Repositories\Eloquent\BaseRepository;
+use Illuminate\Database\Eloquent\Builder;
 
 class ChefRepository extends BaseRepository
 {
@@ -20,6 +21,20 @@ class ChefRepository extends BaseRepository
     public function __construct(Chef $model)
     {
         parent::__construct($model);
+    }
+
+    /**
+     * Return a query for chefs that belong to the given category (cuisine_id on pivot)
+     *
+     * @param int $categoryId
+     * @param array|null $with
+     * @return Builder
+     */
+    public function queryByCategory(int $categoryId, ?array $with = null): Builder
+    {
+        return $this->makeQuery($with)->whereHas('categories', function ($q) use ($categoryId) {
+            $q->where('categories.id', $categoryId);
+        });
     }
 
 

@@ -264,7 +264,6 @@ const isProfileInfoModal = ref(false)
 
 const saveProfile = () => {
   // Implement save profile logic here
-  console.log('Profile saved')
   isProfileInfoModal.value = false
 }
 </script>

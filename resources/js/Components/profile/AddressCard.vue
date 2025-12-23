@@ -171,7 +171,6 @@ const isProfileAddressModal = ref(false)
 
 const saveAddress = () => {
   // Implement save address logic here
-  console.log('Address saved')
   isProfileAddressModal.value = false
 }
 </script>

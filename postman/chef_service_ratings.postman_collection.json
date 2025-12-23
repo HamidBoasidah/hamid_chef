@@ -1,0 +1,114 @@
+{
+  "info": {
+    "_postman_id": "c3f9b2a0-2a4e-4f6a-9d2b-123456789abc",
+    "name": "MoonChef - Chef Service Ratings",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Collection for testing Chef Service Ratings endpoints (create, update, delete, list, show)"
+  },
+  "item": [
+    {
+      "name": "Create Rating (store)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"booking_id\": 1,\n  \"rating\": 5,\n  \"review\": \"خدمة ممتازة، شكراً!\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/chef-service-ratings",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef-service-ratings"]
+        },
+        "description": "Protected - Create a rating for a booking. Use a valid {{token}} belonging to the customer who made the booking. Body example shown as JSON."
+      },
+      "response": []
+    },
+    {
+      "name": "Update Rating (update)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"rating\": 4,\n  \"review\": \"تحديث: جيدة لكن يمكن التحسين.\"\n}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "url": {
+          "raw": "{{base_url}}/api/chef-service-ratings/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef-service-ratings","1"]
+        },
+        "description": "Protected - Update rating with id 1. Authenticated customer must own the rating. Replace 1 with actual rating id. Body example shown as JSON."
+      },
+      "response": []
+    },
+    {
+      "name": "Delete Rating (destroy)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef-service-ratings/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef-service-ratings","1"]
+        },
+        "description": "Protected - Delete rating id 1 owned by authenticated customer. Replace 1 with actual rating id."
+      },
+      "response": []
+    },
+    {
+      "name": "List My Ratings (index)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef-service-ratings?per_page=10",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef-service-ratings"],
+          "query": [
+            { "key": "per_page", "value": "10" }
+          ]
+        },
+        "description": "Protected - Get ratings for the authenticated customer."
+      },
+      "response": []
+    },
+    {
+      "name": "Show My Rating (show)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef-service-ratings/1",
+          "host": ["{{base_url}}"],
+          "path": ["api","chef-service-ratings","1"]
+        },
+        "description": "Protected - Get a single rating owned by the authenticated customer. Replace 1 with actual rating id."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "token", "value": "5|REPLACE_WITH_VALID_TOKEN", "type": "string" }
+  ]
+}

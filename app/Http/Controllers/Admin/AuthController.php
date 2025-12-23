@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Services\AuthService;
 //use App\Http\Traits\ExceptionHandler;
 use App\Http\Traits\SuccessResponse;
-use Illuminate\Support\Facades\Log;
+// logging removed
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -45,11 +45,6 @@ class AuthController extends Controller
             // إعادة التوجيه مع الأخطاء إلى صفحة تسجيل الدخول (Inertia)
             return redirect()->back()->withErrors($e->errors())->withInput();
         } catch (\Exception $e) {
-            Log::error('Admin Login error: ' . $e->getMessage(), [
-                'email' => $request->email,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
             return redirect()->back()->with('error', 'حدث خطأ غير متوقع');
         }
     }
@@ -60,11 +55,6 @@ class AuthController extends Controller
             $this->authService->logout($request);
             return redirect()->route('login');
         } catch (\Exception $e) {
-            Log::error('Admin Logout error: ' . $e->getMessage(), [
-                'user_id' => $request->user() ? $request->user()->id : null,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
             return redirect()->route('login')->with('error', 'حدث خطأ أثناء تسجيل الخروج');
         }
     }
@@ -75,12 +65,7 @@ class AuthController extends Controller
             $this->authService->logoutFromAllDevices($request->user());
             //return $this->successResponse(null, 'تم تسجيل الخروج من جميع الأجهزة بنجاح');
         } catch (\Exception $e) {
-            Log::error('Admin Logout from all devices error: ' . $e->getMessage(), [
-                'user_id' => $request->user() ? $request->user()->id : null,
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
-            ]);
-            //return $this->successResponse(null, 'تم تسجيل الخروج من جميع الأجهزة بنجاح');
+            // ignore
         }
     }
 

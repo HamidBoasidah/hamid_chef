@@ -36,6 +36,8 @@ class ChefDTO extends BaseDTO
     public $deleted_at;
     public $categories;
     public $gallery;
+    public $ratings;
+    public $services;
 
     public function __construct(
         $id,
@@ -67,7 +69,9 @@ class ChefDTO extends BaseDTO
         $created_at = null,
         $deleted_at = null,
         $categories = [],
-        $gallery = []
+        $gallery = [],
+        $ratings = [],
+        $services = []
     ) {
         $this->id = $id;
         $this->user_id = $user_id;
@@ -99,6 +103,8 @@ class ChefDTO extends BaseDTO
         $this->deleted_at = $deleted_at;
         $this->categories = $categories;
         $this->gallery = $gallery;
+        $this->ratings = $ratings;
+        $this->services = $services;
     }
 
     public static function fromModel(Chef $chef): self
@@ -156,6 +162,37 @@ class ChefDTO extends BaseDTO
                     'created_at' => $image->created_at?->toDateTimeString(),
                 ];
             })->toArray() : [],
+            // ratings (if relation loaded)
+            $chef->relationLoaded('ratings') ? $chef->ratings->map(function ($rating) {
+                return [
+                    'id' => $rating->id,
+                    'rating' => $rating->rating,
+                    'review' => $rating->review,
+                    'is_active' => $rating->is_active,
+                    'created_at' => $rating->created_at?->toDateTimeString(),
+                    'customer' => $rating->customer ? [
+                        'id' => $rating->customer->id,
+                        'first_name' => $rating->customer->first_name,
+                        'last_name' => $rating->customer->last_name,
+                    ] : null,
+                    'booking' => $rating->booking ? [
+                        'id' => $rating->booking->id,
+                        'date' => $rating->booking->date?->toDateString(),
+                    ] : null,
+                ];
+            })->toArray() : [],
+            // services (if relation loaded)
+            $chef->relationLoaded('services') ? $chef->services->map(function ($service) {
+                return [
+                    'id' => $service->id,
+                    'name' => $service->name ?? null,
+                    'description' => $service->description ?? null,
+                    'service_type' => $service->service_type ?? null,
+                    'hourly_rate' => $service->hourly_rate ?? null,
+                    'package_price' => $service->package_price ?? null,
+                    'is_active' => $service->is_active ?? true,
+                ];
+            })->toArray() : [],
         );
     }
 
@@ -192,6 +229,8 @@ class ChefDTO extends BaseDTO
             'deleted_at' => $this->deleted_at,
             'categories' => $this->categories,
             'gallery' => $this->gallery,
+            'ratings' => $this->ratings,
+            'services' => $this->services,
         ];
     }
 

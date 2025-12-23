@@ -32,6 +32,9 @@ class RoleService
     public function create(array $attributes)
     {
         return DB::transaction(function () use ($attributes) {
+            // ensure guard_name is set (default to configured ACL guard)
+            $attributes['guard_name'] = $attributes['guard_name'] ?? config('acl.guard', 'admin');
+
             $role = $this->roles->create($attributes);
 
             if (!empty($attributes['permissions'])) {

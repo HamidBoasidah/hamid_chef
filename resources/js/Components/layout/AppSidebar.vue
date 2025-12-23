@@ -382,7 +382,7 @@ const menuGroups = computed(() =>
         {
           icon: HistoryIcon,
           name: t('menu.activityLogs'),
-          path: '/activitylogs',
+          path: route('admin.activitylogs.index'),
           permission: 'activitylogs.view',
         },
       ],

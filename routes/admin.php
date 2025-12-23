@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\KycController;
 use App\Http\Controllers\Admin\AddressController;
 use App\Http\Controllers\Admin\ChefController;
+use App\Http\Controllers\Admin\ChefServiceRatingController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Support\RoutePermissions;
@@ -164,6 +165,37 @@ Route::middleware('auth:admin')
         Route::patch('chef-services/{id}/deactivate', [App\Http\Controllers\Admin\ChefServiceController::class, 'deactivate'])
             ->name('chef-services.deactivate');
 
+        // Chef Service Equipment
+        Route::get('chef-services/{serviceId}/equipment', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'index'])
+            ->name('chef-service-equipment.index');
+        Route::get('chef-services/{serviceId}/equipment/create', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'create'])
+            ->name('chef-service-equipment.create');
+        Route::post('chef-services/{serviceId}/equipment', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'store'])
+            ->name('chef-service-equipment.store');
+        Route::get('chef-service-equipment/{id}', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'show'])
+            ->name('chef-service-equipment.show');
+        Route::get('chef-service-equipment/{id}/edit', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'edit'])
+            ->name('chef-service-equipment.edit');
+        Route::put('chef-service-equipment/{id}', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'update'])
+            ->name('chef-service-equipment.update');
+        Route::delete('chef-service-equipment/{id}', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'destroy'])
+            ->name('chef-service-equipment.destroy');
+        Route::get('chef-services/{serviceId}/equipment/bulk-manage', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'bulkManage'])
+            ->name('chef-service-equipment.bulk-manage');
+        Route::post('chef-services/{serviceId}/equipment/bulk-manage', [App\Http\Controllers\Admin\ChefServiceEquipmentController::class, 'processBulkManage'])
+            ->name('chef-service-equipment.process-bulk-manage');
+
+        // Chef Service Ratings
+        Route::resource('chef-service-ratings', App\Http\Controllers\Admin\ChefServiceRatingController::class)
+            ->only(['index', 'show', 'destroy'])
+            ->names('chef-service-ratings');
+
+        Route::post('chef-service-ratings/{id}/activate', [App\Http\Controllers\Admin\ChefServiceRatingController::class, 'activate'])
+            ->name('chef-service-ratings.activate');
+
+        Route::post('chef-service-ratings/{id}/deactivate', [App\Http\Controllers\Admin\ChefServiceRatingController::class, 'deactivate'])
+            ->name('chef-service-ratings.deactivate');
+
 
 
         // Tags
@@ -185,6 +217,13 @@ Route::middleware('auth:admin')
 
         Route::patch('categories/{id}/deactivate', [CategoryController::class, 'deactivate'])
             ->name('categories.deactivate');
+
+        // Category Icons
+        Route::post('categories/{id}/icon', [CategoryController::class, 'uploadIcon'])
+            ->name('categories.uploadIcon');
+
+        Route::delete('categories/{id}/icon', [CategoryController::class, 'removeIcon'])
+            ->name('categories.removeIcon');
 
         // Admins (managers of the system)
         Route::resource('admins', AdminController::class)
@@ -217,7 +256,7 @@ Route::middleware('auth:admin')
 
         // Activity Log
         Route::resource('activitylogs', ActivityLogController::class)
-            ->only(['index', 'show' , 'destroy'])
+            ->only(['index', 'show'])
             ->names('activitylogs');
 
 

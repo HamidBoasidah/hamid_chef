@@ -61,10 +61,11 @@ class ChefServiceService
     {
         $attributes = $this->normalizeFileAttributes($attributes);
 
-        // Extract tags and images before creating service
+        // Extract tags, images, and equipment before creating service
         $tags = $attributes['tags'] ?? [];
         $serviceImages = $attributes['service_images'] ?? [];
-        unset($attributes['tags'], $attributes['service_images']);
+        $equipment = $attributes['equipment'] ?? [];
+        unset($attributes['tags'], $attributes['service_images'], $attributes['equipment']);
 
         DB::beginTransaction();
         
@@ -79,6 +80,11 @@ class ChefServiceService
             // Create images if provided
             if (!empty($serviceImages)) {
                 $this->imageService->createMultiple($service->id, $serviceImages);
+            }
+
+            // Create equipment if provided
+            if (!empty($equipment)) {
+                $this->createServiceEquipment($service, $equipment);
             }
 
             DB::commit();
@@ -97,11 +103,12 @@ class ChefServiceService
     {
         $attributes = $this->normalizeFileAttributes($attributes);
 
-        // Extract tags and images data before updating service
+        // Extract tags, images, and equipment data before updating service
         $tags = $attributes['tags'] ?? null;
         $serviceImages = $attributes['service_images'] ?? null;
         $deleteImageIds = $attributes['delete_service_image_ids'] ?? [];
-        unset($attributes['tags'], $attributes['service_images'], $attributes['delete_service_image_ids']);
+        $equipment = $attributes['equipment'] ?? null;
+        unset($attributes['tags'], $attributes['service_images'], $attributes['delete_service_image_ids'], $attributes['equipment']);
 
         DB::beginTransaction();
         
@@ -116,6 +123,11 @@ class ChefServiceService
             // Update images if provided
             if ($serviceImages !== null || !empty($deleteImageIds)) {
                 $this->imageService->updateGallery($service->id, $serviceImages ?? [], $deleteImageIds);
+            }
+
+            // Update equipment if provided
+            if ($equipment !== null) {
+                $this->updateServiceEquipment($service, $equipment);
             }
 
             DB::commit();
@@ -134,11 +146,12 @@ class ChefServiceService
     {
         $attributes = $this->normalizeFileAttributes($attributes);
 
-        // Extract tags and images data before updating service
+        // Extract tags, images, and equipment data before updating service
         $tags = $attributes['tags'] ?? null;
         $serviceImages = $attributes['service_images'] ?? null;
         $deleteImageIds = $attributes['delete_service_image_ids'] ?? [];
-        unset($attributes['tags'], $attributes['service_images'], $attributes['delete_service_image_ids']);
+        $equipment = $attributes['equipment'] ?? null;
+        unset($attributes['tags'], $attributes['service_images'], $attributes['delete_service_image_ids'], $attributes['equipment']);
 
         DB::beginTransaction();
         
@@ -153,6 +166,11 @@ class ChefServiceService
             // Update images if provided
             if ($serviceImages !== null || !empty($deleteImageIds)) {
                 $this->imageService->updateGallery($updatedService->id, $serviceImages ?? [], $deleteImageIds);
+            }
+
+            // Update equipment if provided
+            if ($equipment !== null) {
+                $this->updateServiceEquipment($updatedService, $equipment);
             }
 
             DB::commit();
@@ -341,5 +359,68 @@ class ChefServiceService
             'updated_by' => Auth::id(),
             'updated_at' => now(),
         ]);
+    }
+
+    /**
+     * إنشاء أدوات الخدمة
+     * 
+     * @param Model $service
+     * @param array $equipmentData
+     * @return void
+     */
+    protected function createServiceEquipment(Model $service, array $equipmentData): void
+    {
+        foreach ($equipmentData as $equipment) {
+            if (empty($equipment['name'])) {
+                continue; // Skip empty equipment
+            }
+
+            $service->equipment()->create([
+                'name' => $equipment['name'],
+                'is_included' => $equipment['is_included'] ?? true,
+            ]);
+        }
+    }
+
+    /**
+     * تحديث أدوات الخدمة
+     * 
+     * @param Model $service
+     * @param array $equipmentData
+     * @return void
+     */
+    protected function updateServiceEquipment(Model $service, array $equipmentData): void
+    {
+        // Get existing equipment IDs
+        $existingIds = $service->equipment()->pluck('id')->toArray();
+        $updatedIds = [];
+
+        foreach ($equipmentData as $equipment) {
+            if (empty($equipment['name'])) {
+                continue; // Skip empty equipment
+            }
+
+            if (isset($equipment['id']) && in_array($equipment['id'], $existingIds)) {
+                // Update existing equipment
+                $service->equipment()->where('id', $equipment['id'])->update([
+                    'name' => $equipment['name'],
+                    'is_included' => $equipment['is_included'] ?? true,
+                ]);
+                $updatedIds[] = $equipment['id'];
+            } else {
+                // Create new equipment
+                $newEquipment = $service->equipment()->create([
+                    'name' => $equipment['name'],
+                    'is_included' => $equipment['is_included'] ?? true,
+                ]);
+                $updatedIds[] = $newEquipment->id;
+            }
+        }
+
+        // Delete equipment that are no longer in the list
+        $toDelete = array_diff($existingIds, $updatedIds);
+        if (!empty($toDelete)) {
+            $service->equipment()->whereIn('id', $toDelete)->delete();
+        }
     }
 }

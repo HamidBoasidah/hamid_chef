@@ -27,6 +27,9 @@ class ChefServiceDTO extends BaseDTO
     public $deleted_at;
     public $tags;
     public $images;
+    public $ratings;
+    public $equipment;
+    public $equipment_summary;
 
     public function __construct(
         $id,
@@ -49,7 +52,10 @@ class ChefServiceDTO extends BaseDTO
         $created_at = null,
         $deleted_at = null,
         $tags = [],
-        $images = []
+        $images = [],
+        $ratings = [],
+        $equipment = [],
+        $equipment_summary = null
     ) {
         $this->id = $id;
         $this->chef_id = $chef_id;
@@ -72,6 +78,9 @@ class ChefServiceDTO extends BaseDTO
         $this->deleted_at = $deleted_at;
         $this->tags = $tags;
         $this->images = $images;
+        $this->ratings = $ratings;
+        $this->equipment = $equipment;
+        $this->equipment_summary = $equipment_summary;
     }
 
     public static function fromModel(ChefService $service): self
@@ -115,6 +124,32 @@ class ChefServiceDTO extends BaseDTO
                     'created_at' => $image->created_at?->toDateTimeString(),
                 ];
             })->toArray() : [],
+            // ratings (if relation loaded)
+            $service->relationLoaded('ratings') ? $service->ratings->map(function ($rating) {
+                return [
+                    'id' => $rating->id,
+                    'rating' => $rating->rating,
+                    'review' => $rating->review,
+                    'is_active' => $rating->is_active,
+                    'created_at' => $rating->created_at?->toDateTimeString(),
+                    'customer_name' => $rating->customer?->name,
+                    'booking_date' => $rating->booking?->date?->format('Y-m-d'),
+                ];
+            })->toArray() : [],
+            // equipment (if relation loaded)
+            $service->relationLoaded('equipment') ? $service->equipment->map(function ($equipment) {
+                return ChefServiceEquipmentDTO::fromModel($equipment)->toArray();
+            })->toArray() : [],
+            // equipment summary (if relation loaded)
+            $service->relationLoaded('equipment') ? [
+                'total_count' => $service->equipment->count(),
+                'included_count' => $service->equipment->where('is_included', true)->count(),
+                'client_provided_count' => $service->equipment->where('is_included', false)->count(),
+                'has_equipment' => $service->equipment->count() > 0,
+                'has_client_provided' => $service->equipment->where('is_included', false)->count() > 0,
+                'included_items' => $service->equipment->where('is_included', true)->pluck('name')->toArray(),
+                'client_provided_items' => $service->equipment->where('is_included', false)->pluck('name')->toArray(),
+            ] : null,
         );
     }
 
@@ -142,6 +177,9 @@ class ChefServiceDTO extends BaseDTO
             'deleted_at' => $this->deleted_at,
             'tags' => $this->tags,
             'images' => $this->images,
+            'ratings' => $this->ratings,
+            'equipment' => $this->equipment,
+            'equipment_summary' => $this->equipment_summary,
         ];
     }
 

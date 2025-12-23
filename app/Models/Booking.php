@@ -75,7 +75,7 @@ class Booking extends BaseModel
 
     public function rating(): HasOne
     {
-        return $this->hasOne(ChefRating::class);
+        return $this->hasOne(ChefServiceRating::class);
     }
 
     // Computed properties for conflict detection

@@ -5,7 +5,6 @@ namespace App\Services;
 use App\DTOs\BookingDTO;
 use App\Repositories\BookingRepository;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class BookingService
 {
@@ -141,12 +140,7 @@ class BookingService
                 throw new \Exception('Booking update violates time gap requirements: ' . implode(', ', $gapValidation['errors']), 409);
             }
 
-            Log::info('Booking updated with conflict validation', [
-                'booking_id' => $id,
-                'chef_id' => $bookingDTO->chef_id,
-                'date' => $bookingDTO->date,
-                'start_time' => $bookingDTO->start_time
-            ]);
+            // booking updated with conflict validation (logging removed)
         }
 
         return $this->bookings->update($id, $attributes);
@@ -172,13 +166,7 @@ class BookingService
         $success = (bool) $result;
 
         if ($success) {
-            Log::info('Booking cancelled - slot liberated', [
-                'booking_id' => $id,
-                'chef_id' => $booking->chef_id,
-                'date' => $booking->date,
-                'start_time' => $booking->start_time,
-                'reason' => $reason
-            ]);
+            // booking cancelled (logging removed)
         }
 
         return $success;
@@ -298,12 +286,7 @@ class BookingService
                 throw new \Exception('Booking update violates time gap requirements: ' . implode(', ', $gapValidation['errors']), 409);
             }
 
-            Log::info('Booking updated with conflict validation', [
-                'booking_id' => $booking->id,
-                'chef_id' => $bookingDTO->chef_id,
-                'date' => $bookingDTO->date,
-                'start_time' => $bookingDTO->start_time
-            ]);
+            // booking updated with conflict validation (logging removed)
         }
 
         return $this->bookings->update($booking->id, $attributes);

@@ -8,6 +8,8 @@ use App\Models\Address;
 use App\Policies\AddressPolicy;
 use App\Models\Kyc;
 use App\Policies\KycPolicy;
+use App\Models\Category;
+use App\Observers\CategoryObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -27,5 +29,8 @@ class AppServiceProvider extends ServiceProvider
         // Register policies
         Gate::policy(Address::class, AddressPolicy::class);
         Gate::policy(Kyc::class, KycPolicy::class);
+        
+        // Register observers
+        Category::observe(CategoryObserver::class);
     }
 }

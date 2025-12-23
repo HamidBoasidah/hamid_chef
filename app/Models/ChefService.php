@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class ChefService extends BaseModel
 {
@@ -50,6 +51,9 @@ class ChefService extends BaseModel
             // حذف جميع صور الخدمة المرتبطة
             $service->images()->delete();
             
+            // حذف جميع الأدوات المرتبطة بالخدمة
+            $service->equipment()->delete();
+            
             // حذف جميع العلامات المرتبطة بالخدمة من جدول الوسيط
             $service->tags()->detach();
         });
@@ -58,6 +62,9 @@ class ChefService extends BaseModel
         static::forceDeleting(function ($service) {
             // حذف جميع صور الخدمة نهائياً
             $service->images()->forceDelete();
+            
+            // حذف جميع الأدوات نهائياً
+            $service->equipment()->forceDelete();
             
             // حذف جميع العلامات المرتبطة بالخدمة من جدول الوسيط
             $service->tags()->detach();
@@ -129,5 +136,55 @@ class ChefService extends BaseModel
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class);
+    }
+
+    public function ratings()
+    {
+        return $this->hasManyThrough(
+            ChefServiceRating::class,
+            Booking::class,
+            'chef_service_id', // Foreign key on bookings table
+            'booking_id',      // Foreign key on ratings table
+            'id',              // Local key on chef_services table
+            'id'               // Local key on bookings table
+        );
+    }
+
+    /**
+     * Get all equipment for this service
+     */
+    public function equipment(): HasMany
+    {
+        return $this->hasMany(ChefServiceEquipment::class);
+    }
+
+    /**
+     * Get all equipment for this service, ordered for client display
+     */
+    public function activeEquipment(): HasMany
+    {
+        return $this->hasMany(ChefServiceEquipment::class)
+                    ->orderBy('is_included', 'desc')
+                    ->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get only included equipment for this service
+     */
+    public function includedEquipment(): HasMany
+    {
+        return $this->hasMany(ChefServiceEquipment::class)
+                    ->where('is_included', true)
+                    ->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get only client-provided equipment for this service
+     */
+    public function clientProvidedEquipment(): HasMany
+    {
+        return $this->hasMany(ChefServiceEquipment::class)
+                    ->where('is_included', false)
+                    ->orderBy('created_at', 'desc');
     }
 }
