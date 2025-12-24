@@ -1,0 +1,98 @@
+{
+  "info": {
+    "name": "Register API - Moon Chef",
+    "_postman_id": "a1b2c3d4-register-collection",
+    "description": "Collection to test user registration endpoint",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register new user",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            {
+              "key": "first_name",
+              "value": "Test",
+              "type": "text"
+            },
+            {
+              "key": "last_name",
+              "value": "User",
+              "type": "text"
+            },
+            {
+              "key": "email",
+              "value": "{{test_email}}",
+              "type": "text"
+            },
+            {
+              "key": "password",
+              "value": "Password123!",
+              "type": "text"
+            },
+            {
+              "key": "password_confirmation",
+              "value": "Password123!",
+              "type": "text"
+            },
+            {
+              "key": "user_type",
+              "value": "customer",
+              "type": "text"
+            },
+            {
+              "key": "avatar",
+              "type": "file",
+              "src": ""
+            }
+          ]
+        },
+        "url": {
+          "raw": "{{base_url}}/api/register",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "register"
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "exec": [
+              "// generate a unique test email",
+              "const ts = Date.now();",
+              "pm.environment.set('test_email', `test.user.${ts}@example.com`);",
+              "// ensure base_url exists; default to http://localhost:8000 if not set",
+              "if (!pm.environment.get('base_url')) pm.environment.set('base_url', 'http://localhost:8000');"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('Status code is 201', function () {",
+              "    pm.response.to.have.status(201);",
+              "});",
+              "const json = pm.response.json();",
+              "pm.test('Response has token', function () {",
+              "    pm.expect(json).to.have.property('token');",
+              "});",
+              "pm.test('Returned user email matches', function () {",
+              "    pm.expect(json.user.email).to.eql(pm.environment.get('test_email'));",
+              "});"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
