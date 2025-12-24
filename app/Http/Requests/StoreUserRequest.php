@@ -24,9 +24,9 @@ class StoreUserRequest extends FormRequest
         return [
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
+            'user_type' => 'required|in:customer,chef',
             'email' => 'required|email|unique:users,email',
             'avatar' => 'nullable|file|image|max:2048',
-            // phone must be exactly 10 digits and start with 05 (e.g. 05XXXXXXXX)
             'phone_number' => ['nullable', 'regex:/^05[0-9]{8}$/'],
             'whatsapp_number' => ['nullable', 'regex:/^05[0-9]{8}$/'],
             'address' => 'nullable|string|max:255',
