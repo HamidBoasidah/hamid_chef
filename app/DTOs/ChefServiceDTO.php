@@ -30,6 +30,7 @@ class ChefServiceDTO extends BaseDTO
     public $ratings;
     public $equipment;
     public $equipment_summary;
+    public $bookings_count;
 
     public function __construct(
         $id,
@@ -55,7 +56,8 @@ class ChefServiceDTO extends BaseDTO
         $images = [],
         $ratings = [],
         $equipment = [],
-        $equipment_summary = null
+        $equipment_summary = null,
+        $bookings_count = null
     ) {
         $this->id = $id;
         $this->chef_id = $chef_id;
@@ -81,6 +83,7 @@ class ChefServiceDTO extends BaseDTO
         $this->ratings = $ratings;
         $this->equipment = $equipment;
         $this->equipment_summary = $equipment_summary;
+        $this->bookings_count = (int) ($bookings_count ?? 0);
     }
 
     public static function fromModel(ChefService $service): self
@@ -150,6 +153,8 @@ class ChefServiceDTO extends BaseDTO
                 'included_items' => $service->equipment->where('is_included', true)->pluck('name')->toArray(),
                 'client_provided_items' => $service->equipment->where('is_included', false)->pluck('name')->toArray(),
             ] : null,
+            // bookings count (if withCount used it will be available as bookings_count)
+            $service->bookings_count ?? ($service->relationLoaded('bookings') ? $service->bookings->count() : null)
         );
     }
 
@@ -180,6 +185,7 @@ class ChefServiceDTO extends BaseDTO
             'ratings' => $this->ratings,
             'equipment' => $this->equipment,
             'equipment_summary' => $this->equipment_summary,
+            'bookings_count' => $this->bookings_count,
         ];
     }
 
@@ -198,6 +204,7 @@ class ChefServiceDTO extends BaseDTO
             'is_active' => $this->is_active,
             'tags' => $this->tags,
             // images excluded from index for performance
+            'bookings_count' => $this->bookings_count,
         ];
     }
 }

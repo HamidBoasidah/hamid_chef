@@ -67,7 +67,8 @@ class ChefServiceController extends Controller
             }
         ];
 
-        $services = $query->with($relations)->latest()->paginate($perPage);
+        // include bookings count to avoid N+1 when transforming to DTO
+        $services = $query->withCount('bookings')->with($relations)->latest()->paginate($perPage);
 
         // تحويل النتائج إلى DTO كاملة مع التقييمات
         $services->getCollection()->transform(function ($service) {
@@ -203,6 +204,9 @@ class ChefServiceController extends Controller
             $service = $serviceService->find($id);
 
             $activated = $serviceService->activate($service->id);
+
+                    // append bookings count for this service to include in DTO
+                    $service->bookings_count = $service->bookings()->count();
 
             return $this->activatedResponse(
                 ChefServiceDTO::fromModel($activated)->toArray(),
