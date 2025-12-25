@@ -31,6 +31,7 @@ class ChefServiceDTO extends BaseDTO
     public $equipment;
     public $equipment_summary;
     public $bookings_count;
+    public $ratings_count;
 
     public function __construct(
         $id,
@@ -57,6 +58,7 @@ class ChefServiceDTO extends BaseDTO
         $ratings = [],
         $equipment = [],
         $equipment_summary = null,
+        $ratings_count = null,
         $bookings_count = null
     ) {
         $this->id = $id;
@@ -83,6 +85,7 @@ class ChefServiceDTO extends BaseDTO
         $this->ratings = $ratings;
         $this->equipment = $equipment;
         $this->equipment_summary = $equipment_summary;
+        $this->ratings_count = (int) ($ratings_count ?? 0);
         $this->bookings_count = (int) ($bookings_count ?? 0);
     }
 
@@ -153,6 +156,8 @@ class ChefServiceDTO extends BaseDTO
                 'included_items' => $service->equipment->where('is_included', true)->pluck('name')->toArray(),
                 'client_provided_items' => $service->equipment->where('is_included', false)->pluck('name')->toArray(),
             ] : null,
+            // ratings count (if withCount used it will be available as ratings_count)
+            $service->ratings_count ?? ($service->relationLoaded('ratings') ? $service->ratings->count() : null),
             // bookings count (if withCount used it will be available as bookings_count)
             $service->bookings_count ?? ($service->relationLoaded('bookings') ? $service->bookings->count() : null)
         );
@@ -185,6 +190,7 @@ class ChefServiceDTO extends BaseDTO
             'ratings' => $this->ratings,
             'equipment' => $this->equipment,
             'equipment_summary' => $this->equipment_summary,
+            'ratings_count' => $this->ratings_count,
             'bookings_count' => $this->bookings_count,
         ];
     }
@@ -204,6 +210,7 @@ class ChefServiceDTO extends BaseDTO
             'is_active' => $this->is_active,
             'tags' => $this->tags,
             // images excluded from index for performance
+            'ratings_count' => $this->ratings_count,
             'bookings_count' => $this->bookings_count,
         ];
     }
