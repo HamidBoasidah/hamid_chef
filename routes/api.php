@@ -12,6 +12,8 @@ Route::get('chefs', [App\Http\Controllers\Api\ChefController::class, 'index']);
 // Get chefs by category (public) — placed BEFORE the parameterized show route to avoid route shadowing
 Route::get('chefs/by-category/{category}', [App\Http\Controllers\Api\ChefController::class, 'byCategory']);
 Route::get('chefs/{chef}', [App\Http\Controllers\Api\ChefController::class, 'show']);
+// Public: get services for a specific chef (paginated, filterable)
+Route::get('chefs/{chef}/services', [App\Http\Controllers\Api\ChefServiceController::class, 'showByChef']);
 // Public routes for viewing chef services (list and single) — available to guests
 Route::get('chef-services', [App\Http\Controllers\Api\ChefServiceController::class, 'index']);
 Route::get('chef-services/{chefService}', [App\Http\Controllers\Api\ChefServiceController::class, 'show']);
