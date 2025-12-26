@@ -33,6 +33,8 @@ class StoreAddressRequest extends FormRequest
             'building_number' => 'nullable|integer|min:0',
             'floor_number' => 'nullable|integer|min:0',
             'apartment_number' => 'nullable|integer|min:0',
+            'lat' => 'nullable|numeric|between:-90,90',
+            'lang' => 'nullable|numeric|between:-180,180',
             'is_default' => 'nullable|boolean',
             'is_active' => 'nullable|boolean',
             'created_by' => 'nullable|exists:users,id',

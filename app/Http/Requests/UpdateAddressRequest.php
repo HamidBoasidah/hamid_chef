@@ -33,6 +33,8 @@ class UpdateAddressRequest extends FormRequest
             'building_number' => 'sometimes|nullable|integer|min:0',
             'floor_number' => 'sometimes|nullable|integer|min:0',
             'apartment_number' => 'sometimes|nullable|integer|min:0',
+            'lat' => 'sometimes|nullable|numeric|between:-90,90',
+            'lang' => 'sometimes|nullable|numeric|between:-180,180',
             'is_default' => 'sometimes|nullable|boolean',
             'is_active' => 'sometimes|nullable|boolean',
             'created_by' => 'nullable|exists:users,id',

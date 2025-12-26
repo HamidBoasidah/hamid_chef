@@ -20,6 +20,9 @@ return new class extends Migration
             $table->integer('building_number')->nullable();
             $table->integer('floor_number')->nullable();
             $table->integer('apartment_number')->nullable();
+            // Geolocation coordinates
+            $table->decimal('lat', 10, 7)->nullable();
+            $table->decimal('lang', 10, 7)->nullable();
             $table->boolean('is_default')->default(false);
             $table->boolean('is_active')->default(true);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
