@@ -12,6 +12,7 @@ class BookingRepository extends BaseRepository
     protected array $defaultWith = [
         'customer',
         'chef',
+        'chef.ratings',
         'service',
         'address',
         'transactions',
