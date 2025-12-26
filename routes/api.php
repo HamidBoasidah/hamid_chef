@@ -26,6 +26,8 @@ Route::get('chef-service-equipment/{id}', [App\Http\Controllers\Api\ChefServiceC
 // Public route for categories index
 Route::get('categories', [App\Http\Controllers\Api\CategoryController::class, 'index']);
 Route::get('categories/{id}', [App\Http\Controllers\Api\CategoryController::class, 'show']);
+// Public: tags index
+Route::get('tags', [App\Http\Controllers\Api\TagController::class, 'index']);
 
 // Location endpoints: المحافظات - المديريات - المناطق
 Route::get('locations/governorates', [App\Http\Controllers\Api\LocationController::class, 'governorates']);
