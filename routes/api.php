@@ -11,6 +11,8 @@ Route::get('/user', function (Request $request) {
 Route::get('chefs', [App\Http\Controllers\Api\ChefController::class, 'index']);
 // Get chefs by category (public) — placed BEFORE the parameterized show route to avoid route shadowing
 Route::get('chefs/by-category/{category}', [App\Http\Controllers\Api\ChefController::class, 'byCategory']);
+// Public: get chef by user id (for testing via Postman)
+Route::get('chefs/by-user/{userId}', [App\Http\Controllers\Api\ChefController::class, 'showByUserId']);
 Route::get('chefs/{chef}', [App\Http\Controllers\Api\ChefController::class, 'show']);
 // Public: get services for a specific chef (paginated, filterable)
 Route::get('chefs/{chef}/services', [App\Http\Controllers\Api\ChefServiceController::class, 'showByChef']);

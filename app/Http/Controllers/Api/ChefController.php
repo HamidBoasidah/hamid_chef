@@ -136,6 +136,31 @@ class ChefController extends Controller
     }
 
     /**
+     * جلب طاهي بواسطة user_id
+     */
+    public function showByUserId(ChefService $chefService, Request $request, $userId)
+    {
+        try {
+            $chef = $chefService->findForCurrentUser($userId, [
+                'categories:id,name,slug',
+                'gallery' => function($query) {
+                    $query->where('is_active', true)->orderBy('created_at');
+                },
+                'services' => function($query) {
+                    $query->where('is_active', true)->orderBy('created_at');
+                }
+            ]);
+
+            return $this->resourceResponse(
+                ChefDTO::fromModel($chef)->toArray(),
+                'تم جلب بيانات الطاهي بنجاح'
+            );
+        } catch (ModelNotFoundException) {
+            $this->throwNotFoundException('الطاهي المطلوب غير موجود');
+        }
+    }
+
+    /**
      * تحديث طاهي يخص المستخدم الحالي
      */
     public function update(UpdateChefRequest $request, ChefService $chefService, $id)
