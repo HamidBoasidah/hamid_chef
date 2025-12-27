@@ -52,6 +52,7 @@ return [
     'categories'         => ['view', 'create', 'update', 'delete'],
     'chef-services'         => ['view', 'create', 'update', 'delete'],
     'bookings'      => ['view', 'create', 'update', 'delete'],
+    'landing-page-sections' => ['view', 'create', 'update', 'delete'],
     
     ],
 
@@ -80,6 +81,7 @@ return [
     'categories'   => ['en' => 'Categories', 'ar' => 'التصنيفات'],
     'chef-services' => ['en' => 'Chef Services', 'ar' => 'خدمات الطهاة'],
     'bookings' => ['en' => 'Bookings', 'ar' => 'الحجوزات'],
+    'landing-page-sections' => ['en' => 'Landing Pages', 'ar' => 'الصفحات الخارجية'],
 
     ],
 

@@ -14,6 +14,8 @@ class AddressDTO extends BaseDTO
     public $building_number;
     public $floor_number;
     public $apartment_number;
+    public $lat;
+    public $lang;
     public $is_default;
     public $is_active;
     public $governorate_id;
@@ -39,6 +41,8 @@ class AddressDTO extends BaseDTO
         $building_number,
         $floor_number,
         $apartment_number,
+        $lat,
+        $lang,
         $is_default,
         $is_active,
         $governorate_id,
@@ -63,6 +67,8 @@ class AddressDTO extends BaseDTO
         $this->building_number = $building_number;
         $this->floor_number = $floor_number;
         $this->apartment_number = $apartment_number;
+        $this->lat = $lat;
+        $this->lang = $lang;
         $this->is_default = (bool) $is_default;
         $this->is_active = (bool) $is_active;
         $this->governorate_id = $governorate_id;
@@ -92,6 +98,8 @@ class AddressDTO extends BaseDTO
             $address->building_number,
             $address->floor_number,
             $address->apartment_number,
+            $address->lat,
+            $address->lang,
             $address->is_default ?? false,
             $address->is_active ?? true,
             $address->governorate_id,
@@ -121,6 +129,8 @@ class AddressDTO extends BaseDTO
             'building_number' => $this->building_number,
             'floor_number' => $this->floor_number,
             'apartment_number' => $this->apartment_number,
+            'lat' => $this->lat,
+            'lang' => $this->lang,
             'is_default' => $this->is_default,
             'is_active' => $this->is_active,
             'governorate_id' => $this->governorate_id,
@@ -146,6 +156,8 @@ class AddressDTO extends BaseDTO
             'id' => $this->id,
             'label' => $this->label,
             'address' => $this->address,
+            'lat' => $this->lat,
+            'lang' => $this->lang,
             'is_active' => $this->is_active,
             'is_default' => $this->is_default,
             'governorate_id' => $this->governorate_id,

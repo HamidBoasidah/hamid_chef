@@ -1,6 +1,40 @@
 @import 'tailwindcss';
 @import '../js/assets/main.css';
 
+/* Custom Fonts - Air Strip Arabic and Ahlan */
+/* 
+ * IMPORTANT: You need to add the font files to use these custom fonts.
+ * 
+ * Steps to add fonts:
+ * 1. Create the directory: public/fonts/
+ * 2. Add your font files:
+ *    - AirStripArabic.woff2 (recommended)
+ *    - AirStripArabic.woff (fallback)
+ *    - AirStripArabic.ttf (fallback)
+ *    - Ahlan.woff2 (recommended)
+ *    - Ahlan.woff (fallback)
+ *    - Ahlan.ttf (fallback)
+ * 
+ * Until you add the font files, the warnings during build are normal.
+ * The site will use fallback fonts (Arial) until the custom fonts are added.
+ */
+
+@font-face {
+    font-family: 'Air Strip Arabic';
+    src: url('/fonts/AirStripArabic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Ahlan';
+    src: url('/fonts/Ahlan.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -9,15 +43,19 @@
 @theme {
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-arabic: 'Air Strip Arabic', 'Arial', sans-serif;
+    --font-english: 'Ahlan', 'Arial', sans-serif;
 }
 
 /* Logical positioning utilities for RTL/LTR agnostic off-canvas */
 .inline-start-0 {
     inset-inline-start: 0;
 }
+
 .inline-start--full {
     inset-inline-start: -100%;
 }
+
 .transition-inline-start {
     transition-property: inset-inline-start;
 }

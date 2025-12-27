@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Repositories\TagRepository;
 use App\Models\Tag;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
+
 
 class TagService
 {
@@ -23,6 +25,11 @@ class TagService
     public function paginate(int $perPage = 15, array $with = [])
     {
         return $this->tags->paginate($perPage, $with);
+    }
+
+    public function query(?array $with = null): Builder
+    {
+        return $this->tags->query($with);
     }
 
     public function find($id, array $with = [])

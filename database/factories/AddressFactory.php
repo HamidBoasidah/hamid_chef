@@ -30,6 +30,8 @@ class AddressFactory extends Factory
             'building_number' => $this->faker->numberBetween(1,200),
             'floor_number' => $this->faker->numberBetween(0,10),
             'apartment_number' => $this->faker->numberBetween(1,1000),
+            'lat' => $this->faker->latitude(),
+            'lang' => $this->faker->longitude(),
             'is_active' => true,
             'created_by' => null,
             'updated_by' => null,

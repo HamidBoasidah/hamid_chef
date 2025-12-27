@@ -35,7 +35,7 @@ class ChefServiceController extends Controller
         $this->equipmentService = $equipmentService;
         
         // Allow guests to view the services list and single service routes
-        $this->middleware('auth:sanctum')->except(['index', 'show', 'getEquipment', 'showEquipment']);
+        $this->middleware('auth:sanctum')->except(['index', 'show', 'getEquipment', 'showEquipment', 'showByChef']);
     }
 
     /**
@@ -67,7 +67,14 @@ class ChefServiceController extends Controller
             }
         ];
 
-        $services = $query->with($relations)->latest()->paginate($perPage);
+        // include bookings and active ratings counts to avoid N+1 when transforming to DTO
+        $services = $query->withCount([
+            'bookings',
+            // qualify the column name to avoid ambiguous `is_active` when joined in subquery
+            'ratings' => function ($q) {
+                $q->where('chef_service_ratings.is_active', true);
+            }
+        ])->with($relations)->latest()->paginate($perPage);
 
         // تحويل النتائج إلى DTO كاملة مع التقييمات
         $services->getCollection()->transform(function ($service) {
@@ -124,6 +131,53 @@ class ChefServiceController extends Controller
         } catch (ModelNotFoundException) {
             $this->throwNotFoundException('الخدمة المطلوبة غير موجودة');
         }
+    }
+
+    /**
+     * عرض خدمات شيف معين (قابل للفلاتر وترقيم)
+     *
+     * @param Request $request
+     * @param ChefServiceService $serviceService
+     * @param int $chefId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function showByChef(Request $request, ChefServiceService $serviceService, int $chefId)
+    {
+        $perPage = (int) $request->get('per_page', 10);
+
+        // Query مخصص للشيف المحدد
+        $query = $serviceService->getQueryForChef($chefId);
+
+        // تطبيق الفلاتر المشتركة
+        $query = $this->applyFilters(
+            $query,
+            $request,
+            $this->getSearchableFields(),
+            $this->getForeignKeyFilters()
+        );
+
+        $relations = [
+            'chef',
+            'ratings' => function($query) {
+                $query->with(['customer:id,first_name,last_name'])
+                      ->where('chef_service_ratings.is_active', true)
+                      ->orderBy('chef_service_ratings.created_at', 'desc')
+                      ->limit(5);
+            }
+        ];
+
+        $services = $query->withCount([
+            'bookings',
+            'ratings' => function ($q) {
+                $q->where('chef_service_ratings.is_active', true);
+            }
+        ])->with($relations)->latest()->paginate($perPage);
+
+        $services->getCollection()->transform(function ($service) {
+            return ChefServiceDTO::fromModel($service)->toArray();
+        });
+
+        return $this->collectionResponse($services, 'تم جلب خدمات الشيف بنجاح');
     }
 
     /**
@@ -203,6 +257,10 @@ class ChefServiceController extends Controller
             $service = $serviceService->find($id);
 
             $activated = $serviceService->activate($service->id);
+
+                    // append bookings and ratings counts for this service to include in DTO
+                    $service->bookings_count = $service->bookings()->count();
+                    $service->ratings_count = $service->relationLoaded('ratings') ? $service->ratings->count() : $service->ratings()->where('is_active', true)->count();
 
             return $this->activatedResponse(
                 ChefServiceDTO::fromModel($activated)->toArray(),

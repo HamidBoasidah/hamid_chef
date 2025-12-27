@@ -179,14 +179,35 @@ class BookingDTO extends BaseDTO
 
     public function toIndexArray(): array
     {
-        return [
+        $array = [
             'id' => $this->id,
             'customer_id' => $this->customer_id,
             'chef_id' => $this->chef_id,
             'date' => $this->date,
+            'start_time' => $this->start_time,
+            'hours_count' => $this->hours_count,
+            'number_of_guests' => $this->number_of_guests,
             'total_amount' => $this->total_amount,
             'booking_status' => $this->booking_status,
         ];
+
+        // Chef details
+        if (isset($this->chef)) {
+            $array['chef'] = [
+                'id' => $this->chef->id ?? null,
+                'name' => $this->chef->name ?? null,
+                'rating' => $this->chef->rating_avg ?? null,
+                'ratings_count' => $this->chef->ratings()->count() ?? 0,
+                'image' => $this->chef->logo ?? null,
+            ];
+        }
+
+        // Service name
+        if (isset($this->service)) {
+            $array['service_name'] = $this->service->name ?? null;
+        }
+
+        return $array;
     }
 
     // Time calculation methods for conflict detection

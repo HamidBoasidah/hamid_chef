@@ -10,7 +10,6 @@ class ChefDTO extends BaseDTO
     public $user_id;
     public $name;
     public $address;
-    public $bio;
     public $short_description;
     public $long_description;
     public $logo;
@@ -38,13 +37,14 @@ class ChefDTO extends BaseDTO
     public $gallery;
     public $ratings;
     public $services;
+    public $bookings_count;
+    public $reviews_count;
 
     public function __construct(
         $id,
         $user_id,
         $name,
         $address,
-        $bio,
         $short_description = null,
         $long_description = null,
         $logo,
@@ -71,13 +71,15 @@ class ChefDTO extends BaseDTO
         $categories = [],
         $gallery = [],
         $ratings = [],
-        $services = []
+        $services = [],
+        $bookings_count = null,
+        $reviews_count = null
     ) {
         $this->id = $id;
         $this->user_id = $user_id;
         $this->name = $name;
         $this->address = $address;
-        $this->bio = $bio;
+        
         $this->short_description = $short_description;
         $this->long_description = $long_description;
         $this->logo = $logo;
@@ -105,6 +107,8 @@ class ChefDTO extends BaseDTO
         $this->gallery = $gallery;
         $this->ratings = $ratings;
         $this->services = $services;
+        $this->bookings_count = $bookings_count;
+        $this->reviews_count = $reviews_count;
     }
 
     public static function fromModel(Chef $chef): self
@@ -114,8 +118,6 @@ class ChefDTO extends BaseDTO
             $chef->user_id ?? null,
             $chef->name ?? null,
             $chef->address ?? null,
-            // legacy bio (kept for compatibility)
-            $chef->bio ?? null,
             // explicit short/long descriptions
             $chef->short_description ?? null,
             $chef->long_description ?? null,
@@ -193,6 +195,11 @@ class ChefDTO extends BaseDTO
                     'is_active' => $service->is_active ?? true,
                 ];
             })->toArray() : [],
+            // counts
+            // bookings_count: prefer preloaded withCount value, otherwise derive from relation or query
+            $chef->bookings_count ?? ($chef->relationLoaded('bookings') ? $chef->bookings->count() : $chef->bookings()->count()),
+            // reviews_count: count of active ratings/reviews
+            $chef->ratings_count ?? ($chef->relationLoaded('ratings') ? $chef->ratings->where('is_active', true)->count() : $chef->ratings()->where('is_active', true)->count()),
         );
     }
 
@@ -203,7 +210,7 @@ class ChefDTO extends BaseDTO
             'user_id' => $this->user_id,
             'name' => $this->name,
             'address' => $this->address,
-            'bio' => $this->bio,
+            
             'logo' => $this->logo,
             'short_description' => $this->short_description,
             'long_description' => $this->long_description,
@@ -231,6 +238,8 @@ class ChefDTO extends BaseDTO
             'gallery' => $this->gallery,
             'ratings' => $this->ratings,
             'services' => $this->services,
+            'bookings_count' => $this->bookings_count,
+            'reviews_count' => $this->reviews_count,
         ];
     }
 
@@ -255,6 +264,8 @@ class ChefDTO extends BaseDTO
             'is_active' => $this->is_active,
             'categories' => $this->categories,
             // gallery excluded from index for performance
+            'bookings_count' => $this->bookings_count ?? 0,
+            'reviews_count' => $this->reviews_count ?? 0,
         ];
     }
 }

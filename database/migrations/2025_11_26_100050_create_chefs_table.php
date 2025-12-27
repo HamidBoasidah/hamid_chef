@@ -31,7 +31,8 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
-            $table->unique('user_id');
+            // Allow creating a new chef for the same user after soft-delete
+            $table->unique(['user_id', 'deleted_at']);
         });
     }
 

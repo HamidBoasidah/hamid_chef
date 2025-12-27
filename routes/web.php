@@ -2,10 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LocaleController;
+use App\Http\Controllers\Site\LandingPageController;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+// Public Landing Page
+Route::get('/', [LandingPageController::class, 'index'])->name('landing');
+
+// Locale Switcher
+Route::post('/locale/switch', function () {
+    $locale = request('locale', 'ar');
+    session(['locale' => $locale]);
+    app()->setLocale($locale);
+    return back();
+})->name('locale.switch');
 
 
 Route::middleware(['auth', 'verified'])
@@ -50,7 +58,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
 //Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 //Route::post('login', [AuthController::class, 'login'])->name('login');
 //Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-//Route::post('/locale', LocaleController::class)->name('locale.set')->middleware('throttle:10,1');
+Route::post('/locale', LocaleController::class)->name('locale.set')->middleware('throttle:10,1');
 
 // --- BREEZE MERGED CONTENT START ---
 // Note: Duplicate imports and routes commented out to prevent conflicts.

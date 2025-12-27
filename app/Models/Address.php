@@ -22,6 +22,8 @@ class Address extends BaseModel
         'building_number',
         'floor_number',
         'apartment_number',
+        'lat',
+        'lang',
         'is_default',
         'is_active',
         'created_by',
@@ -32,6 +34,8 @@ class Address extends BaseModel
         'building_number' => 'integer',
         'floor_number' => 'integer',
         'apartment_number' => 'integer',
+        'lat' => 'float',
+        'lang' => 'float',
         'is_default' => 'boolean',
         'is_active' => 'boolean',
     ];

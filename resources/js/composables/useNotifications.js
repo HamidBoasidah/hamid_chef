@@ -54,3 +54,30 @@ export function useNotifications() {
 	}
 }
 
+/**
+ * Extract error message from Inertia errors object
+ * @param {Object} errors - Inertia errors object
+ * @param {string} defaultMessage - Default message if no specific error found
+ * @returns {string} - Extracted error message
+ */
+export function extractErrorMessage(errors, defaultMessage = 'An error occurred') {
+	if (typeof errors === 'string') {
+		return errors
+	}
+
+	if (errors && typeof errors === 'object') {
+		// Check for Laravel validation errors
+		if (errors.message) {
+			return errors.message
+		}
+
+		// Check for errors object with field-specific errors
+		const firstKey = Object.keys(errors)[0]
+		if (firstKey && errors[firstKey]) {
+			const firstError = errors[firstKey]
+			return Array.isArray(firstError) ? firstError[0] : firstError
+		}
+	}
+
+	return defaultMessage
+}

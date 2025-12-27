@@ -136,8 +136,26 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function update(int|string $id, array $attributes)
     {
         $record = $this->findOrFail($id);
+        
+        \Log::info('🔄 BaseRepository::update', [
+            'id' => $id,
+            'model' => get_class($record),
+            'attributes_keys' => array_keys($attributes),
+            'additional_data' => $attributes['additional_data'] ?? 'not set'
+        ]);
+        
         $attributes = $this->handleFileUploads($attributes, $record);
+        
+        \Log::info('📤 BaseRepository::update - calling model update', [
+            'attributes' => $attributes
+        ]);
+        
         $record->update($attributes);
+        
+        \Log::info('✅ BaseRepository::update - model updated', [
+            'additional_data_after' => $record->additional_data
+        ]);
+        
         return $record;
     }
 

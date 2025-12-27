@@ -225,6 +225,19 @@ Route::middleware('auth:admin')
         Route::delete('categories/{id}/icon', [CategoryController::class, 'removeIcon'])
             ->name('categories.removeIcon');
 
+        // Landing Page Sections
+        Route::get('landing-page-sections/{section}/manage', [App\Http\Controllers\Admin\LandingPageSectionController::class, 'manage'])
+            ->name('landing-page-sections.manage');
+
+        Route::resource('landing-page-sections', App\Http\Controllers\Admin\LandingPageSectionController::class)
+            ->names('landing-page-sections');
+
+        Route::patch('landing-page-sections/{id}/activate', [App\Http\Controllers\Admin\LandingPageSectionController::class, 'activate'])
+            ->name('landing-page-sections.activate');
+
+        Route::patch('landing-page-sections/{id}/deactivate', [App\Http\Controllers\Admin\LandingPageSectionController::class, 'deactivate'])
+            ->name('landing-page-sections.deactivate');
+
         // Admins (managers of the system)
         Route::resource('admins', AdminController::class)
             ->names('admins');

@@ -218,6 +218,7 @@ import {
   TagIcon,
   TaskIcon,
   CalenderIcon,
+  PageIcon,
 } from "../../icons"
 import { useSidebar } from "@/composables/useSidebar"
 import { usePermissions } from "@/composables/usePermissions"
@@ -345,6 +346,67 @@ const menuGroups = computed(() =>
           name: t('menu.categories'),
           path: route('admin.categories.index'),
           permission: 'categories.view',
+        },
+        {
+          icon: PageIcon,
+          name: t('menu.landing_pages'),
+          subItems: [
+            {
+              name: t('menu.landing_hero'),
+              path: route('admin.landing-page-sections.manage', { section: 'hero' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_features'),
+              path: route('admin.landing-page-sections.manage', { section: 'features' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_how_it_works'),
+              path: route('admin.landing-page-sections.manage', { section: 'how_it_works' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_top_chefs'),
+              path: route('admin.landing-page-sections.manage', { section: 'top_chefs' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_categories'),
+              path: route('admin.landing-page-sections.manage', { section: 'categories' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_testimonials'),
+              path: route('admin.landing-page-sections.manage', { section: 'testimonials' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_about'),
+              path: route('admin.landing-page-sections.manage', { section: 'about_us' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_vision_mission'),
+              path: route('admin.landing-page-sections.manage', { section: 'vision_mission' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_why_us'),
+              path: route('admin.landing-page-sections.manage', { section: 'why_us' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_partners'),
+              path: route('admin.landing-page-sections.manage', { section: 'partners' }),
+              permission: 'landing-page-sections.view',
+            },
+            {
+              name: t('menu.landing_contact'),
+              path: route('admin.landing-page-sections.manage', { section: 'contact' }),
+              permission: 'landing-page-sections.view',
+            },
+          ],
         },
         {
           icon: UserCircleIcon,
