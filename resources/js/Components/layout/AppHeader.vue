@@ -77,7 +77,7 @@
         <div class="flex items-center gap-2 2xsm:gap-3">
           <ThemeToggler />
           <DirectionToggler />
-          <NotificationMenu />
+          <!-- NotificationMenu hidden per request -->
         </div>
         <UserMenu />
       </div>
@@ -92,7 +92,6 @@ import ThemeToggler from '../common/ThemeToggler.vue'
 import DirectionToggler from '../common/DirectionToggler.vue'
 import SearchBar from './header/SearchBar.vue'
 import HeaderLogo from './header/HeaderLogo.vue'
-import NotificationMenu from './header/NotificationMenu.vue'
 import UserMenu from './header/UserMenu.vue'
 
 const { toggleSidebar, toggleMobileSidebar, isMobileOpen } = useSidebar()
