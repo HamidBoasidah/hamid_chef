@@ -88,7 +88,8 @@ class ChefServiceService
             }
 
             DB::commit();
-            return $service;
+            // Reload with default relations so DTOs include tags/images immediately
+            return $this->services->findOrFail($service->id);
             
         } catch (Exception $e) {
             DB::rollBack();
@@ -131,7 +132,8 @@ class ChefServiceService
             }
 
             DB::commit();
-            return $service;
+            // Reload with default relations so DTOs include tags/images immediately
+            return $this->services->findOrFail($service->id);
             
         } catch (Exception $e) {
             DB::rollBack();
@@ -174,7 +176,8 @@ class ChefServiceService
             }
 
             DB::commit();
-            return $updatedService;
+            // Reload with default relations so DTOs include tags/images immediately
+            return $this->services->findOrFail($updatedService->id);
             
         } catch (Exception $e) {
             DB::rollBack();
