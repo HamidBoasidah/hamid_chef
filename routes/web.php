@@ -68,7 +68,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:web')->group(function () {
     Route::get('/dashboard', function () {
         return Inertia::render('Chef/Dashboard');
     })->name('dashboard');
@@ -82,9 +82,15 @@ Route::middleware('auth')->group(function () {
         return Inertia::render('Chef/Bookings/Index');
     })->name('bookings.index');
 
-    Route::get('/chef-services', function () {
-        return Inertia::render('Chef/ChefService/Index');
-    })->name('chef-services.index');
+    // Chef Services
+    Route::resource('chef-services', App\Http\Controllers\Chef\ChefServiceController::class)
+        ->names('chef-services');
+
+    Route::patch('chef-services/{id}/activate', [App\Http\Controllers\Chef\ChefServiceController::class, 'activate'])
+        ->name('chef-services.activate');
+
+    Route::patch('chef-services/{id}/deactivate', [App\Http\Controllers\Chef\ChefServiceController::class, 'deactivate'])
+        ->name('chef-services.deactivate');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

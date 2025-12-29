@@ -170,7 +170,7 @@
     </div>
 
     <div class="flex flex-col gap-3 sm:flex-row sm:justify-end">
-      <Link :href="route('admin.chef-services.index')" class="shadow-theme-xs inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03]">{{ t('buttons.backToList') }}</Link>
+      <Link :href="route('chef-services.index')" class="shadow-theme-xs inline-flex items-center justify-center gap-2 rounded-lg bg-white px-4 py-3 text-sm font-medium text-gray-700 ring-1 ring-gray-300 transition hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-400 dark:ring-gray-700 dark:hover:bg-white/[0.03]">{{ t('buttons.backToList') }}</Link>
       <button @click="create" class="bg-brand-500 shadow-theme-xs hover:bg-brand-600 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-white transition">{{ t('buttons.create') }}</button>
     </div>
   </div>
@@ -183,7 +183,7 @@ import { useNotifications } from '@/composables/useNotifications'
 import MultiImageUpload from '@/Components/common/MultiImageUpload.vue'
 import ImageUploadBox from '@/Components/common/ImageUploadBox.vue'
 import TagSelector from '@/Components/TagSelector.vue'
-import EquipmentManager from '@/Components/admin/chef-service/EquipmentManager.vue'
+import EquipmentManager from '@/Components/Chef/chef-service/EquipmentManager.vue'
 
 const { t } = useI18n()
 const { success, error } = useNotifications()
@@ -212,7 +212,7 @@ const form = useForm({
 })
 
 function create() {
-  form.post(route('admin.chef-services.store'), {
+  form.post(route('chef-services.store'), {
     onSuccess: () => success(t('chef_services.serviceCreatedSuccessfully')),
     onError: () => error(t('chef_services.serviceCreationFailed')),
   })

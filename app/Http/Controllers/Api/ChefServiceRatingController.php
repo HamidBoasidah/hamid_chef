@@ -25,6 +25,53 @@ class ChefServiceRatingController extends Controller
     }
 
     /**
+     * عرض تقييم يخص مستخدماً محدداً
+     * - يتطلب أن يطابق userId المستخدم المصادَق عليه
+     * - خيارياً: تمرير booking_id كـ query لاستخراج تقييم حجز محدد
+     */
+    public function showByUser(Request $request, ChefServiceRatingService $ratingService, int $userId)
+    {
+        try {
+            $authUser = $request->user();
+
+            // السماح للمستخدم برؤية تقييماته فقط
+            if ((int) $authUser->id !== (int) $userId) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'غير مصرح بالوصول إلى هذه البيانات'
+                ], 403);
+            }
+
+            // booking relation must reference the correct foreign key column name: chef_service_id
+            $with = ['booking:id,date,chef_id,chef_service_id', 'chef:id,name'];
+            $bookingId = $request->query('booking_id');
+            $rating = null;
+
+            if ($bookingId) {
+                // احضر تقييم هذا الحجز (إن وُجد) وتأكد أنه يخص المستخدم
+                $found = $ratingService->getForBooking((int) $bookingId, $with);
+                if ($found && (int) $found->customer_id === (int) $authUser->id) {
+                    $rating = $found;
+                }
+            } else {
+                // احضر أحدث تقييم للمستخدم (إن وُجد)
+                $ratings = $ratingService->getForCustomer($authUser->id, $with);
+                $rating = $ratings->first();
+            }
+
+            return response()->json([
+                'success' => true,
+                'rating' => $rating ? ChefServiceRatingDTO::fromModel($rating)->toArray() : null,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    /**
      * إنشاء تقييم جديد للمستخدم الحالي
      */
     public function store(StoreChefServiceRatingRequest $request, ChefServiceRatingService $ratingService, BookingService $bookingService)
@@ -40,11 +87,11 @@ class ChefServiceRatingController extends Controller
                 ['chef', 'service']
             );
 
-            // التحقق من أن الحجز مؤكد أو مكتمل
-            if (!in_array($booking->booking_status, ['confirmed', 'completed'])) {
+            // التحقق من أن الحجز مكتمل فقط
+            if ($booking->booking_status !== 'completed') {
                 return response()->json([
                     'success' => false,
-                    'message' => 'يمكن تقييم الحجوزات المؤكدة أو المكتملة فقط'
+                    'message' => 'يمكن تقييم الحجوزات المكتملة فقط'
                 ], 400);
             }
 
