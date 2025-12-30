@@ -1,0 +1,135 @@
+{
+  "info": {
+    "_postman_id": "chef-services-update-collection",
+    "name": "تعديل خدمة طاهي (Update Chef Service)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "مجموعة بوست مان مخصصة فقط لتعديل خدمة طاهي عبر API. تستخدم بيئة 'Chef Services Environment' وتقرأ {{base_url}} و {{auth_token}} و {{service_id}}."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "تحديث خدمة طاهي (PATCH - JSON)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/chef/chef-services/{{service_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["chef", "chef-services", "{{service_id}}"]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"خدمة مناسبة\",\n  \"description\": \"وصف محدث\",\n  \"service_type\": \"hourly\",\n  \"hourly_rate\": 75,\n  \"min_hours\": 2,\n  \"allow_extra_guests\": true,\n  \"is_active\": true\n}"
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.test('Status is 2xx', function () { pm.expect(pm.response.code).to.be.within(200, 299); });",
+              "pm.test('Has data object', function () { pm.expect(json).to.have.property('data'); });",
+              "pm.test('Name updated', function () { pm.expect(json.data.name).to.eql('خدمة مناسبة'); });",
+              "pm.test('Service type hourly', function () { pm.expect(json.data.service_type).to.eql('hourly'); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "تحديث خدمة طاهي (PATCH - form-data)",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/chef/chef-services/{{service_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["chef", "chef-services", "{{service_id}}"]
+        },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "name", "value": "خدمة الضيافة", "type": "text" },
+            { "key": "description", "value": "تحديث عبر form-data", "type": "text" },
+            { "key": "service_type", "value": "package", "type": "text" },
+            { "key": "package_price", "value": "250", "type": "text" },
+            { "key": "max_guests_included", "value": "10", "type": "text" },
+            { "key": "allow_extra_guests", "value": "true", "type": "text" },
+            { "key": "extra_guest_price", "value": "20", "type": "text" },
+            { "key": "is_active", "value": "true", "type": "text" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.test('Status is 2xx', function () { pm.expect(pm.response.code).to.be.within(200, 299); });",
+              "pm.test('Service type package', function () { pm.expect(json.data.service_type).to.eql('package'); });",
+              "pm.test('Package price updated', function () { pm.expect(json.data.package_price).to.eql(250); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "تحديث خدمة طاهي (PUT - form-data)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/chef/chef-services/{{service_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["chef", "chef-services", "{{service_id}}"]
+        },
+        "body": {
+          "mode": "formdata",
+          "formdata": [
+            { "key": "name", "value": "خدمة الطاهي المحدثة", "type": "text" },
+            { "key": "description", "value": "تحديث شامل عبر PUT", "type": "text" },
+            { "key": "service_type", "value": "hourly", "type": "text" },
+            { "key": "hourly_rate", "value": "120", "type": "text" },
+            { "key": "min_hours", "value": "3", "type": "text" },
+            { "key": "allow_extra_guests", "value": "false", "type": "text" },
+            { "key": "is_active", "value": "true", "type": "text" }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.test('Status is 2xx', function () { pm.expect(pm.response.code).to.be.within(200, 299); });",
+              "pm.test('Hourly rate updated', function () { pm.expect(json.data.hourly_rate).to.eql(120); });",
+              "pm.test('Min hours updated', function () { pm.expect(json.data.min_hours).to.eql(3); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -30,6 +30,8 @@ use App\Repositories\RoleRepository;
 use App\Repositories\TagRepository;
 use App\Repositories\WithdrawalMethodRepository;
 use App\Repositories\ActivityLogRepository;
+use App\Repositories\ConversationRepository;
+use App\Repositories\MessageRepository;
 
 // Models
 use App\Models\User;
@@ -59,6 +61,8 @@ use App\Models\Tag;
 use App\Models\WithdrawalMethod;
 // Activity model from spatie
 use Spatie\Activitylog\Models\Activity;
+use App\Models\Conversation;
+use App\Models\Message;
 
 // Services
 use App\Services\UserService;
@@ -88,6 +92,8 @@ use App\Services\RoleService;
 use App\Services\TagService;
 use App\Services\WithdrawalMethodService;
 use App\Services\ActivityLogService;
+use App\Services\ConversationService;
+use App\Services\MessageService;
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -120,6 +126,8 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TagRepository::class, fn($app) => new TagRepository($app->make(Tag::class)));
         $this->app->bind(WithdrawalMethodRepository::class, fn($app) => new WithdrawalMethodRepository($app->make(WithdrawalMethod::class)));
         $this->app->bind(ActivityLogRepository::class, fn($app) => new ActivityLogRepository($app->make(Activity::class)));
+        $this->app->bind(ConversationRepository::class, fn($app) => new ConversationRepository($app->make(Conversation::class)));
+        $this->app->bind(MessageRepository::class, fn($app) => new MessageRepository($app->make(Message::class)));
 
         // Bind Services to their Repositories
         $this->app->bind(UserService::class, fn($app) => new UserService($app->make(UserRepository::class)));
@@ -161,5 +169,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(TagService::class, fn($app) => new TagService($app->make(TagRepository::class)));
         $this->app->bind(WithdrawalMethodService::class, fn($app) => new WithdrawalMethodService($app->make(WithdrawalMethodRepository::class)));
         $this->app->bind(ActivityLogService::class, fn($app) => new ActivityLogService($app->make(ActivityLogRepository::class)));
+        $this->app->bind(ConversationService::class, fn($app) => new ConversationService($app->make(ConversationRepository::class)));
+        $this->app->bind(MessageService::class, fn($app) => new MessageService(
+            $app->make(MessageRepository::class),
+            $app->make(ConversationService::class)
+        ));
     }
 }

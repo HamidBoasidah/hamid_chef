@@ -40,6 +40,20 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('addresses/{address}/deactivate', [App\Http\Controllers\Api\AddressController::class, 'deactivate']);
     Route::post('addresses/{address}/set-default', [App\Http\Controllers\Api\AddressController::class, 'setDefault']);
 
+    // Conversations & Messaging
+    Route::get('conversations', [App\Http\Controllers\Api\ConversationController::class, 'index'])
+        ->name('api.conversations.index');
+    Route::post('conversations', [App\Http\Controllers\Api\ConversationController::class, 'store'])
+        ->name('api.conversations.store');
+    Route::get('conversations/{conversation}/messages', [App\Http\Controllers\Api\ConversationController::class, 'messages'])
+        ->name('api.conversations.messages.index');
+    Route::post('conversations/{conversation}/messages', [App\Http\Controllers\Api\ConversationController::class, 'sendMessage'])
+        ->name('api.conversations.messages.store');
+    Route::get('conversations/{conversation}/messages/{message}/attachment', [App\Http\Controllers\Api\ConversationController::class, 'downloadAttachment'])
+        ->name('api.conversations.messages.attachment');
+    Route::post('conversations/{conversation}/read', [App\Http\Controllers\Api\ConversationController::class, 'markAsRead'])
+        ->name('api.conversations.mark-as-read');
+
     // Chef Service Ratings API Routes
     Route::apiResource('chef-service-ratings', App\Http\Controllers\Api\ChefServiceRatingController::class)->only(['store', 'update', 'destroy']);
     // Show rating for authenticated user (optionally by booking_id)

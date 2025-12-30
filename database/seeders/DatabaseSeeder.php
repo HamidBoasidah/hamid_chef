@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             AreaSeeder::class,
             // initial data for new chef marketplace tables
             InitialDataSeeder::class,
+            ConversationSeeder::class,
         ]);
     }
 }
