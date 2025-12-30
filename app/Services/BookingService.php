@@ -293,12 +293,24 @@ class BookingService
     }
 
     /**
-     * Confirm a booking (for chef)
+     * Accept a booking (for chef)
      */
-    public function confirm($id)
+    public function accept($id)
     {
         return $this->bookings->update($id, [
-            'booking_status' => 'confirmed',
+            'booking_status' => 'accepted',
+            'updated_at' => now()
+        ]);
+    }
+
+    /**
+     * Reject a booking (for chef)
+     */
+    public function reject($id)
+    {
+        return $this->bookings->update($id, [
+            'booking_status' => 'rejected',
+            'is_active' => false,
             'updated_at' => now()
         ]);
     }

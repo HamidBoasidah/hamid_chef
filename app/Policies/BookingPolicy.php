@@ -79,4 +79,28 @@ class BookingPolicy
     {
         return $booking->chef !== null && $booking->chef->user_id === $user->id;
     }
+
+    /**
+     * Chef can accept a booking if he owns it.
+     */
+    public function accept(User $user, Booking $booking): bool
+    {
+        return $booking->chef !== null && $booking->chef->user_id === $user->id;
+    }
+
+    /**
+     * Chef can reject a booking if he owns it.
+     */
+    public function reject(User $user, Booking $booking): bool
+    {
+        return $booking->chef !== null && $booking->chef->user_id === $user->id;
+    }
+
+    /**
+     * Chef can complete a booking if he owns it.
+     */
+    public function complete(User $user, Booking $booking): bool
+    {
+        return $booking->chef !== null && $booking->chef->user_id === $user->id;
+    }
 }

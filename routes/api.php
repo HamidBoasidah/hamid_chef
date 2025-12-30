@@ -51,6 +51,9 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('bookings', [App\Http\Controllers\Api\BookingController::class, 'index']);
         Route::get('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'show']);
         Route::put('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'update']);
+        // Customer-only cancellation endpoint
+        Route::post('bookings/{booking}/cancel-by-customer', [App\Http\Controllers\Api\BookingController::class, 'cancelByCustomer']);
+        // Legacy delete route kept for backward compatibility (generic cancel)
         Route::delete('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'destroy']);
         Route::get('chefs/{chef}/bookings', [App\Http\Controllers\Api\BookingController::class, 'getChefBookings']);
     });
@@ -100,6 +103,12 @@ Route::group(['prefix' => 'chef', 'middleware' => ['auth:sanctum', 'user_role:ch
     Route::delete('chef-service-equipment/{id}', [App\Http\Controllers\Api\ChefServiceController::class, 'destroyEquipment']);
     Route::post('chef-service-equipment/bulk-manage', [App\Http\Controllers\Api\ChefServiceController::class, 'bulkManageEquipment']);
     Route::post('chef-service-equipment/copy-from-service', [App\Http\Controllers\Api\ChefServiceController::class, 'copyEquipmentFromService']);
+
+    // Chef booking status management
+    Route::post('bookings/{booking}/accept', [App\Http\Controllers\Api\BookingController::class, 'accept']);
+    Route::post('bookings/{booking}/reject', [App\Http\Controllers\Api\BookingController::class, 'reject']);
+    Route::post('bookings/{booking}/cancel', [App\Http\Controllers\Api\BookingController::class, 'cancelByChef']);
+    Route::post('bookings/{booking}/complete', [App\Http\Controllers\Api\BookingController::class, 'complete']);
 });
 
 Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);
