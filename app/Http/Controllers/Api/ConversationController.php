@@ -6,6 +6,7 @@ use App\DTOs\ConversationDTO;
 use App\DTOs\MessageDTO;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreConversationRequest;
+use App\Http\Requests\StoreConversationByChefRequest;
 use App\Http\Requests\StoreMessageRequest;
 use App\Http\Traits\ExceptionHandler;
 use App\Http\Traits\SuccessResponse;
@@ -58,6 +59,25 @@ class ConversationController extends Controller
         }
 
         // reload with default relations
+        $conversation = $service->find($conversation->id);
+
+        return $this->createdResponse(ConversationDTO::fromModel($conversation)->toArray(), __('messages.created_success'));
+    }
+
+    /**
+     * Chef starts/ensures a conversation with a customer and optionally sends an initial message
+     */
+    public function storeByChef(StoreConversationByChefRequest $request, ConversationService $service, MessageService $messageService)
+    {
+        $data = $request->validated();
+
+        // Ensure conversation by chef to user
+        $conversation = $service->ensureForCurrentChefAndUser($data['user_id']);
+
+        if (!empty($data['content']) || !empty($data['attachment'])) {
+            $messageService->send($conversation, $data);
+        }
+
         $conversation = $service->find($conversation->id);
 
         return $this->createdResponse(ConversationDTO::fromModel($conversation)->toArray(), __('messages.created_success'));

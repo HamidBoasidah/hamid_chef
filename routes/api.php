@@ -123,6 +123,10 @@ Route::group(['prefix' => 'chef', 'middleware' => ['auth:sanctum', 'user_role:ch
     Route::post('bookings/{booking}/reject', [App\Http\Controllers\Api\BookingController::class, 'reject']);
     Route::post('bookings/{booking}/cancel', [App\Http\Controllers\Api\BookingController::class, 'cancelByChef']);
     Route::post('bookings/{booking}/complete', [App\Http\Controllers\Api\BookingController::class, 'complete']);
+
+    // Chef can start/ensure conversation with a customer
+    Route::post('conversations', [App\Http\Controllers\Api\ConversationController::class, 'storeByChef'])
+        ->name('api.chef.conversations.store');
 });
 
 Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);

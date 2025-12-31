@@ -140,6 +140,43 @@
           ]
         },
         {
+          "name": "Chef: Start/Ensure Conversation (with user)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/chef/conversations",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "chef", "conversations"]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "user_id", "value": "{{userId}}", "type": "text" },
+                { "key": "content", "value": "مرحبا عميلنا العزيز!", "type": "text" },
+                { "key": "attachment", "type": "file" }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const conv = json?.data;",
+                  "if (conv?.id) { pm.collectionVariables.set('conversationId', String(conv.id)); }",
+                  "pm.test('Chef ensured conversation', () => { pm.expect(!!conv?.id).to.be.true; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
           "name": "Start/Ensure Conversation (optional first message)",
           "request": {
             "method": "POST",

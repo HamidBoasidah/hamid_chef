@@ -7,6 +7,7 @@ use App\Models\Conversation;
 use App\Repositories\ConversationRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
+use App\Exceptions\ValidationException;
 
 class ConversationService
 {
@@ -46,6 +47,21 @@ class ConversationService
     public function ensureForCurrentUserAndChef(int $chefId): Conversation
     {
         $userId = Auth::id();
+        return $this->conversations->firstOrCreate($userId, $chefId);
+    }
+
+    /**
+     * Ensure a conversation exists between current chef and given customer
+     */
+    public function ensureForCurrentChefAndUser(int $userId): Conversation
+    {
+        $chefId = optional(Auth::user()->chef)->id;
+        if (!$chefId) {
+            // Return a clear validation error if the authenticated user doesn't have a Chef profile
+            throw ValidationException::withMessages([
+                'chef' => ['يجب إنشاء ملف الطاهي قبل بدء المحادثات.']
+            ]);
+        }
         return $this->conversations->firstOrCreate($userId, $chefId);
     }
 
