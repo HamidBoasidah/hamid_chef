@@ -132,6 +132,16 @@ Route::group(['prefix' => 'chef', 'middleware' => ['auth:sanctum', 'user_role:ch
     // Chef can start/ensure conversation with a customer
     Route::post('conversations', [App\Http\Controllers\Api\ConversationController::class, 'storeByChef'])
         ->name('api.chef.conversations.store');
+
+    // Chef Working Hours (manage own schedule)
+    Route::get('working-hours', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'index'])
+        ->name('api.chef.working-hours.index');
+    Route::post('working-hours', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'store'])
+        ->name('api.chef.working-hours.store');
+    Route::put('working-hours/{id}', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'update'])
+        ->name('api.chef.working-hours.update');
+    Route::delete('working-hours/{id}', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'destroy'])
+        ->name('api.chef.working-hours.destroy');
 });
 
 Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);

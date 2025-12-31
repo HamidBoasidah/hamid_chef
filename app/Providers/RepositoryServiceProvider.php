@@ -32,6 +32,7 @@ use App\Repositories\WithdrawalMethodRepository;
 use App\Repositories\ActivityLogRepository;
 use App\Repositories\ConversationRepository;
 use App\Repositories\MessageRepository;
+use App\Repositories\ChefWorkingHourRepository;
 
 // Models
 use App\Models\User;
@@ -63,6 +64,7 @@ use App\Models\WithdrawalMethod;
 use Spatie\Activitylog\Models\Activity;
 use App\Models\Conversation;
 use App\Models\Message;
+use App\Models\ChefWorkingHour;
 
 // Services
 use App\Services\UserService;
@@ -94,6 +96,7 @@ use App\Services\WithdrawalMethodService;
 use App\Services\ActivityLogService;
 use App\Services\ConversationService;
 use App\Services\MessageService;
+use App\Services\ChefWorkingHourService;
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -128,6 +131,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ActivityLogRepository::class, fn($app) => new ActivityLogRepository($app->make(Activity::class)));
         $this->app->bind(ConversationRepository::class, fn($app) => new ConversationRepository($app->make(Conversation::class)));
         $this->app->bind(MessageRepository::class, fn($app) => new MessageRepository($app->make(Message::class)));
+        $this->app->bind(ChefWorkingHourRepository::class, fn($app) => new ChefWorkingHourRepository($app->make(ChefWorkingHour::class)));
 
         // Bind Services to their Repositories
         $this->app->bind(UserService::class, fn($app) => new UserService($app->make(UserRepository::class)));
@@ -173,6 +177,9 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(MessageService::class, fn($app) => new MessageService(
             $app->make(MessageRepository::class),
             $app->make(ConversationService::class)
+        ));
+        $this->app->bind(ChefWorkingHourService::class, fn($app) => new ChefWorkingHourService(
+            $app->make(ChefWorkingHourRepository::class)
         ));
     }
 }
