@@ -53,6 +53,41 @@
           ]
         },
         {
+          "name": "Login with phone (get token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "login"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"phone_number\": \"500000000\",\n  \"password\": \"password\"\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const token = json?.data?.token;",
+                  "if (token) { pm.collectionVariables.set('token', token); }",
+                  "const userId = json?.data?.user?.id;",
+                  "if (userId) { pm.collectionVariables.set('userId', userId.toString()); }",
+                  "pm.test('Phone login succeeded', () => { pm.expect(!!token).to.be.true; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
           "name": "Me (verify token)",
           "request": {
             "method": "GET",

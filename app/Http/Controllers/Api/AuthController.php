@@ -24,10 +24,11 @@ class AuthController extends Controller
     {
         try {
             $request->validate([
-                'email' => 'required|string',
+                'email' => 'nullable|email|required_without:phone_number',
+                'phone_number' => 'nullable|string|required_without:email',
                 'password' => 'required|string',
             ]);
-            $result = $this->authService->loginApi($request->only('email', 'password'));
+            $result = $this->authService->loginApi($request->only('email', 'phone_number', 'password'));
             return $this->successResponse($result, 'تم تسجيل الدخول بنجاح');
         } catch (\Exception $e) {
             throw $e;
