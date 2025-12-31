@@ -16,6 +16,7 @@ class ConversationDTO extends BaseDTO
     public $user_unread_count;
     public $chef_unread_count;
     public $is_active;
+    public $last_message;
 
     public function __construct(
         $id,
@@ -27,7 +28,8 @@ class ConversationDTO extends BaseDTO
         $last_message_at,
         $user_unread_count,
         $chef_unread_count,
-        $is_active
+        $is_active,
+        $last_message
     ) {
         $this->id = $id;
         $this->user_id = $user_id;
@@ -39,10 +41,34 @@ class ConversationDTO extends BaseDTO
         $this->user_unread_count = (int) $user_unread_count;
         $this->chef_unread_count = (int) $chef_unread_count;
         $this->is_active = (bool) $is_active;
+        $this->last_message = $last_message;
     }
 
     public static function fromModel(Conversation $conv): self
     {
+        $last = $conv->lastMessage ?? null;
+        $lastMessageData = null;
+        if ($last) {
+            $downloadUrl = null;
+            if ($last->attachment) {
+                $downloadUrl = route('api.conversations.messages.attachment', [
+                    'conversation' => $conv->id,
+                    'message' => $last->id,
+                ]);
+            }
+            $lastMessageData = [
+                'id' => $last->id,
+                'sender_type' => $last->sender_type,
+                'sender_id' => $last->sender_id,
+                'content' => $last->content,
+                'attachment_url' => $downloadUrl,
+                'attachment_mime' => $last->attachment_mime,
+                'attachment_size' => $last->attachment_size,
+                'is_read' => (bool) ($last->is_read ?? false),
+                'created_at' => $last->created_at?->toDateTimeString(),
+            ];
+        }
+
         return new self(
             $conv->id,
             $conv->user_id,
@@ -53,7 +79,8 @@ class ConversationDTO extends BaseDTO
             $conv->last_message_at?->toDateTimeString(),
             $conv->user_unread_count ?? 0,
             $conv->chef_unread_count ?? 0,
-            $conv->is_active ?? true
+            $conv->is_active ?? true,
+            $lastMessageData
         );
     }
 
@@ -70,6 +97,7 @@ class ConversationDTO extends BaseDTO
             'user_unread_count' => $this->user_unread_count,
             'chef_unread_count' => $this->chef_unread_count,
             'is_active' => $this->is_active,
+            'last_message' => $this->last_message,
         ];
     }
 }

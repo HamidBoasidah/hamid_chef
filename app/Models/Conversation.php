@@ -43,4 +43,9 @@ class Conversation extends BaseModel
     {
         return $this->hasMany(Message::class);
     }
+
+    public function lastMessage(): BelongsTo
+    {
+        return $this->belongsTo(Message::class, 'last_message_id');
+    }
 }

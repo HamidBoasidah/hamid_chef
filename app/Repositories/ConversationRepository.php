@@ -14,6 +14,7 @@ class ConversationRepository extends BaseRepository
     protected array $defaultWith = [
         'user:id,first_name,last_name',
         'chef:id,name,user_id',
+        'lastMessage:id,conversation_id,sender_type,sender_id,content,attachment,attachment_mime,attachment_size,is_read,created_at',
     ];
 
     public function __construct(Conversation $model)
