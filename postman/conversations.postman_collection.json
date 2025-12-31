@@ -8,6 +8,7 @@
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:8000" },
     { "key": "token", "value": "" },
+    { "key": "userId", "value": "" },
     { "key": "perPage", "value": "20" },
     { "key": "chefId", "value": "1" },
     { "key": "conversationId", "value": "" },
@@ -214,7 +215,7 @@
           ]
         },
         {
-          "name": "List Messages",
+          "name": "List Messages (by participants)",
           "request": {
             "method": "GET",
             "header": [
@@ -222,11 +223,13 @@
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
             "url": {
-              "raw": "{{baseUrl}}/api/conversations/{{conversationId}}/messages?per_page={{perPage}}",
+              "raw": "{{baseUrl}}/api/conversations/messages?per_page={{perPage}}&user_id={{userId}}&chef_id={{chefId}}",
               "host": ["{{baseUrl}}"],
-              "path": ["api", "conversations", "{{conversationId}}", "messages"],
+              "path": ["api", "conversations", "messages"],
               "query": [
-                { "key": "per_page", "value": "{{perPage}}" }
+                { "key": "per_page", "value": "{{perPage}}" },
+                { "key": "user_id", "value": "{{userId}}" },
+                { "key": "chef_id", "value": "{{chefId}}" }
               ]
             }
           },
@@ -236,9 +239,47 @@
               "script": {
                 "exec": [
                   "const json = pm.response.json();",
-                  "const list = json?.data || [];",
+                  "const convId = json?.data?.conversation_id;",
+                  "if (convId) { pm.collectionVariables.set('conversationId', String(convId)); }",
+                  "const list = json?.data?.messages || [];",
                   "if (Array.isArray(list) && list.length) { pm.collectionVariables.set('messageId', String(list[0].id)); }",
-                  "pm.test('Fetched messages', () => { pm.expect(Array.isArray(list)).to.be.true; });"
+                  "pm.test('Fetched messages by participants', () => { pm.expect(!!convId).to.be.true; });"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ]
+        },
+        {
+          "name": "Ensure Messages by Participants (ensure + list)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/conversations/messages/ensure",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "conversations", "messages", "ensure"]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"user_id\": {{userId}},\n  \"chef_id\": {{chefId}},\n  \"per_page\": {{perPage}}\n}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "const convId = json?.data?.conversation_id;",
+                  "if (convId) { pm.collectionVariables.set('conversationId', String(convId)); }",
+                  "const list = json?.data?.messages || [];",
+                  "if (Array.isArray(list) && list.length) { pm.collectionVariables.set('messageId', String(list[0].id)); }",
+                  "pm.test('Ensured and fetched messages by participants', () => { pm.expect(!!convId).to.be.true; });"
                 ],
                 "type": "text/javascript"
               }

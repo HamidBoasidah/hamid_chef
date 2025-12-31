@@ -45,8 +45,13 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('api.conversations.index');
     Route::post('conversations', [App\Http\Controllers\Api\ConversationController::class, 'store'])
         ->name('api.conversations.store');
+    // Participants-based listing (no conversation id in path)
+    Route::get('conversations/messages', [App\Http\Controllers\Api\ConversationController::class, 'messages'])
+        ->name('api.conversations.messages.by-participants');
     Route::get('conversations/{conversation}/messages', [App\Http\Controllers\Api\ConversationController::class, 'messages'])
         ->name('api.conversations.messages.index');
+    Route::post('conversations/messages/ensure', [App\Http\Controllers\Api\ConversationController::class, 'ensureMessagesByParticipants'])
+        ->name('api.conversations.messages.ensure');
     Route::post('conversations/{conversation}/messages', [App\Http\Controllers\Api\ConversationController::class, 'sendMessage'])
         ->name('api.conversations.messages.store');
     Route::get('conversations/{conversation}/messages/{message}/attachment', [App\Http\Controllers\Api\ConversationController::class, 'downloadAttachment'])

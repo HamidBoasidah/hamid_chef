@@ -8,6 +8,7 @@ use App\Repositories\ConversationRepository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use App\Exceptions\ValidationException;
+use App\Exceptions\ForbiddenException;
 
 class ConversationService
 {
@@ -77,7 +78,20 @@ class ConversationService
             || ($chefId && $conversation->chef_id === $chefId);
 
         if (!$isParticipant) {
-            abort(403, __('messages.unauthorized'));
+            // Use structured exception response instead of raw abort
+            $message = __('messages.unauthorized');
+            if ($message === 'messages.unauthorized') {
+                $message = 'غير مصرح لك بالوصول لهذا المورد';
+            }
+            throw new ForbiddenException($message);
         }
+    }
+
+    /**
+     * Ensure conversation between explicit participants (user_id & chef_id)
+     */
+    public function ensureByParticipants(int $userId, int $chefId): Conversation
+    {
+        return $this->conversations->firstOrCreate($userId, $chefId);
     }
 }

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreConversationRequest;
 use App\Http\Requests\StoreConversationByChefRequest;
 use App\Http\Requests\StoreMessageRequest;
+use App\Http\Requests\EnsureConversationMessagesRequest;
 use App\Http\Traits\ExceptionHandler;
 use App\Http\Traits\SuccessResponse;
 use App\Models\Conversation;
@@ -86,9 +87,57 @@ class ConversationController extends Controller
     /**
      * List messages for a conversation
      */
-    public function messages(Request $request, ConversationService $service, MessageService $messageService, $conversationId)
+    public function messages(Request $request, ConversationService $service, MessageService $messageService, $conversationId = null)
     {
         try {
+            // New flexible usage: if user_id & chef_id are provided, ensure/fetch by participants instead of requiring conversationId
+            $userId = $request->query('user_id');
+            $chefId = $request->query('chef_id');
+
+            if ($userId !== null && $chefId !== null) {
+                // Validate minimal types/exists to avoid creating invalid conversations
+                $validated = $request->validate([
+                    'user_id' => ['required', 'integer', 'exists:users,id'],
+                    'chef_id' => ['required', 'integer', 'exists:chefs,id'],
+                    'per_page' => ['nullable', 'integer', 'min:1', 'max:100'],
+                ]);
+
+                $conversation = $service->ensureByParticipants((int) $validated['user_id'], (int) $validated['chef_id']);
+                $service->assertParticipant($conversation);
+
+                $perPage = (int) ($validated['per_page'] ?? $request->get('per_page', 20));
+                $messages = $messageService->forConversation($conversation->id, $perPage);
+
+                $messages->getCollection()->transform(function ($msg) use ($conversation) {
+                    $downloadUrl = null;
+                    if ($msg->attachment) {
+                        $downloadUrl = route('api.conversations.messages.attachment', [
+                            'conversation' => $conversation->id,
+                            'message' => $msg->id,
+                        ]);
+                    }
+                    return MessageDTO::fromModel($msg, $downloadUrl)->toArray();
+                });
+
+                // Custom payload to include conversation_id when using participants flow (even if no messages yet)
+                return response()->json([
+                    'success' => true,
+                    'message' => __('messages.list_success'),
+                    'status_code' => 200,
+                    'data' => [
+                        'conversation_id' => $conversation->id,
+                        'messages' => $messages->items(),
+                    ],
+                    'pagination' => [
+                        'current_page' => $messages->currentPage(),
+                        'per_page' => $messages->perPage(),
+                        'total' => $messages->total(),
+                        'last_page' => $messages->lastPage(),
+                    ],
+                ], 200);
+            }
+
+            // Default behavior (by conversation id in path)
             $conversation = $service->find($conversationId);
             $service->assertParticipant($conversation);
 
@@ -112,6 +161,52 @@ class ConversationController extends Controller
         } catch (ModelNotFoundException) {
             $this->throwNotFoundException(__('messages.not_found'));
         }
+    }
+
+    /**
+     * Ensure a conversation by participants (user_id & chef_id) and return its messages.
+     * If conversation does not exist, it will be created and return empty messages with conversation_id.
+     */
+    public function ensureMessagesByParticipants(EnsureConversationMessagesRequest $request, ConversationService $service, MessageService $messageService)
+    {
+        $data = $request->validated();
+
+        // Ensure conversation for provided participants
+        $conversation = $service->ensureByParticipants($data['user_id'], $data['chef_id']);
+
+        // Participant must be the caller (either the user or the chef for this conversation)
+        $service->assertParticipant($conversation);
+
+        $perPage = (int) ($data['per_page'] ?? 20);
+        $messages = $messageService->forConversation($conversation->id, $perPage);
+
+        $messages->getCollection()->transform(function ($msg) use ($conversation) {
+            $downloadUrl = null;
+            if ($msg->attachment) {
+                $downloadUrl = route('api.conversations.messages.attachment', [
+                    'conversation' => $conversation->id,
+                    'message' => $msg->id,
+                ]);
+            }
+            return MessageDTO::fromModel($msg, $downloadUrl)->toArray();
+        });
+
+        // Custom response to include conversation_id and pagination
+        return response()->json([
+            'success' => true,
+            'message' => __('messages.list_success'),
+            'status_code' => 200,
+            'data' => [
+                'conversation_id' => $conversation->id,
+                'messages' => $messages->items(),
+            ],
+            'pagination' => [
+                'current_page' => $messages->currentPage(),
+                'per_page' => $messages->perPage(),
+                'total' => $messages->total(),
+                'last_page' => $messages->lastPage(),
+            ],
+        ], 200);
     }
 
     /**
