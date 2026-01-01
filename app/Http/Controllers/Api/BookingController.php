@@ -170,25 +170,31 @@ class BookingController extends Controller
     }
 
     /**
-     * إلغاء حجز يخص المستخدم الحالي
+     * إلغاء الحجز من العميل فقط
      */
-    public function destroy(BookingService $bookingService, Request $request, $id)
+    public function cancelByCustomer(BookingService $bookingService, Request $request, $id)
     {
         try {
             $booking = $bookingService->findForUser($id, $request->user()->id);
 
-            $this->authorize('delete', $booking);
+            // صلاحية خاصة بالعميل فقط
+            $this->authorize('cancelByCustomer', $booking);
 
-            // تحديد نوع الإلغاء حسب نوع المستخدم
-            $user = $request->user();
-            $cancellationReason = 'cancelled_by_customer'; // افتراضي للعميل
-            
-            // إذا كان المستخدم طاهي وهو صاحب الحجز
-            if ($user->chef && $booking->chef_id == $user->chef->id) {
-                $cancellationReason = 'cancelled_by_chef';
+            // يسمح للعميل بالإلغاء فقط إذا كانت الحالة الحالية "pending" أو "accepted"
+            if (!in_array($booking->booking_status, ['pending', 'accepted'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن للعميل إلغاء الحجز في حالته الحالية',
+                    'errors' => [
+                        'booking_status' => [
+                            'الحالة الحالية لا تسمح بالإلغاء',
+                            'current_status: ' . $booking->booking_status
+                        ]
+                    ]
+                ], 422);
             }
 
-            $cancelled = $bookingService->cancel($id, $cancellationReason);
+            $cancelled = $bookingService->cancel($id, 'cancelled_by_customer');
 
             if (!$cancelled) {
                 return response()->json([
@@ -204,21 +210,154 @@ class BookingController extends Controller
     }
 
     /**
-     * تأكيد حجز يخص المستخدم الحالي (للطاهي)
+     * إلغاء حجز (نقطة عامة قد تُستخدم قديماً) — تُحدد الجهة تلقائياً
      */
-    public function confirm(BookingService $bookingService, Request $request, $id)
+    public function destroy(BookingService $bookingService, Request $request, $id)
     {
         try {
             $booking = $bookingService->findForUser($id, $request->user()->id);
 
-            $this->authorize('confirm', $booking);
+            $this->authorize('delete', $booking);
 
-            $confirmed = $bookingService->confirm($id);
+            $user = $request->user();
+            $reason = 'cancelled_by_customer';
+            if ($user->chef && $booking->chef_id == $user->chef->id) {
+                $reason = 'cancelled_by_chef';
+            }
+
+            // إذا كان الإلغاء من العميل تأكد من أن الحالة تسمح بذلك
+            if ($reason === 'cancelled_by_customer' && !in_array($booking->booking_status, ['pending', 'accepted'])) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن للعميل إلغاء الحجز في حالته الحالية',
+                    'errors' => [
+                        'booking_status' => [
+                            'الحالة الحالية لا تسمح بالإلغاء',
+                            'current_status: ' . $booking->booking_status
+                        ]
+                    ]
+                ], 422);
+            }
+
+            $cancelled = $bookingService->cancel($id, $reason);
+
+            if (!$cancelled) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'فشل إلغاء الحجز'
+                ], 500);
+            }
+
+            return $this->deletedResponse('تم إلغاء الحجز بنجاح');
+        } catch (ModelNotFoundException) {
+            $this->throwNotFoundException('الحجز المطلوب غير موجود');
+        }
+    }
+
+    /**
+     * قبول الحجز (للطاهي)
+     */
+    public function accept(BookingService $bookingService, Request $request, $id)
+    {
+        try {
+            $booking = $bookingService->findForUser($id, $request->user()->id);
+
+            $this->authorize('accept', $booking);
+
+            // الطاهي يستطيع قبول الحجز فقط عندما تكون الحالة الحالية "pending"
+            if ($booking->booking_status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن للطاهي قبول الحجز إلا إذا كانت حالته حالياً قيد الانتظار',
+                    'errors' => [
+                        'booking_status' => [
+                            'الحالة الحالية لا تسمح بالقبول',
+                            'current_status: ' . $booking->booking_status
+                        ]
+                    ]
+                ], 422);
+            }
+
+            $accepted = $bookingService->accept($id);
 
             return $this->updatedResponse(
-                BookingDTO::fromModel($confirmed)->toArray(),
-                'تم تأكيد الحجز بنجاح'
+                BookingDTO::fromModel($accepted)->toArray(),
+                'تم قبول الحجز بنجاح'
             );
+        } catch (ModelNotFoundException) {
+            $this->throwNotFoundException('الحجز المطلوب غير موجود');
+        }
+    }
+
+    /**
+     * رفض الحجز (للطاهي)
+     */
+    public function reject(BookingService $bookingService, Request $request, $id)
+    {
+        try {
+            $booking = $bookingService->findForUser($id, $request->user()->id);
+
+            $this->authorize('reject', $booking);
+
+            // الطاهي يستطيع رفض الحجز فقط عندما تكون الحالة الحالية "pending"
+            if ($booking->booking_status !== 'pending') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن للطاهي رفض الحجز إلا إذا كانت حالته حالياً قيد الانتظار',
+                    'errors' => [
+                        'booking_status' => [
+                            'الحالة الحالية لا تسمح بالرفض',
+                            'current_status: ' . $booking->booking_status
+                        ]
+                    ]
+                ], 422);
+            }
+
+            $rejected = $bookingService->reject($id);
+
+            return $this->updatedResponse(
+                BookingDTO::fromModel($rejected)->toArray(),
+                'تم رفض الحجز بنجاح'
+            );
+        } catch (ModelNotFoundException) {
+            $this->throwNotFoundException('الحجز المطلوب غير موجود');
+        }
+    }
+
+    /**
+     * إلغاء الحجز من الطاهي (للطاهي)
+     */
+    public function cancelByChef(BookingService $bookingService, Request $request, $id)
+    {
+        try {
+            $booking = $bookingService->findForUser($id, $request->user()->id);
+
+            $this->authorize('cancelByChef', $booking);
+
+            // الطاهي يستطيع إلغاء الحجز فقط عندما تكون الحالة الحالية "accepted"
+            if ($booking->booking_status !== 'accepted') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن للطاهي إلغاء الحجز إلا إذا كانت حالته مقبولة',
+                    'errors' => [
+                        'booking_status' => [
+                            'الحالة الحالية لا تسمح بالإلغاء من الطاهي',
+                            'current_status: ' . $booking->booking_status
+                        ]
+                    ]
+                ], 422);
+            }
+
+            $cancelled = $bookingService->cancel($id, 'cancelled_by_chef');
+
+            if (!$cancelled) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'فشل إلغاء الحجز'
+                ], 500);
+            }
+
+            return $this->deletedResponse('تم إلغاء الحجز من الطاهي بنجاح');
         } catch (ModelNotFoundException) {
             $this->throwNotFoundException('الحجز المطلوب غير موجود');
         }
@@ -233,6 +372,20 @@ class BookingController extends Controller
             $booking = $bookingService->findForUser($id, $request->user()->id);
 
             $this->authorize('complete', $booking);
+
+            // الطاهي يستطيع إكمال الحجز فقط عندما تكون الحالة الحالية "accepted"
+            if ($booking->booking_status !== 'accepted') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'لا يمكن للطاهي إكمال الحجز إلا إذا كانت حالته مقبولة',
+                    'errors' => [
+                        'booking_status' => [
+                            'الحالة الحالية لا تسمح بالإكمال',
+                            'current_status: ' . $booking->booking_status
+                        ]
+                    ]
+                ], 422);
+            }
 
             $completed = $bookingService->complete($id);
 

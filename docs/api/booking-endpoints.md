@@ -257,22 +257,69 @@ Same as create booking, but all fields are optional.
 
 Same as get booking details.
 
-### 5. Cancel Booking
+### 5. Cancel Booking (Customer)
 
-**DELETE** `/api/bookings/{id}`
+**POST** `/api/bookings/{id}/cancel-by-customer`
 
-Cancel a booking (sets status to cancelled_by_customer).
+Cancel a booking by the customer only (sets status to `cancelled_by_customer`).
+
+Allowed only when current `booking_status` is `pending` or `accepted`.
 
 #### Response
 
 ```json
 {
   "success": true,
-  "message": "Booking cancelled successfully"
+  "message": "تم إلغاء الحجز بنجاح"
 }
 ```
 
+#### Validation Error (422)
+
+```json
+{
+  "success": false,
+  "message": "لا يمكن للعميل إلغاء الحجز في حالته الحالية",
+  "errors": {
+    "booking_status": [
+      "الحالة الحالية لا تسمح بالإلغاء",
+      "current_status: completed"
+    ]
+  }
+}
+```
+
+> Note: The legacy route `DELETE /api/bookings/{id}` remains for backward compatibility and will determine cancellation actor automatically.
+
 ### 6. Check Chef Availability
+### 7. Chef Booking Status Management
+
+These endpoints are under the chef namespace and require the `user_role:chef` middleware.
+
+Base path: `/api/chef/bookings/{id}`
+
+- **POST** `/accept` → sets `booking_status` to `accepted`
+  - Note: Allowed only when current `booking_status` is `pending`. Returns 422 otherwise.
+- **POST** `/reject` → sets `booking_status` to `rejected` and `is_active` to `false`
+
+  - Note: Allowed only when current `booking_status` is `pending`. Returns 422 otherwise.
+- **POST** `/cancel` → sets `booking_status` to `cancelled_by_chef` and `is_active` to `false`
+- **POST** `/complete` → sets `booking_status` to `completed`
+
+  - Note: Both `cancel` and `complete` are allowed only when current `booking_status` is `accepted`. Returns 422 otherwise.
+
+#### Success Response (example)
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "booking_status": "accepted"
+  },
+  "message": "تم قبول الحجز بنجاح"
+}
+```
 
 **GET** `/api/chefs/{chef_id}/availability`
 
@@ -326,7 +373,7 @@ Check if a chef is available for a specific time slot.
 }
 ```
 
-### 7. Get Chef Bookings
+### 8. Get Chef Bookings
 
 **GET** `/api/chefs/{chef_id}/bookings`
 
@@ -358,7 +405,7 @@ Get all bookings for a specific chef on a given date.
 }
 ```
 
-### 8. Validate Booking
+### 9. Validate Booking
 
 **POST** `/api/bookings/validate`
 

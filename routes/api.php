@@ -40,14 +40,39 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('addresses/{address}/deactivate', [App\Http\Controllers\Api\AddressController::class, 'deactivate']);
     Route::post('addresses/{address}/set-default', [App\Http\Controllers\Api\AddressController::class, 'setDefault']);
 
-    // Chef Service Ratings API Routes (only allow store, update, destroy via API)
+    // Conversations & Messaging
+    Route::get('conversations', [App\Http\Controllers\Api\ConversationController::class, 'index'])
+        ->name('api.conversations.index');
+    Route::post('conversations', [App\Http\Controllers\Api\ConversationController::class, 'store'])
+        ->name('api.conversations.store');
+    // Participants-based listing (no conversation id in path)
+    Route::get('conversations/messages', [App\Http\Controllers\Api\ConversationController::class, 'messages'])
+        ->name('api.conversations.messages.by-participants');
+    Route::get('conversations/{conversation}/messages', [App\Http\Controllers\Api\ConversationController::class, 'messages'])
+        ->name('api.conversations.messages.index');
+    Route::post('conversations/messages/ensure', [App\Http\Controllers\Api\ConversationController::class, 'ensureMessagesByParticipants'])
+        ->name('api.conversations.messages.ensure');
+    Route::post('conversations/{conversation}/messages', [App\Http\Controllers\Api\ConversationController::class, 'sendMessage'])
+        ->name('api.conversations.messages.store');
+    Route::get('conversations/{conversation}/messages/{message}/attachment', [App\Http\Controllers\Api\ConversationController::class, 'downloadAttachment'])
+        ->name('api.conversations.messages.attachment');
+    Route::post('conversations/{conversation}/read', [App\Http\Controllers\Api\ConversationController::class, 'markAsRead'])
+        ->name('api.conversations.mark-as-read');
+
+    // Chef Service Ratings API Routes
     Route::apiResource('chef-service-ratings', App\Http\Controllers\Api\ChefServiceRatingController::class)->only(['store', 'update', 'destroy']);
+    // Show rating for authenticated user (optionally by booking_id)
+    Route::get('chef-service-ratings/user/{userId}', [App\Http\Controllers\Api\ChefServiceRatingController::class, 'showByUser'])
+        ->name('chef-service-ratings.user');
     
     // Booking API Routes with Rate Limiting
     Route::middleware('App\Http\Middleware\BookingRateLimitMiddleware:general_api')->group(function () {
         Route::get('bookings', [App\Http\Controllers\Api\BookingController::class, 'index']);
         Route::get('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'show']);
         Route::put('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'update']);
+        // Customer-only cancellation endpoint
+        Route::post('bookings/{booking}/cancel-by-customer', [App\Http\Controllers\Api\BookingController::class, 'cancelByCustomer']);
+        // Legacy delete route kept for backward compatibility (generic cancel)
         Route::delete('bookings/{booking}', [App\Http\Controllers\Api\BookingController::class, 'destroy']);
         Route::get('chefs/{chef}/bookings', [App\Http\Controllers\Api\BookingController::class, 'getChefBookings']);
     });
@@ -97,6 +122,26 @@ Route::group(['prefix' => 'chef', 'middleware' => ['auth:sanctum', 'user_role:ch
     Route::delete('chef-service-equipment/{id}', [App\Http\Controllers\Api\ChefServiceController::class, 'destroyEquipment']);
     Route::post('chef-service-equipment/bulk-manage', [App\Http\Controllers\Api\ChefServiceController::class, 'bulkManageEquipment']);
     Route::post('chef-service-equipment/copy-from-service', [App\Http\Controllers\Api\ChefServiceController::class, 'copyEquipmentFromService']);
+
+    // Chef booking status management
+    Route::post('bookings/{booking}/accept', [App\Http\Controllers\Api\BookingController::class, 'accept']);
+    Route::post('bookings/{booking}/reject', [App\Http\Controllers\Api\BookingController::class, 'reject']);
+    Route::post('bookings/{booking}/cancel', [App\Http\Controllers\Api\BookingController::class, 'cancelByChef']);
+    Route::post('bookings/{booking}/complete', [App\Http\Controllers\Api\BookingController::class, 'complete']);
+
+    // Chef can start/ensure conversation with a customer
+    Route::post('conversations', [App\Http\Controllers\Api\ConversationController::class, 'storeByChef'])
+        ->name('api.chef.conversations.store');
+
+    // Chef Working Hours (manage own schedule)
+    Route::get('working-hours', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'index'])
+        ->name('api.chef.working-hours.index');
+    Route::post('working-hours', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'store'])
+        ->name('api.chef.working-hours.store');
+    Route::put('working-hours/{id}', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'update'])
+        ->name('api.chef.working-hours.update');
+    Route::delete('working-hours/{id}', [App\Http\Controllers\Api\ChefWorkingHourController::class, 'destroy'])
+        ->name('api.chef.working-hours.destroy');
 });
 
 Route::post('/login', [App\Http\Controllers\Api\AuthController::class, 'login']);

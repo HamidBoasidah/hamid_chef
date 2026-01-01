@@ -14,17 +14,27 @@ class AuthService
     // تسجيل دخول API (token)
     public function loginApi(array $credentials)
     {
-        $user = User::where('email', $credentials['email'])->first();
+        $byEmail = !empty($credentials['email']);
+        $byPhone = !empty($credentials['phone_number']);
+
+        $user = null;
+        if ($byEmail) {
+            $user = User::where('email', $credentials['email'])->first();
+        } elseif ($byPhone) {
+            $user = User::where('phone_number', $credentials['phone_number'])->first();
+        }
+
+        $errorField = $byEmail ? 'email' : 'phone_number';
 
         if (!$user || !Hash::check($credentials['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['بيانات تسجيل الدخول غير صحيحة'],
+                $errorField => ['بيانات تسجيل الدخول غير صحيحة'],
             ]);
         }
 
         if (!$user->is_active) {
             throw ValidationException::withMessages([
-                'email' => ['الحساب معطل، يرجى التواصل مع الإدارة'],
+                $errorField => ['الحساب معطل، يرجى التواصل مع الإدارة'],
             ]);
         }
 

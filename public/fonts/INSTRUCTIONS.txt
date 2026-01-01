@@ -1,0 +1,70 @@
+========================================
+  تعليمات إضافة الخطوط المخصصة
+  Custom Fonts Installation Instructions
+========================================
+
+الخطوة 1: نسخ ملفات الخطوط
+Step 1: Copy Font Files
+------------------------
+قم بنسخ ملفات الخطوط التالية إلى هذا المجلد (public/fonts/):
+Copy the following font files to this folder (public/fonts/):
+
+✓ AirStripArabic.ttf  (للنصوص العربية / For Arabic text)
+✓ Ahlan.ttf           (للنصوص الإنجليزية / For English text - إذا كان متوفراً / if available)
+
+الخطوة 2: التحقق من الملفات
+Step 2: Verify Files
+---------------------
+بعد نسخ الملفات، تأكد من وجودها في:
+After copying, verify files exist at:
+
+D:\Web Projects\hamid_chef\public\fonts\AirStripArabic.ttf
+D:\Web Projects\hamid_chef\public\fonts\Ahlan.ttf
+
+الخطوة 3: إعادة البناء
+Step 3: Rebuild
+----------------
+بعد إضافة الخطوط، قم بتشغيل:
+After adding fonts, run:
+
+npm run build
+
+الخطوة 4: التحقق من الموقع
+Step 4: Check Website
+----------------------
+افتح الموقع وتحقق من ظهور الخطوط بشكل صحيح
+Open the website and verify fonts are displaying correctly
+
+========================================
+ملاحظات مهمة / Important Notes
+========================================
+
+1. الخطوط المطلوبة بصيغة TTF فقط
+   Only TTF format fonts are required
+
+2. حتى يتم إضافة الخطوط، سيستخدم الموقع خط Arial كبديل
+   Until fonts are added, the site will use Arial as fallback
+
+3. التحذيرات أثناء البناء طبيعية حتى يتم إضافة الخطوط
+   Build warnings are normal until fonts are added
+
+4. الخطوط يجب أن تكون في مجلد public/fonts/ وليس resources/
+   Fonts must be in public/fonts/ folder, not resources/
+
+========================================
+الحالة الحالية / Current Status
+========================================
+
+✅ تم إصلاح تعارض Git في ziggy.js
+   Fixed Git merge conflict in ziggy.js
+
+✅ تم إصلاح تعارض Git في routes/web.php
+   Fixed Git merge conflict in routes/web.php
+
+✅ البناء يعمل بنجاح
+   Build is working successfully
+
+⚠️  في انتظار إضافة ملفات الخطوط
+   Waiting for font files to be added
+
+========================================

@@ -140,7 +140,8 @@ class BookingConflictService
             return [
                 'success' => true,
                 'message' => 'Booking created successfully',
-                'booking' => BookingDTO::fromModel($booking),
+                // Return the Eloquent Booking model; controllers/services will convert to DTO
+                'booking' => $booking,
                 'errors' => []
             ];
         });

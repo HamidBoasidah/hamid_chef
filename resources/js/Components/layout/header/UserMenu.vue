@@ -61,7 +61,7 @@
 </template>
 
 <script setup>
-import { UserCircleIcon, ChevronDownIcon, LogoutIcon, SettingsIcon, InfoCircleIcon } from '@/icons'
+import { UserCircleIcon, ChevronDownIcon, LogoutIcon } from '@/icons'
 import { Link, usePage , router} from '@inertiajs/vue3'
 import { ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
@@ -75,9 +75,8 @@ const dropdownOpen = ref(false)
 const dropdownRef = ref(null)
 
 const menuItems = [
+  // Keep only profile; hide account settings and support per request
   { href: '/profile', icon: UserCircleIcon, text: 'user.editProfile' },
-  { href: '/chat', icon: SettingsIcon, text: 'user.accountSettings' },
-  { href: '/profile', icon: InfoCircleIcon, text: 'user.support' },
 ]
 
 const toggleDropdown = () => {

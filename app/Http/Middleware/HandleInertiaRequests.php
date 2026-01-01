@@ -43,11 +43,12 @@ class HandleInertiaRequests extends Middleware
 
             'auth' => [
                 'user' => fn () => $request->user()?->only(['id', 'name', 'email' , 'avatar']),
-                'permissions' => fn () => $request->user()
-                    ? $request->user()->getAllPermissions()->pluck('name')->all()
+                // Some guards (e.g., web users) don't implement Spatie HasRoles. Guard safely.
+                'permissions' => fn () => ($u = $request->user()) && method_exists($u, 'getAllPermissions')
+                    ? $u->getAllPermissions()->pluck('name')->all()
                     : [],
-                'roles' => fn () => $request->user()
-                    ? $request->user()->getRoleNames()->all()
+                'roles' => fn () => ($u = $request->user()) && method_exists($u, 'getRoleNames')
+                    ? $u->getRoleNames()->all()
                     : [],
             ],
         ];

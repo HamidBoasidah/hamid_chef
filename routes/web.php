@@ -15,21 +15,9 @@ Route::post('/locale/switch', function () {
     return back();
 })->name('locale.switch');
 
-
-Route::middleware(['auth', 'verified'])
-    ->group(function () {
-        // User Dashboard - show a simple welcome page or redirect to admin if user is admin
-        Route::get('/dashboard', function () {
-            // If user is admin, redirect to admin dashboard
-            if (auth()->user() && auth()->guard('admin')->check()) {
-                return redirect()->route('admin.dashboard');
-            }
-            // For regular users, show a simple message or redirect to profile
-            return redirect()->route('profile.edit');
-        })->name('dashboard');
-});
-
 // Admin Routes
+
+/*
 Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(function () {
     // Admin Dashboard
     Route::get('/', function () {
@@ -53,6 +41,7 @@ Route::middleware(['auth', 'verified'])->prefix('admin')->name('admin.')->group(
     Route::get('bookings/chef/{chef}/bookings', [App\Http\Controllers\Admin\BookingController::class, 'getChefBookings'])
         ->name('bookings.chef-bookings');
 });
+*/
 
 // روابط مصادقة لوحة التحكم (بدون حماية)
 //Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -65,8 +54,8 @@ Route::post('/locale', LocaleController::class)->name('locale.set')->middleware(
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
+use Inertia\Inertia;
 // use Illuminate\Support\Facades\Route; // Already imported
-// use Inertia\Inertia; // Already imported
 
 /*
 // Conflict: You already have a root route '/' defined above.
@@ -85,7 +74,30 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 */
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:web')->group(function () {
+    Route::get('/dashboard', function () {
+        return Inertia::render('Chef/Dashboard');
+    })->name('dashboard');
+
+    // Web Guard navigation links (Chef pages)
+    Route::get('/chef', function () {
+        return Inertia::render('Chef/Dashboard');
+    })->name('chef.index');
+
+    Route::get('/bookings', function () {
+        return Inertia::render('Chef/Bookings/Index');
+    })->name('bookings.index');
+
+    // Chef Services
+    Route::resource('chef-services', App\Http\Controllers\Chef\ChefServiceController::class)
+        ->names('chef-services');
+
+    Route::patch('chef-services/{id}/activate', [App\Http\Controllers\Chef\ChefServiceController::class, 'activate'])
+        ->name('chef-services.activate');
+
+    Route::patch('chef-services/{id}/deactivate', [App\Http\Controllers\Chef\ChefServiceController::class, 'deactivate'])
+        ->name('chef-services.deactivate');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

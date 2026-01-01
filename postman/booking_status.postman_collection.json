@@ -1,0 +1,117 @@
+{
+  "info": {
+    "_postman_id": "booking-status-collection-0001",
+    "name": "MoonChef - Booking Status Management",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Endpoints لإدارة حالة الحجز: إلغاء من العميل، وقبول/رفض/إلغاء/إكمال من الطاهي."
+  },
+  "item": [
+    {
+      "name": "إلغاء الحجز من العميل",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/bookings/{{booking_id}}/cancel-by-customer",
+          "host": ["{{base_url}}"],
+          "path": ["api", "bookings", "{{booking_id}}", "cancel-by-customer"]
+        },
+        "description": "العميل يملك الحجز يمكنه فقط تغيير الحالة إلى cancelled_by_customer."
+      },
+      "response": []
+    },
+    {
+      "name": "قبول الحجز (طاهي)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef/bookings/{{booking_id}}/accept",
+          "host": ["{{base_url}}"],
+          "path": ["api", "chef", "bookings", "{{booking_id}}", "accept"]
+        },
+        "description": "الطاهي يستطيع تغيير الحالة إلى accepted."
+      },
+      "response": []
+    },
+    {
+      "name": "رفض الحجز (طاهي)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef/bookings/{{booking_id}}/reject",
+          "host": ["{{base_url}}"],
+          "path": ["api", "chef", "bookings", "{{booking_id}}", "reject"]
+        },
+        "description": "الطاهي يستطيع تغيير الحالة إلى rejected ويتم تعطيل الحجز (is_active=false)."
+      },
+      "response": []
+    },
+    {
+      "name": "إلغاء الحجز من الطاهي",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef/bookings/{{booking_id}}/cancel",
+          "host": ["{{base_url}}"],
+          "path": ["api", "chef", "bookings", "{{booking_id}}", "cancel"]
+        },
+        "description": "الطاهي يستطيع تغيير الحالة إلى cancelled_by_chef ويتم تعطيل الحجز (is_active=false)."
+      },
+      "response": []
+    },
+    {
+      "name": "إكمال الحجز (طاهي)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/chef/bookings/{{booking_id}}/complete",
+          "host": ["{{base_url}}"],
+          "path": ["api", "chef", "bookings", "{{booking_id}}", "complete"]
+        },
+        "description": "الطاهي يستطيع تغيير الحالة إلى completed عند انتهاء الخدمة."
+      },
+      "response": []
+    },
+    {
+      "name": "إلغاء الحجز (مسار قديم عام)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Accept", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{token}}", "type": "text" }
+        ],
+        "url": {
+          "raw": "{{base_url}}/api/bookings/{{booking_id}}",
+          "host": ["{{base_url}}"],
+          "path": ["api", "bookings", "{{booking_id}}"]
+        },
+        "description": "مسار متوافق للخلفية يحدد الجهة تلقائيًا (عميل/طاهي) ويُغيّر الحالة بناءً على صاحب الطلب."
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:8000", "type": "string" },
+    { "key": "token", "value": "", "type": "string" },
+    { "key": "booking_id", "value": "1", "type": "string" }
+  ]
+}

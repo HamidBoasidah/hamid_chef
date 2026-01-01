@@ -21,7 +21,7 @@ return new class extends Migration
             $table->decimal('package_price', 10, 2)->nullable();
             $table->unsignedSmallInteger('max_guests_included')->nullable();
             $table->boolean('allow_extra_guests')->default(false);
-            $table->decimal('extra_guest_price', 10, 2)->default(0);
+            $table->decimal('extra_guest_price', 10, 2)->nullable()->default(0);
             $table->boolean('is_active')->default(true);
             $table->foreignId('created_by')->nullable()->constrained('users')->nullOnDelete();
             $table->foreignId('updated_by')->nullable()->constrained('users')->nullOnDelete();
