@@ -184,6 +184,9 @@
   },
   "user": {
     "name": "حميد بوعصيدة",
+    "email": "admin@monchef.com",
+    "phone": "+09 363 398 46",
+    "position": "Team Manager",
     "editProfile": "تعديل الملف الشخصي",
     "accountSettings": "إعدادات الحساب",
     "support": "الدعم",
@@ -512,14 +515,38 @@
     "updateDetails": "حدّث بياناتك للحفاظ على ملفك محدثاً.",
     "socialLinks": "روابط التواصل",
     "personalInformation": "المعلومات الشخصية",
+    "profilePicture": "صورة الملف الشخصي",
+    "changePicture": "تغيير الصورة",
+    "pictureRequirements": "JPG، PNG أو GIF. الحد الأقصى 2MB",
     "labels": {
+      "name": "الاسم",
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "emailAddress": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "phonePlaceholder": "أدخل رقم الهاتف",
+      "whatsapp": "واتساب",
+      "whatsappPlaceholder": "أدخل رقم الواتساب",
+      "address": "العنوان",
+      "addressPlaceholder": "أدخل العنوان",
+      "bio": "نبذة",
       "facebook": "فيسبوك",
       "x": "X.com",
       "linkedin": "لينكدإن",
-      "instagram": "انستغرام",
-      "firstName": "الاسم الأول",
-      "lastName": "اسم العائلة",
-      "bio": "نبذة"
+      "instagram": "انستغرام"
+    },
+    "address": {
+      "title": "العنوان",
+      "country": "البلد",
+      "cityState": "المدينة/الولاية",
+      "cityPlaceholder": "المدينة، الولاية",
+      "postalCode": "الرمز البريدي",
+      "taxId": "معرف الضريبة"
+    },
+    "errors": {
+      "fileTooLarge": "حجم الملف كبير جداً. الحد الأقصى 2 ميجابايت",
+      "invalidFileType": "نوع الملف غير مدعوم. يرجى اختيار صورة",
+      "updateFailed": "فشل تحديث الملف الشخصي"
     }
   },
   "tags": {

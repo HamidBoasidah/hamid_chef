@@ -13,7 +13,7 @@ class SetLocale
     {
         // اللغات المدعومة
         $supported = ['ar', 'en'];
-        $fallback  = config('app.fallback_locale', 'en');
+        $fallback  = config('app.fallback_locale', 'ar');
 
         // أولوية تحديد اللغة: Session → حقل المستخدم → تفضيل المتصفح → Fallback
         $locale =

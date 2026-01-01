@@ -41,8 +41,7 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Ahlan', 'Arial', sans-serif;
     --font-arabic: 'Air Strip Arabic', 'Arial', sans-serif;
     --font-english: 'Ahlan', 'Arial', sans-serif;
 }

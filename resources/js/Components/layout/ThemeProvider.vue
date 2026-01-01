@@ -17,10 +17,17 @@ const toggleTheme = () => {
 }
 
 onMounted(() => {
+  // Always start with light mode, remove any existing dark class
+  document.documentElement.classList.remove('dark')
+  
   const savedTheme = localStorage.getItem('theme') as Theme | null
   const initialTheme = savedTheme || 'light' // Default to light theme
 
   theme.value = initialTheme
+  // Apply theme after ensuring light is default
+  if (initialTheme === 'dark') {
+    document.documentElement.classList.add('dark')
+  }
   isInitialized.value = true
 })
 

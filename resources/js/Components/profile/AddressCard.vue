@@ -99,7 +99,7 @@
                   <input
                     type="text"
                     value="United States"
-                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-secondary-300 dark:focus:border-primary-300 focus:outline-hidden focus:ring-3 focus:ring-secondary-500/10 dark:focus:ring-primary-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-primary-300"
                   />
                 </div>
 
@@ -110,7 +110,7 @@
                   <input
                     type="text"
                     value="Poenix, Arizona, United States"
-                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-secondary-300 dark:focus:border-primary-300 focus:outline-hidden focus:ring-3 focus:ring-secondary-500/10 dark:focus:ring-primary-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-primary-300"
                   />
                 </div>
 
@@ -121,7 +121,7 @@
                   <input
                     type="text"
                     value="ERT 2489"
-                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-secondary-300 dark:focus:border-primary-300 focus:outline-hidden focus:ring-3 focus:ring-secondary-500/10 dark:focus:ring-primary-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-primary-300"
                   />
                 </div>
 
@@ -132,7 +132,7 @@
                   <input
                     type="text"
                     value="AS4568384"
-                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                    class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-secondary-300 dark:focus:border-primary-300 focus:outline-hidden focus:ring-3 focus:ring-secondary-500/10 dark:focus:ring-primary-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-primary-300"
                   />
                 </div>
               </div>
@@ -148,7 +148,7 @@
               <button
                 @click="saveAddress"
                 type="button"
-                class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 sm:w-auto"
+                class="flex w-full justify-center rounded-lg bg-secondary-500 dark:bg-primary-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-secondary-600 dark:hover:bg-primary-600 sm:w-auto"
               >
                 {{ t('buttons.saveChanges') }}
               </button>
@@ -171,6 +171,7 @@ const isProfileAddressModal = ref(false)
 
 const saveAddress = () => {
   // Implement save address logic here
+  console.log('Address saved')
   isProfileAddressModal.value = false
 }
 </script>

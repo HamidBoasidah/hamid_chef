@@ -4,9 +4,23 @@
       <div class="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
         <div class="flex flex-col items-center w-full gap-6 xl:flex-row">
           <div
-            class="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800 flex items-center justify-center"
+            class="relative w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800 flex items-center justify-center group cursor-pointer"
+            @click="triggerAvatarUpload"
           >
             <img :src="user?.avatar ? `/storage/${rawUser.avatar}` : '/images/user/owner.jpg'" alt="User" class="w-full h-full object-cover object-center" />
+            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <input
+              ref="avatarInput"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleAvatarChange"
+            />
           </div>
           <div class="order-3 xl:order-2">
             <h4
@@ -14,93 +28,12 @@
             >
               {{ user?.name || t('user.name', { default: 'Code Brains' }) }}
             </h4>
-            <div
-              class="flex flex-col items-center gap-1 text-center xl:flex-row xl:gap-3 xl:text-left"
-            >
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ user?.bio || t('profile.labels.bio') }}</p>
-              <div class="hidden h-3.5 w-px bg-gray-300 dark:bg-gray-700 xl:block"></div>
-              <p class="text-sm text-gray-500 dark:text-gray-400">{{ user?.address || t('profile.address.cityPlaceholder') }}</p>
-            </div>
+            <p class="text-sm text-gray-500 dark:text-gray-400 text-center xl:text-left">
+              {{ user?.email || '-' }}
+            </p>
           </div>
           <div class="flex items-center order-2 gap-2 grow xl:order-3 xl:justify-end">
-            <a
-              :href="user?.social?.facebook || 'https://www.facebook.com/PimjoHQ'"
-              target="_blank"
-              rel="noopener"
-              class="social-button"
-            >
-              <svg
-                class="fill-current"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M11.6666 11.2503H13.7499L14.5833 7.91699H11.6666V6.25033C11.6666 5.39251 11.6666 4.58366 13.3333 4.58366H14.5833V1.78374C14.3118 1.7477 13.2858 1.66699 12.2023 1.66699C9.94025 1.66699 8.33325 3.04771 8.33325 5.58342V7.91699H5.83325V11.2503H8.33325V18.3337H11.6666V11.2503Z"
-                  fill=""
-                />
-              </svg>
-            </a>
-            <a :href="user?.social?.x || 'https://x.com/PimjoHQ'" target="_blank" rel="noopener" class="social-button">
-              <svg
-                class="fill-current"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M15.1708 1.875H17.9274L11.9049 8.75833L18.9899 18.125H13.4424L9.09742 12.4442L4.12578 18.125H1.36745L7.80912 10.7625L1.01245 1.875H6.70078L10.6283 7.0675L15.1708 1.875ZM14.2033 16.475H15.7308L5.87078 3.43833H4.23162L14.2033 16.475Z"
-                  fill=""
-                />
-              </svg>
-            </a>
-            <a
-              :href="user?.social?.linkedin || 'https://www.linkedin.com/company/pimjo/'"
-              target="_blank"
-              rel="noopener"
-              class="social-button"
-            >
-              <svg
-                class="fill-current"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M5.78381 4.16645C5.78351 4.84504 5.37181 5.45569 4.74286 5.71045C4.11391 5.96521 3.39331 5.81321 2.92083 5.32613C2.44836 4.83904 2.31837 4.11413 2.59216 3.49323C2.86596 2.87233 3.48886 2.47942 4.16715 2.49978C5.06804 2.52682 5.78422 3.26515 5.78381 4.16645ZM5.83381 7.06645H2.50048V17.4998H5.83381V7.06645ZM11.1005 7.06645H7.78381V17.4998H11.0672V12.0248C11.0672 8.97475 15.0422 8.69142 15.0422 12.0248V17.4998H18.3338V10.8914C18.3338 5.74978 12.4505 5.94145 11.0672 8.46642L11.1005 7.06645Z"
-                  fill=""
-                />
-              </svg>
-            </a>
-            <a
-              :href="user?.social?.instagram || 'https://www.instagram.com/PimjoHQ'"
-              target="_blank"
-              rel="noopener"
-              class="social-button"
-            >
-              <svg
-                class="fill-current"
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.8567 1.66699C11.7946 1.66854 12.2698 1.67351 12.6805 1.68573L12.8422 1.69102C13.0291 1.69766 13.2134 1.70599 13.4357 1.71641C14.3224 1.75738 14.9273 1.89766 15.4586 2.10391C16.0078 2.31572 16.4717 2.60183 16.9349 3.06503C17.3974 3.52822 17.6836 3.99349 17.8961 4.54141C18.1016 5.07197 18.2419 5.67753 18.2836 6.56433C18.2935 6.78655 18.3015 6.97088 18.3081 7.15775L18.3133 7.31949C18.3255 7.73011 18.3311 8.20543 18.3328 9.1433L18.3335 9.76463C18.3336 9.84055 18.3336 9.91888 18.3336 9.99972L18.3335 10.2348L18.333 10.8562C18.3314 11.794 18.3265 12.2694 18.3142 12.68L18.3089 12.8417C18.3023 13.0286 18.294 13.213 18.2836 13.4351C18.2426 14.322 18.1016 14.9268 17.8961 15.458C17.6842 16.0074 17.3974 16.4713 16.9349 16.9345C16.4717 17.397 16.0057 17.6831 15.4586 17.8955C14.9273 18.1011 14.3224 18.2414 13.4357 18.2831C13.2134 18.293 13.0291 18.3011 12.8422 18.3076L12.6805 18.3128C12.2698 18.3251 11.7946 18.3306 10.8567 18.3324L10.2353 18.333C10.1594 18.333 10.0811 18.333 10.0002 18.333H9.76516L9.14375 18.3325C8.20591 18.331 7.7306 18.326 7.31997 18.3137L7.15824 18.3085C6.97136 18.3018 6.78703 18.2935 6.56481 18.2831C5.67801 18.2421 5.07384 18.1011 4.5419 17.8955C3.99328 17.6838 3.5287 17.397 3.06551 16.9345C2.60231 16.4713 2.3169 16.0053 2.1044 15.458C1.89815 14.9268 1.75856 14.322 1.7169 13.4351C1.707 13.213 1.69892 13.0286 1.69238 12.8417L1.68714 12.68C1.67495 12.2694 1.66939 11.794 1.66759 10.8562L1.66748 9.1433C1.66903 8.20543 1.67399 7.73011 1.68621 7.31949L1.69151 7.15775C1.69815 6.97088 1.70648 6.78655 1.7169 6.56433C1.75786 5.67683 1.89815 5.07266 2.1044 4.54141C2.3162 3.9928 2.60231 3.52822 3.06551 3.06503C3.5287 2.60183 3.99398 2.31641 4.5419 2.10391C5.07315 1.89766 5.67731 1.75808 6.56481 1.71641C6.78703 1.70652 6.97136 1.69844 7.15824 1.6919L7.31997 1.68666C7.7306 1.67446 8.20591 1.6689 9.14375 1.6671L10.8567 1.66699ZM10.0002 5.83308C7.69781 5.83308 5.83356 7.69935 5.83356 9.99972C5.83356 12.3021 7.69984 14.1664 10.0002 14.1664C12.3027 14.1664 14.1669 12.3001 14.1669 9.99972C14.1669 7.69732 12.3006 5.83308 10.0002 5.83308ZM10.0002 7.49974C11.381 7.49974 12.5002 8.61863 12.5002 9.99972C12.5002 11.3805 11.3813 12.4997 10.0002 12.4997C8.6195 12.4997 7.50023 11.3809 7.50023 9.99972C7.50023 8.61897 8.61908 7.49974 10.0002 7.49974ZM14.3752 4.58308C13.8008 4.58308 13.3336 5.04967 13.3336 5.62403C13.3336 6.19841 13.8002 6.66572 14.3752 6.66572C14.9496 6.66572 15.4169 6.19913 15.4169 5.62403C15.4169 5.04967 14.9488 4.58236 14.3752 4.58308Z"
-                  fill=""
-                />
-              </svg>
-            </a>
-          </div>
-        </div>
-  <button @click="isProfileInfoModal = true" class="edit-button">
+            <button @click="isProfileInfoModal = true" class="edit-button">
           <svg
             class="fill-current"
             width="18"
@@ -118,16 +51,18 @@
           </svg>
           {{ t('profile.edit') }}
         </button>
+          </div>
+        </div>
       </div>
     </div>
-    <Modal v-if="isProfileInfoModal" @close="isProfileInfoModal = false">
+    <Modal v-if="isProfileInfoModal" @close="closeModal">
       <template #body>
         <div
           class="no-scrollbar relative w-full max-w-[700px] overflow-y-auto rounded-3xl bg-white p-4 dark:bg-gray-900 lg:p-11"
         >
           <!-- close btn -->
           <button
-            @click="isProfileInfoModal = false"
+            @click="closeModal"
             class="transition-color absolute right-5 top-5 z-999 flex h-11 w-11 items-center justify-center rounded-full bg-gray-100 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:bg-gray-700 dark:text-gray-400 dark:hover:bg-white/[0.07] dark:hover:text-gray-300"
           >
             <svg
@@ -155,68 +90,51 @@
             </p>
           </div>
           <form class="flex flex-col">
-            <div class="custom-scrollbar h-[458px] overflow-y-auto p-2">
-              <div>
-                  <h5 class="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
-                  {{ t('profile.socialLinks') }}
+            <div class="custom-scrollbar overflow-y-auto p-2 max-h-[600px]">
+              <!-- Profile Picture Section -->
+              <div class="mb-7">
+                <h5 class="mb-4 text-lg font-medium text-gray-800 dark:text-white/90">
+                  {{ t('profile.profilePicture') }}
                 </h5>
-
-                <div class="grid grid-cols-1 gap-x-6 gap-y-5 lg:grid-cols-2">
-                  <div>
-                    <label
-                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-                    >
-                      {{ t('profile.labels.facebook') }}
-                    </label>
-                    <input
-                      type="text"
-                      v-model="form.facebook"
-                      class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                <div class="flex items-center gap-4">
+                  <div class="relative w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800 flex items-center justify-center avatar-preview">
+                    <img 
+                      ref="avatarPreview"
+                      :src="avatarPreviewUrl || (user?.avatar && rawUser?.avatar ? `/storage/${rawUser.avatar}` : '/images/user/owner.jpg')" 
+                      alt="User" 
+                      class="w-full h-full object-cover object-center"
+                      :key="rawUser?.avatar || avatarPreviewUrl || 'default'"
                     />
                   </div>
-
-                  <div>
-                    <label
-                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                  <div class="flex-1">
+                    <button
+                      type="button"
+                      @click="triggerAvatarUpload"
+                      class="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700"
                     >
-                      {{ t('profile.labels.x') }}
-                    </label>
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"></path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      </svg>
+                      {{ t('profile.changePicture') }}
+                    </button>
                     <input
-                      type="text"
-                      v-model="form.x"
-                      class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                      ref="avatarInput"
+                      type="file"
+                      accept="image/*"
+                      class="hidden"
+                      @change="handleAvatarChange"
                     />
-                  </div>
-
-                  <div>
-                    <label
-                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-                    >
-                      {{ t('profile.labels.linkedin') }}
-                    </label>
-                    <input
-                      type="text"
-                      v-model="form.linkedin"
-                      class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
-                    />
-                  </div>
-
-                  <div>
-                    <label
-                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-                    >
-                      {{ t('profile.labels.instagram') }}
-                    </label>
-                    <input
-                      type="text"
-                      v-model="form.instagram"
-                      class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
-                    />
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                      {{ t('profile.pictureRequirements') }}
+                    </p>
                   </div>
                 </div>
               </div>
-              <div class="mt-7">
-                  <h5 class="mb-5 text-lg font-medium text-gray-800 dark:text-white/90 lg:mb-6">
+
+              <!-- Personal Information Section -->
+              <div>
+                <h5 class="mb-5 text-lg font-medium text-gray-800 dark:text-white/90">
                   {{ t('profile.personalInformation') }}
                 </h5>
 
@@ -225,11 +143,11 @@
                     <label
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
-                      {{ t('profile.labels.firstName') }}
+                      {{ t('profile.labels.name') }} <span class="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      v-model="form.first_name"
+                      v-model="form.name"
                       class="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -238,23 +156,10 @@
                     <label
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
-                      {{ t('profile.labels.lastName') }}
+                      {{ t('profile.labels.emailAddress') }} <span class="text-red-500">*</span>
                     </label>
                     <input
-                      type="text"
-                      v-model="form.last_name"
-                      class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
-                    />
-                  </div>
-
-                  <div class="col-span-2 lg:col-span-1">
-                    <label
-                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
-                    >
-                      {{ t('profile.labels.emailAddress') }}
-                    </label>
-                    <input
-                      type="text"
+                      type="email"
                       v-model="form.email"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
@@ -269,6 +174,21 @@
                     <input
                       type="text"
                       v-model="form.phone_number"
+                      :placeholder="t('profile.labels.phonePlaceholder')"
+                      class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                    />
+                  </div>
+
+                  <div class="col-span-2 lg:col-span-1">
+                    <label
+                      class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
+                    >
+                      {{ t('profile.labels.whatsapp') }}
+                    </label>
+                    <input
+                      type="text"
+                      v-model="form.whatsapp_number"
+                      :placeholder="t('profile.labels.whatsappPlaceholder')"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -277,11 +197,12 @@
                     <label
                       class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400"
                     >
-                      {{ t('profile.labels.bio') }}
+                      {{ t('profile.labels.address') }}
                     </label>
                     <input
                       type="text"
-                      v-model="form.bio"
+                      v-model="form.address"
+                      :placeholder="t('profile.labels.addressPlaceholder')"
                       class="dark:bg-dark-900 h-11 w-full appearance-none rounded-lg border border-gray-300 bg-transparent bg-none px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
                     />
                   </div>
@@ -289,19 +210,20 @@
               </div>
             </div>
             <div class="flex items-center gap-3 px-2 mt-6 lg:justify-end">
-              <button
-                @click="isProfileInfoModal = false"
-                type="button"
-                class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto"
-              >
+          <button
+            @click="closeModal"
+            type="button"
+            class="flex w-full justify-center rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-white/[0.03] sm:w-auto"
+          >
                 {{ t('buttons.close') }}
               </button>
               <button
                 @click="saveProfile"
                 type="button"
-                class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 sm:w-auto"
+                :disabled="form.processing"
+                class="flex w-full justify-center rounded-lg bg-brand-500 px-4 py-2.5 text-sm font-medium text-white hover:bg-brand-600 disabled:opacity-50 disabled:cursor-not-allowed sm:w-auto"
               >
-                {{ t('buttons.saveChanges') }}
+                {{ form.processing ? t('buttons.saving', { default: 'جاري الحفظ...' }) : t('buttons.saveChanges') }}
               </button>
             </div>
           </form>
@@ -312,53 +234,146 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import Modal from './Modal.vue'
 import { useI18n } from 'vue-i18n'
-import { usePage } from '@inertiajs/vue3'
+import { usePage, useForm, router } from '@inertiajs/vue3'
+import { route } from '@/route'
 
 const { t } = useI18n()
 const page = usePage()
-const rawUser = page.props.value?.auth?.user || page.props.auth?.user || null
+const rawUser = computed(() => page.props.value?.auth?.user || page.props.auth?.user || null)
 
 const user = computed(() => {
-  if (!rawUser) return null
+  if (!rawUser.value) return null
   return {
     // prefer name attribute if model provides it, otherwise join first/last
-    name: rawUser.name || [rawUser.first_name, rawUser.last_name].filter(Boolean).join(' ') || null,
-    avatar: rawUser.avatar || null,
-    bio: rawUser.bio || null,
-    address: rawUser.address || null,
-    email: rawUser.email || null,
-    phone_number: rawUser.phone_number || null,
+    name: rawUser.value.name || [rawUser.value.first_name, rawUser.value.last_name].filter(Boolean).join(' ') || null,
+    avatar: rawUser.value.avatar || null,
+    bio: rawUser.value.bio || null,
+    address: rawUser.value.address || null,
+    email: rawUser.value.email || null,
+    phone_number: rawUser.value.phone_number || null,
     social: {
-      facebook: rawUser.facebook || null,
-      x: rawUser.x_url || null,
-      linkedin: rawUser.linkedin || null,
-      instagram: rawUser.instagram || null,
+      facebook: rawUser.value.facebook || null,
+      x: rawUser.value.x_url || null,
+      linkedin: rawUser.value.linkedin || null,
+      instagram: rawUser.value.instagram || null,
     },
-    first_name: rawUser.first_name || null,
-    last_name: rawUser.last_name || null,
+    first_name: rawUser.value.first_name || null,
+    last_name: rawUser.value.last_name || null,
   }
 })
 
-const form = reactive({
-  facebook: rawUser?.facebook || '',
-  x: rawUser?.x_url || '',
-  linkedin: rawUser?.linkedin || '',
-  instagram: rawUser?.instagram || '',
-  first_name: rawUser?.first_name || '',
-  last_name: rawUser?.last_name || '',
-  email: rawUser?.email || '',
-  phone_number: rawUser?.phone_number || '',
-  bio: rawUser?.bio || '',
-  address: rawUser?.address || '',
+const isProfileInfoModal = ref(false)
+const avatarInput = ref(null)
+const avatarPreview = ref(null)
+const avatarPreviewUrl = ref(null)
+
+const form = useForm({
+  name: '',
+  email: '',
+  phone_number: '',
+  whatsapp_number: '',
+  address: '',
+  avatar: null,
 })
 
-const isProfileInfoModal = ref(false)
+// Update form when user data changes
+watch(rawUser, (newUser) => {
+  if (newUser) {
+    form.name = newUser.name || [newUser.first_name, newUser.last_name].filter(Boolean).join(' ') || ''
+    form.email = newUser.email || ''
+    form.phone_number = newUser.phone_number || ''
+    form.whatsapp_number = newUser.whatsapp_number || ''
+    form.address = newUser.address || ''
+  }
+}, { immediate: true })
+
+const closeModal = () => {
+  isProfileInfoModal.value = false
+  // Reset avatar preview if not saved
+  if (form.avatar && !form.processing) {
+    form.avatar = null
+    avatarPreviewUrl.value = null
+    if (avatarInput.value) {
+      avatarInput.value.value = ''
+    }
+  }
+}
+
+const triggerAvatarUpload = () => {
+  avatarInput.value?.click()
+}
+
+const handleAvatarChange = (event) => {
+  const file = event.target.files[0]
+  if (!file) return
+
+  // Validate file size (max 2MB)
+  if (file.size > 2 * 1024 * 1024) {
+    alert(t('profile.errors.fileTooLarge', { default: 'File size must be less than 2MB' }))
+    event.target.value = '' // Reset input
+    return
+  }
+
+  // Validate file type
+  if (!file.type.startsWith('image/')) {
+    alert(t('profile.errors.invalidFileType', { default: 'Please select an image file' }))
+    event.target.value = '' // Reset input
+    return
+  }
+
+  // Update form with the file (don't save yet, wait for save button)
+  form.avatar = file
+  
+  // Create preview URL for the selected image
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    avatarPreviewUrl.value = e.target.result
+  }
+  reader.readAsDataURL(file)
+}
 
 const saveProfile = () => {
-  // Implement save profile logic here
-  isProfileInfoModal.value = false
+  // Split name into first_name and last_name
+  const nameParts = form.name.trim().split(' ')
+  const firstName = nameParts[0] || ''
+  const lastName = nameParts.slice(1).join(' ') || ''
+  
+  const updateData = {
+    first_name: firstName,
+    last_name: lastName,
+    email: form.email,
+    phone_number: form.phone_number,
+    whatsapp_number: form.whatsapp_number,
+    address: form.address,
+    avatar: form.avatar,
+  }
+  
+  // Use patch method directly, and forceFormData if avatar exists
+  const options = {
+    preserveScroll: true,
+    onSuccess: () => {
+      isProfileInfoModal.value = false
+      form.avatar = null
+      avatarPreviewUrl.value = null
+      if (avatarInput.value) {
+        avatarInput.value.value = '' // Reset input
+      }
+      router.reload({ only: ['auth'] })
+    },
+    onError: (errors) => {
+      console.error('Profile update errors:', errors)
+    },
+  }
+  
+  // If avatar exists, use forceFormData
+  if (form.avatar) {
+    options.forceFormData = true
+  }
+  
+  // Use direct URL to avoid routing issues
+  form.transform(() => updateData).patch('/profile', options)
 }
 </script>

@@ -10,7 +10,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				sans: ['Figtree', ...require('tailwindcss/defaultTheme').fontFamily.sans],
+				sans: ['Ahlan', 'Arial', 'sans-serif'],
 				arabic: ['Air Strip Arabic', 'Arial', 'sans-serif'],
 				english: ['Ahlan', 'Arial', 'sans-serif'],
 			},

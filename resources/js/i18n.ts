@@ -4,12 +4,20 @@ import ar from '@/locales/ar.json';
 import { getSavedDirection } from '@/utils/direction';
 
 // Determine initial locale from saved direction (rtl -> ar, ltr -> en)
-const initialLocale = getSavedDirection() === 'rtl' ? 'ar' : 'en';
+// Default to Arabic ('ar') if no saved direction or in SSR
+const getInitialLocale = (): 'ar' | 'en' => {
+  if (typeof window === 'undefined') return 'ar' // SSR default to Arabic
+  const savedDirection = getSavedDirection()
+  // Default to Arabic (RTL) if no saved direction
+  return savedDirection === 'ltr' ? 'en' : 'ar'
+}
+
+const initialLocale = getInitialLocale()
 
 export const i18n = createI18n({
   legacy: false,
   locale: initialLocale,
-  fallbackLocale: 'en',
+  fallbackLocale: 'ar', // Default fallback to Arabic
   messages: { en, ar },
 });
 

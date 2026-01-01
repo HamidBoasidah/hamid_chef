@@ -161,22 +161,19 @@ const navItems = ref([
   }
 ])
 
-// Initialize dark mode from localStorage
+// Initialize dark mode from localStorage - default to light
 onMounted(() => {
+  // Always start with light mode, remove any existing dark class
+  document.documentElement.classList.remove('dark')
+  
   const savedDarkMode = localStorage.getItem('darkMode')
   if (savedDarkMode === 'true') {
     isDarkMode.value = true
     document.documentElement.classList.add('dark')
-  } else if (savedDarkMode === 'false') {
-    isDarkMode.value = false
-    document.documentElement.classList.remove('dark')
   } else {
-    // Check system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    isDarkMode.value = prefersDark
-    if (prefersDark) {
-      document.documentElement.classList.add('dark')
-    }
+    // Default to light mode
+    isDarkMode.value = false
+    localStorage.setItem('darkMode', 'false')
   }
 })
 
