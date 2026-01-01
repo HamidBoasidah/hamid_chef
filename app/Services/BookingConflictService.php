@@ -6,6 +6,7 @@ use App\DTOs\BookingDTO;
 use App\Exceptions\BookingConflictException;
 use App\Exceptions\BookingValidationException;
 use App\Models\Booking;
+use App\Models\ChefService;
 use App\Repositories\BookingRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -14,12 +15,25 @@ use Illuminate\Support\Facades\DB;
 class BookingConflictService
 {
     protected BookingRepository $bookingRepository;
-    protected int $minimumGapHours;
+    protected int $defaultRestHours;
 
     public function __construct(BookingRepository $bookingRepository)
     {
         $this->bookingRepository = $bookingRepository;
-        $this->minimumGapHours = config('booking.minimum_gap_hours', 2);
+        $this->defaultRestHours = config('booking.minimum_gap_hours', 2);
+    }
+
+    /**
+     * Get rest hours required for a service
+     */
+    protected function getServiceRestHours(?int $serviceId): int
+    {
+        if (!$serviceId) {
+            return $this->defaultRestHours;
+        }
+
+        $service = ChefService::find($serviceId);
+        return $service?->rest_hours_required ?? $this->defaultRestHours;
     }
 
     /**
@@ -61,7 +75,7 @@ class BookingConflictService
     }
 
     /**
-     * Validate if booking respects minimum time gaps
+     * Validate if booking respects minimum time gaps (using service-specific rest hours)
      */
     public function validateTimeGaps(BookingDTO $booking, ?int $excludeBookingId = null): array
     {
@@ -73,11 +87,14 @@ class BookingConflictService
             ];
         }
 
-        $nearbyBookings = $this->findNearbyBookings($booking, $excludeBookingId);
+        // Get rest hours for the new booking's service
+        $newBookingRestHours = $this->getServiceRestHours($booking->chef_service_id);
+
+        $nearbyBookings = $this->findNearbyBookings($booking, $excludeBookingId, $newBookingRestHours);
         $gapViolations = [];
 
         foreach ($nearbyBookings as $existingBooking) {
-            $gapViolation = $this->checkTimeGapViolation($booking, $existingBooking);
+            $gapViolation = $this->checkTimeGapViolation($booking, $existingBooking, $newBookingRestHours);
             if ($gapViolation) {
                 $gapViolations[] = $gapViolation;
             }
@@ -93,7 +110,7 @@ class BookingConflictService
 
         return [
             'valid' => false,
-            'errors' => ["Minimum {$this->minimumGapHours}-hour gap required between bookings"],
+            'errors' => ["Rest hours requirement not met between bookings"],
             'conflicting_bookings' => $gapViolations
         ];
     }
@@ -166,15 +183,20 @@ class BookingConflictService
 
     /**
      * Find bookings near the given booking for gap validation
+     * Uses the maximum of new booking's rest hours and existing bookings' rest hours
      */
-    protected function findNearbyBookings(BookingDTO $booking, ?int $excludeBookingId = null): Collection
+    protected function findNearbyBookings(BookingDTO $booking, ?int $excludeBookingId = null, ?int $newBookingRestHours = null): Collection
     {
         $startDateTime = $booking->getStartDateTime();
         $endDateTime = $booking->getEndDateTime();
         
-        // Extend search range by minimum gap hours
-        $searchStart = $startDateTime->copy()->subHours($this->minimumGapHours);
-        $searchEnd = $endDateTime->copy()->addHours($this->minimumGapHours);
+        // Use the provided rest hours or get from service
+        $restHours = $newBookingRestHours ?? $this->getServiceRestHours($booking->chef_service_id);
+        
+        // Extend search range by maximum possible rest hours (use a safe maximum)
+        $maxRestHours = max($restHours, 8); // Search up to 8 hours to catch all potential conflicts
+        $searchStart = $startDateTime->copy()->subHours($maxRestHours);
+        $searchEnd = $endDateTime->copy()->addHours($maxRestHours);
 
         return $this->bookingRepository->findBookingsWithinTimeRange(
             $booking->chef_id,
@@ -185,43 +207,56 @@ class BookingConflictService
     }
 
     /**
-     * Check if two bookings violate the minimum time gap
+     * Check if two bookings violate the rest hours requirement
+     * Uses service-specific rest hours for each booking
      */
-    protected function checkTimeGapViolation(BookingDTO $newBooking, Booking $existingBooking): ?array
+    protected function checkTimeGapViolation(BookingDTO $newBooking, Booking $existingBooking, ?int $newBookingRestHours = null): ?array
     {
         $newStart = $newBooking->getStartDateTime();
         $newEnd = $newBooking->getEndDateTime();
         $existingStart = $existingBooking->start_date_time;
         $existingEnd = $existingBooking->end_date_time;
 
-        // Check gap before existing booking
+        // Get rest hours for both bookings
+        $newRestHours = $newBookingRestHours ?? $this->getServiceRestHours($newBooking->chef_service_id);
+        $existingRestHours = $existingBooking->service?->rest_hours_required ?? $this->defaultRestHours;
+
+        // Check gap before existing booking (new booking ends before existing starts)
+        // The new booking needs its rest hours before the existing booking can start
         if ($newEnd->lte($existingStart)) {
-            $gap = $existingStart->diffInHours($newEnd);
-            if ($gap < $this->minimumGapHours) {
+            // Gap = time between new booking end and existing booking start
+            $gap = $newEnd->diffInHours($existingStart);
+            // Gap must be >= rest hours (booking can start exactly when rest period ends)
+            if ($gap < $newRestHours) {
                 return [
                     'id' => $existingBooking->id,
                     'date' => $existingBooking->date->format('Y-m-d'),
                     'start_time' => $existingBooking->start_time->format('H:i'),
                     'end_time' => $existingBooking->end_time->format('H:i'),
                     'gap_hours' => $gap,
-                    'required_gap' => $this->minimumGapHours,
-                    'violation_type' => 'insufficient_gap_before'
+                    'required_rest_hours' => $newRestHours,
+                    'violation_type' => 'insufficient_rest_after_new_booking',
+                    'service_name' => $existingBooking->service?->name
                 ];
             }
         }
 
-        // Check gap after existing booking
+        // Check gap after existing booking (new booking starts after existing ends)
+        // The existing booking needs its rest hours before the new booking can start
         if ($newStart->gte($existingEnd)) {
-            $gap = $newStart->diffInHours($existingEnd);
-            if ($gap < $this->minimumGapHours) {
+            // Gap = time between existing booking end and new booking start
+            $gap = $existingEnd->diffInHours($newStart);
+            // Gap must be >= rest hours (booking can start exactly when rest period ends)
+            if ($gap < $existingRestHours) {
                 return [
                     'id' => $existingBooking->id,
                     'date' => $existingBooking->date->format('Y-m-d'),
                     'start_time' => $existingBooking->start_time->format('H:i'),
                     'end_time' => $existingBooking->end_time->format('H:i'),
                     'gap_hours' => $gap,
-                    'required_gap' => $this->minimumGapHours,
-                    'violation_type' => 'insufficient_gap_after'
+                    'required_rest_hours' => $existingRestHours,
+                    'violation_type' => 'insufficient_rest_after_existing_booking',
+                    'service_name' => $existingBooking->service?->name
                 ];
             }
         }
@@ -232,10 +267,10 @@ class BookingConflictService
     /**
      * Check if a chef is available for a specific time slot
      */
-    public function checkChefAvailability(int $chefId, string $date, string $startTime, int $hoursCount, ?int $excludeBookingId = null): array
+    public function checkChefAvailability(int $chefId, string $date, string $startTime, int $hoursCount, ?int $serviceId = null, ?int $excludeBookingId = null): array
     {
         $bookingDTO = new BookingDTO(
-            null, null, $chefId, null, null, $date, $startTime, $hoursCount,
+            null, null, $chefId, $serviceId, null, $date, $startTime, $hoursCount,
             null, null, null, null, null, null, null, null, null, null, true, null, null
         );
 

@@ -83,6 +83,7 @@ class ChefService extends BaseModel
         'max_guests_included',
         'allow_extra_guests',
         'extra_guest_price',
+        'rest_hours_required',
         'is_active',
         'created_by',
         'updated_by',
@@ -93,6 +94,7 @@ class ChefService extends BaseModel
         'package_price' => 'decimal:2',
         'extra_guest_price' => 'decimal:2',
         'allow_extra_guests' => 'boolean',
+        'rest_hours_required' => 'integer',
     ];
 
     /**

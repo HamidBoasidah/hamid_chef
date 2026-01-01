@@ -172,9 +172,9 @@ class BookingService
         return $success;
     }
 
-    public function checkAvailability(int $chefId, string $date, string $startTime, int $hoursCount, ?int $excludeBookingId = null): array
+    public function checkAvailability(int $chefId, string $date, string $startTime, int $hoursCount, ?int $serviceId = null, ?int $excludeBookingId = null): array
     {
-        return $this->conflictService->checkChefAvailability($chefId, $date, $startTime, $hoursCount, $excludeBookingId);
+        return $this->conflictService->checkChefAvailability($chefId, $date, $startTime, $hoursCount, $serviceId, $excludeBookingId);
     }
 
     public function getChefBookingsForDate(int $chefId, string $date): array

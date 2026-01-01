@@ -26,6 +26,7 @@ class StoreChefServiceRequest extends FormRequest
             'max_guests_included' => 'nullable|integer|min:1',
             'allow_extra_guests' => 'nullable|boolean',
             'extra_guest_price' => 'nullable|numeric|min:0',
+            'rest_hours_required' => 'nullable|integer|min:0|max:12',
             'is_active' => 'nullable|boolean',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id',

@@ -19,6 +19,7 @@ class ChefServiceDTO extends BaseDTO
     public $max_guests_included;
     public $allow_extra_guests;
     public $extra_guest_price;
+    public $rest_hours_required;
     public $feature_image;
     public $is_active;
     public $created_by;
@@ -47,6 +48,7 @@ class ChefServiceDTO extends BaseDTO
         $max_guests_included = null,
         $allow_extra_guests = false,
         $extra_guest_price = null,
+        $rest_hours_required = 2,
         $feature_image = null,
         $is_active = true,
         $created_by = null,
@@ -74,6 +76,7 @@ class ChefServiceDTO extends BaseDTO
         $this->max_guests_included = $max_guests_included;
         $this->allow_extra_guests = (bool) $allow_extra_guests;
         $this->extra_guest_price = $extra_guest_price;
+        $this->rest_hours_required = (int) ($rest_hours_required ?? 2);
         $this->feature_image = $feature_image;
         $this->is_active = (bool) $is_active;
         $this->created_by = $created_by;
@@ -106,6 +109,7 @@ class ChefServiceDTO extends BaseDTO
             $service->max_guests_included ?? null,
             $service->allow_extra_guests ?? false,
             $service->extra_guest_price ?? null,
+            $service->rest_hours_required ?? 2,
             $service->feature_image ?? null,
             $service->is_active ?? true,
             $service->created_by ?? null,
@@ -179,6 +183,7 @@ class ChefServiceDTO extends BaseDTO
             'max_guests_included' => $this->max_guests_included,
             'allow_extra_guests' => $this->allow_extra_guests,
             'extra_guest_price' => $this->extra_guest_price,
+            'rest_hours_required' => $this->rest_hours_required,
             'feature_image' => $this->feature_image,
             'is_active' => $this->is_active,
             'created_by' => $this->created_by,

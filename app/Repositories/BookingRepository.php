@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Repositories\Eloquent\BaseRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class BookingRepository extends BaseRepository
 {
@@ -25,6 +26,36 @@ class BookingRepository extends BaseRepository
     }
 
     /**
+     * Check if using SQLite database
+     */
+    protected function isSqlite(): bool
+    {
+        return DB::connection()->getDriverName() === 'sqlite';
+    }
+
+    /**
+     * Get database-agnostic datetime concatenation expression
+     */
+    protected function getDateTimeConcat(): string
+    {
+        if ($this->isSqlite()) {
+            return "datetime(date || ' ' || start_time)";
+        }
+        return "CONCAT(date, ' ', start_time)";
+    }
+
+    /**
+     * Get database-agnostic datetime addition expression
+     */
+    protected function getDateTimeAddHours(string $baseExpr, string $hoursColumn): string
+    {
+        if ($this->isSqlite()) {
+            return "datetime({$baseExpr}, '+' || {$hoursColumn} || ' hours')";
+        }
+        return "DATE_ADD({$baseExpr}, INTERVAL {$hoursColumn} HOUR)";
+    }
+
+    /**
      * Find bookings that conflict with the given time range
      */
     public function findConflictingBookings(
@@ -34,31 +65,34 @@ class BookingRepository extends BaseRepository
         Carbon $endDateTime, 
         ?int $excludeBookingId = null
     ): Collection {
+        $dateTimeConcat = $this->getDateTimeConcat();
+        $dateTimeAddHours = $this->getDateTimeAddHours($dateTimeConcat, 'hours_count');
+
         $query = $this->model
             ->forChef($chefId)
             ->active()
             ->onDate($date)
-            ->where(function ($q) use ($startDateTime, $endDateTime) {
+            ->where(function ($q) use ($startDateTime, $endDateTime, $dateTimeConcat, $dateTimeAddHours) {
                 // Check for overlapping time ranges
-                $q->where(function ($subQ) use ($startDateTime, $endDateTime) {
+                $q->where(function ($subQ) use ($startDateTime, $endDateTime, $dateTimeConcat, $dateTimeAddHours) {
                     // New booking starts during existing booking
-                    $subQ->whereRaw("CONCAT(date, ' ', start_time) <= ?", [$startDateTime->format('Y-m-d H:i:s')])
-                         ->whereRaw("DATE_ADD(CONCAT(date, ' ', start_time), INTERVAL hours_count HOUR) > ?", [$startDateTime->format('Y-m-d H:i:s')]);
+                    $subQ->whereRaw("{$dateTimeConcat} <= ?", [$startDateTime->format('Y-m-d H:i:s')])
+                         ->whereRaw("{$dateTimeAddHours} > ?", [$startDateTime->format('Y-m-d H:i:s')]);
                 })
-                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime) {
+                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime, $dateTimeConcat, $dateTimeAddHours) {
                     // New booking ends during existing booking
-                    $subQ->whereRaw("CONCAT(date, ' ', start_time) < ?", [$endDateTime->format('Y-m-d H:i:s')])
-                         ->whereRaw("DATE_ADD(CONCAT(date, ' ', start_time), INTERVAL hours_count HOUR) >= ?", [$endDateTime->format('Y-m-d H:i:s')]);
+                    $subQ->whereRaw("{$dateTimeConcat} < ?", [$endDateTime->format('Y-m-d H:i:s')])
+                         ->whereRaw("{$dateTimeAddHours} >= ?", [$endDateTime->format('Y-m-d H:i:s')]);
                 })
-                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime) {
+                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime, $dateTimeConcat, $dateTimeAddHours) {
                     // New booking completely contains existing booking
-                    $subQ->whereRaw("CONCAT(date, ' ', start_time) >= ?", [$startDateTime->format('Y-m-d H:i:s')])
-                         ->whereRaw("DATE_ADD(CONCAT(date, ' ', start_time), INTERVAL hours_count HOUR) <= ?", [$endDateTime->format('Y-m-d H:i:s')]);
+                    $subQ->whereRaw("{$dateTimeConcat} >= ?", [$startDateTime->format('Y-m-d H:i:s')])
+                         ->whereRaw("{$dateTimeAddHours} <= ?", [$endDateTime->format('Y-m-d H:i:s')]);
                 })
-                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime) {
+                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime, $dateTimeConcat, $dateTimeAddHours) {
                     // Existing booking completely contains new booking
-                    $subQ->whereRaw("CONCAT(date, ' ', start_time) <= ?", [$startDateTime->format('Y-m-d H:i:s')])
-                         ->whereRaw("DATE_ADD(CONCAT(date, ' ', start_time), INTERVAL hours_count HOUR) >= ?", [$endDateTime->format('Y-m-d H:i:s')]);
+                    $subQ->whereRaw("{$dateTimeConcat} <= ?", [$startDateTime->format('Y-m-d H:i:s')])
+                         ->whereRaw("{$dateTimeAddHours} >= ?", [$endDateTime->format('Y-m-d H:i:s')]);
                 });
             });
 
@@ -91,24 +125,27 @@ class BookingRepository extends BaseRepository
         Carbon $endDateTime, 
         ?int $excludeBookingId = null
     ): Collection {
+        $dateTimeConcat = $this->getDateTimeConcat();
+        $dateTimeAddHours = $this->getDateTimeAddHours($dateTimeConcat, 'hours_count');
+
         $query = $this->model
             ->forChef($chefId)
             ->active()
             ->inDateRange($startDateTime, $endDateTime)
-            ->where(function ($q) use ($startDateTime, $endDateTime) {
+            ->where(function ($q) use ($startDateTime, $endDateTime, $dateTimeConcat, $dateTimeAddHours) {
                 // Find bookings that are within the search range
-                $q->whereRaw("CONCAT(date, ' ', start_time) BETWEEN ? AND ?", [
+                $q->whereRaw("{$dateTimeConcat} BETWEEN ? AND ?", [
                     $startDateTime->format('Y-m-d H:i:s'),
                     $endDateTime->format('Y-m-d H:i:s')
                 ])
-                ->orWhereRaw("DATE_ADD(CONCAT(date, ' ', start_time), INTERVAL hours_count HOUR) BETWEEN ? AND ?", [
+                ->orWhereRaw("{$dateTimeAddHours} BETWEEN ? AND ?", [
                     $startDateTime->format('Y-m-d H:i:s'),
                     $endDateTime->format('Y-m-d H:i:s')
                 ])
-                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime) {
+                ->orWhere(function ($subQ) use ($startDateTime, $endDateTime, $dateTimeConcat, $dateTimeAddHours) {
                     // Bookings that span across the search range
-                    $subQ->whereRaw("CONCAT(date, ' ', start_time) <= ?", [$startDateTime->format('Y-m-d H:i:s')])
-                         ->whereRaw("DATE_ADD(CONCAT(date, ' ', start_time), INTERVAL hours_count HOUR) >= ?", [$endDateTime->format('Y-m-d H:i:s')]);
+                    $subQ->whereRaw("{$dateTimeConcat} <= ?", [$startDateTime->format('Y-m-d H:i:s')])
+                         ->whereRaw("{$dateTimeAddHours} >= ?", [$endDateTime->format('Y-m-d H:i:s')]);
                 });
             });
 

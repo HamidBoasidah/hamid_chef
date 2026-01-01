@@ -21,6 +21,7 @@ class ChefServiceFactory extends Factory
             'hourly_rate' => $type === 'hourly' ? $this->faker->randomFloat(2, 20, 200) : null,
             'package_price' => $type === 'package' ? $this->faker->randomFloat(2, 50, 1000) : null,
             'min_hours' => $type === 'hourly' ? $this->faker->numberBetween(1,8) : null,
+            'rest_hours_required' => $this->faker->numberBetween(1, 4),
             'is_active' => true,
             'created_by' => null,
             'updated_by' => null,

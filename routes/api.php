@@ -13,6 +13,8 @@ Route::get('chefs', [App\Http\Controllers\Api\ChefController::class, 'index']);
 Route::get('chefs/by-category/{category}', [App\Http\Controllers\Api\ChefController::class, 'byCategory']);
 // Public: get chef by user id (for testing via Postman)
 Route::get('chefs/by-user/{userId}', [App\Http\Controllers\Api\ChefController::class, 'showByUserId']);
+// Public: get chef availability calendar and day details
+Route::get('chefs/{chefId}/availability-calendar', [App\Http\Controllers\Api\ChefController::class, 'availability']);
 Route::get('chefs/{chef}', [App\Http\Controllers\Api\ChefController::class, 'show']);
 // Public: get services for a specific chef (paginated, filterable)
 Route::get('chefs/{chef}/services', [App\Http\Controllers\Api\ChefServiceController::class, 'showByChef']);

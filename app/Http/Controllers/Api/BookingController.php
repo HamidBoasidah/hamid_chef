@@ -407,6 +407,7 @@ class BookingController extends Controller
             'date' => 'required|date|after_or_equal:today',
             'start_time' => 'required|date_format:H:i',
             'hours_count' => 'required|integer|min:1|max:12',
+            'chef_service_id' => 'nullable|integer|exists:chef_services,id',
             'exclude_booking_id' => 'nullable|integer|exists:bookings,id'
         ]);
 
@@ -416,6 +417,7 @@ class BookingController extends Controller
                 $request->date,
                 $request->start_time,
                 $request->hours_count,
+                $request->chef_service_id,
                 $request->exclude_booking_id
             );
 
@@ -469,7 +471,8 @@ class BookingController extends Controller
                 $validated['chef_id'],
                 $validated['date'],
                 $validated['start_time'],
-                $validated['hours_count']
+                $validated['hours_count'],
+                $validated['chef_service_id'] ?? null
             );
 
             return response()->json([

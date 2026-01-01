@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Services\ChefService;
+use App\Services\ChefAvailabilityService;
 use App\DTOs\ChefDTO;
 use App\Http\Requests\StoreChefRequest;
 use App\Http\Requests\UpdateChefRequest;
@@ -21,8 +22,8 @@ class ChefController extends Controller
 
     public function __construct()
     {
-        // Allow guests to view the chefs list, single chef and by-category routes
-        $this->middleware('auth:sanctum')->except(['index', 'show', 'byCategory']);
+        // Allow guests to view the chefs list, single chef, by-category routes, and availability
+        $this->middleware('auth:sanctum')->except(['index', 'show', 'byCategory', 'availability']);
     }
 
     /**
@@ -279,6 +280,46 @@ class ChefController extends Controller
             );
         } catch (ModelNotFoundException) {
             $this->throwNotFoundException('الطاهي المطلوب غير موجود');
+        }
+    }
+
+    /**
+     * Get chef availability calendar and day details
+     * 
+     * Returns:
+     * - Available days (working days with no bookings)
+     * - Off days (days the chef doesn't work)
+     * - Partially booked days
+     * - Fully booked days
+     * - Day details for a specific date (working hours, bookings, available slots)
+     * - Service information including rest hours required
+     */
+    public function availability(Request $request, ChefAvailabilityService $availabilityService, $chefId)
+    {
+        $request->validate([
+            'date' => 'nullable|date',
+        ]);
+
+        try {
+            $date = $request->get('date');
+
+            $availability = $availabilityService->getChefAvailability(
+                (int) $chefId,
+                $date
+            );
+
+            return $this->successResponse(
+                $availability,
+                'تم جلب بيانات التوفر بنجاح'
+            );
+        } catch (ModelNotFoundException) {
+            $this->throwNotFoundException('الطاهي المطلوب غير موجود');
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'خطأ في جلب بيانات التوفر',
+                'error' => $e->getMessage()
+            ], 500);
         }
     }
 

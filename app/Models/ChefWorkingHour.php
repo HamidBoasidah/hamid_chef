@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ChefWorkingHour extends BaseModel
 {
+    use HasFactory;
+
     protected $table = 'chef_working_hours';
 
     protected $fillable = [

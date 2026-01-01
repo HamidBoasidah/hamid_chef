@@ -25,6 +25,7 @@ class UpdateChefServiceRequest extends FormRequest
             'max_guests_included' => 'sometimes|nullable|integer|min:1',
             'allow_extra_guests' => 'sometimes|nullable|boolean',
             'extra_guest_price' => 'sometimes|nullable|numeric|min:0',
+            'rest_hours_required' => 'sometimes|nullable|integer|min:0|max:12',
             'is_active' => 'sometimes|nullable|boolean',
             'tags' => 'sometimes|nullable|array',
             'tags.*' => 'exists:tags,id',
