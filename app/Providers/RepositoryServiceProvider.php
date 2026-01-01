@@ -33,6 +33,7 @@ use App\Repositories\ActivityLogRepository;
 use App\Repositories\ConversationRepository;
 use App\Repositories\MessageRepository;
 use App\Repositories\ChefWorkingHourRepository;
+use App\Repositories\ChefVacationRepository;
 
 // Models
 use App\Models\User;
@@ -65,6 +66,7 @@ use Spatie\Activitylog\Models\Activity;
 use App\Models\Conversation;
 use App\Models\Message;
 use App\Models\ChefWorkingHour;
+use App\Models\ChefVacation;
 
 // Services
 use App\Services\UserService;
@@ -97,6 +99,7 @@ use App\Services\ActivityLogService;
 use App\Services\ConversationService;
 use App\Services\MessageService;
 use App\Services\ChefWorkingHourService;
+use App\Services\ChefVacationService;
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -132,6 +135,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(ConversationRepository::class, fn($app) => new ConversationRepository($app->make(Conversation::class)));
         $this->app->bind(MessageRepository::class, fn($app) => new MessageRepository($app->make(Message::class)));
         $this->app->bind(ChefWorkingHourRepository::class, fn($app) => new ChefWorkingHourRepository($app->make(ChefWorkingHour::class)));
+        $this->app->bind(ChefVacationRepository::class, fn($app) => new ChefVacationRepository($app->make(ChefVacation::class)));
 
         // Bind Services to their Repositories
         $this->app->bind(UserService::class, fn($app) => new UserService($app->make(UserRepository::class)));
@@ -180,6 +184,10 @@ class RepositoryServiceProvider extends ServiceProvider
         ));
         $this->app->bind(ChefWorkingHourService::class, fn($app) => new ChefWorkingHourService(
             $app->make(ChefWorkingHourRepository::class)
+        ));
+        $this->app->bind(ChefVacationService::class, fn($app) => new ChefVacationService(
+            $app->make(ChefVacationRepository::class),
+            $app->make(BookingRepository::class)
         ));
     }
 }

@@ -32,6 +32,87 @@ class ChefWorkingHourService
     }
 
     /**
+     * Return off-hour intervals (outside working hours) for a given day of week (0-6).
+     * If $dayOfWeek is null, use current day.
+     * Returns array of ['start_time' => 'HH:MM', 'end_time' => 'HH:MM'] representing off periods.
+     */
+    public function getOffHoursForCurrentChef(?int $dayOfWeek = null): array
+    {
+        $chefId = $this->currentChefId();
+        $day = $dayOfWeek !== null ? (int) $dayOfWeek : (int) now()->dayOfWeek;
+
+        $intervals = $this->repo->getDayIntervals($chefId, $day)->map(function ($r) {
+            // normalize times to HH:MM (remove seconds if present)
+            $start = explode(':', $r->start_time);
+            $end = explode(':', $r->end_time);
+            $s = sprintf('%02d:%02d', (int)$start[0], (int)($start[1] ?? 0));
+            $e = sprintf('%02d:%02d', (int)$end[0], (int)($end[1] ?? 0));
+            return ['start' => $s, 'end' => $e];
+        })->toArray();
+
+        // convert to minutes and sort
+        $mins = array_map(function ($iv) {
+            [$sh, $sm] = explode(':', $iv['start']);
+            [$eh, $em] = explode(':', $iv['end']);
+            return [ 'start' => (int)$sh * 60 + (int)$sm, 'end' => (int)$eh * 60 + (int)$em ];
+        }, $intervals);
+
+        usort($mins, fn($a, $b) => $a['start'] <=> $b['start']);
+
+        // merge overlaps just in case
+        $merged = [];
+        foreach ($mins as $iv) {
+            if (empty($merged)) { $merged[] = $iv; continue; }
+            $last = &$merged[count($merged)-1];
+            if ($iv['start'] <= $last['end']) {
+                // overlap or contiguous
+                $last['end'] = max($last['end'], $iv['end']);
+            } else {
+                $merged[] = $iv;
+            }
+        }
+
+        $off = [];
+        $dayStart = 0;
+        $dayEnd = 24 * 60;
+
+        if (empty($merged)) {
+            // whole day off
+            return [['start_time' => '00:00', 'end_time' => '24:00']];
+        }
+
+        // gap before first
+        if ($merged[0]['start'] > $dayStart) {
+            $off[] = ['start_time' => $this->minutesToTime($dayStart), 'end_time' => $this->minutesToTime($merged[0]['start'])];
+        }
+
+        // gaps between
+        for ($i = 0; $i < count($merged) - 1; $i++) {
+            $cur = $merged[$i];
+            $next = $merged[$i+1];
+            if ($next['start'] > $cur['end']) {
+                $off[] = ['start_time' => $this->minutesToTime($cur['end']), 'end_time' => $this->minutesToTime($next['start'])];
+            }
+        }
+
+        // gap after last
+        $last = $merged[count($merged)-1];
+        if ($last['end'] < $dayEnd) {
+            $off[] = ['start_time' => $this->minutesToTime($last['end']), 'end_time' => $this->minutesToTime($dayEnd)];
+        }
+
+        return $off;
+    }
+
+    protected function minutesToTime(int $m): string
+    {
+        if ($m === 24*60) return '24:00';
+        $h = intdiv($m, 60);
+        $mm = $m % 60;
+        return sprintf('%02d:%02d', $h, $mm);
+    }
+
+    /**
      * Replace the weekly schedule for current chef.
      * @param array $schedule e.g. [ ['day_of_week'=>1,'ranges'=>[['start_time'=>'09:00','end_time'=>'12:00']]] ]
      */

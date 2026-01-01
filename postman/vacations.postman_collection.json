@@ -1,16 +1,15 @@
 {
   "info": {
-    "name": "Chef Working Hours API",
-    "_postman_id": "d2a1b8dc-1c3c-4b69-9bbd-abcdef123456",
+    "name": "Chef Vacations API",
+    "_postman_id": "f3c2a7e0-9876-4c1a-a1b2-abcdef654321",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "description": "Moon Chef - Manage chef weekly working hours (API only)."
+    "description": "Moon Chef - Manage chef vacation dates (API only)."
   },
   "variable": [
     { "key": "baseUrl", "value": "http://localhost:8000" },
     { "key": "token", "value": "" },
-    { "key": "perPage", "value": "20" },
-    { "key": "userId", "value": "" },
-    { "key": "workingHourId", "value": "" }
+    { "key": "vacationId", "value": "" },
+    { "key": "month", "value": "11-2025" }
   ],
   "item": [
     {
@@ -35,8 +34,6 @@
                   "const json = pm.response.json();",
                   "const token = json?.data?.token;",
                   "if (token) pm.collectionVariables.set('token', token);",
-                  "const userId = json?.data?.user?.id;",
-                  "if (userId) pm.collectionVariables.set('userId', String(userId));",
                   "pm.test('Login ok', () => pm.expect(!!token).to.be.true);"
                 ],
                 "type": "text/javascript"
@@ -47,34 +44,52 @@
       ]
     },
     {
-      "name": "Working Hours",
+      "name": "Vacations",
       "item": [
         {
-          "name": "Get My Working Hours",
+          "name": "List Vacations",
           "request": {
             "method": "GET",
             "header": [
               { "key": "Accept", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
-            "url": { "raw": "{{baseUrl}}/api/chef/working-hours", "host": ["{{baseUrl}}"], "path": ["api","chef","working-hours"] }
+            "url": { "raw": "{{baseUrl}}/api/chef/vacations", "host": ["{{baseUrl}}"], "path": ["api","chef","vacations"] }
           }
         },
         {
-          "name": "Create Working Hour",
+          "name": "List Vacations (Monthly)",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/chef/vacations/monthly",
+              "host": ["{{baseUrl}}"],
+              "path": ["api","chef","vacations","monthly"],
+              "query": [
+                { "key": "month", "value": "", "disabled": false }
+              ]
+            }
+          },
+          "event": []
+        },
+        {
+          "name": "Create Vacation",
           "request": {
             "method": "POST",
             "header": [
               { "key": "Accept", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
-            "url": { "raw": "{{baseUrl}}/api/chef/working-hours", "host": ["{{baseUrl}}"], "path": ["api","chef","working-hours"] },
+            "url": { "raw": "{{baseUrl}}/api/chef/vacations", "host": ["{{baseUrl}}"], "path": ["api","chef","vacations"] },
             "body": {
               "mode": "formdata",
               "formdata": [
-                { "key": "day_of_week", "value": "6", "type": "text" },
-                { "key": "start_time", "value": "09:00", "type": "text" },
-                { "key": "end_time", "value": "13:00", "type": "text" }
+                { "key": "date", "value": "2026-01-05", "type": "text" },
+                { "key": "note", "value": "إجازة شخصية", "type": "text" }
               ]
             }
           },
@@ -85,8 +100,8 @@
                 "exec": [
                   "const json = pm.response.json();",
                   "const id = json?.data?.id;",
-                  "if (id) pm.collectionVariables.set('workingHourId', String(id));",
-                  "pm.test('Created working hour', () => pm.expect(!!id).to.be.true);"
+                  "if (id) pm.collectionVariables.set('vacationId', String(id));",
+                  "pm.test('Created vacation', () => pm.expect(!!id).to.be.true);"
                 ],
                 "type": "text/javascript"
               }
@@ -94,56 +109,47 @@
           ]
         },
         {
-          "name": "Update Working Hour",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{token}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/chef/working-hours/{{workingHourId}}", "host": ["{{baseUrl}}"], "path": ["api","chef","working-hours","{{workingHourId}}"] },
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                { "key": "_method", "value": "PUT", "type": "text" },
-                { "key": "start_time", "value": "16:00", "type": "text" },
-                { "key": "end_time", "value": "20:00", "type": "text" }
-              ]
-            }
-          }
-        },
-        {
-          "name": "Delete Working Hour",
-          "request": {
-            "method": "POST",
-            "header": [
-              { "key": "Accept", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{token}}" }
-            ],
-            "url": { "raw": "{{baseUrl}}/api/chef/working-hours/{{workingHourId}}", "host": ["{{baseUrl}}"], "path": ["api","chef","working-hours","{{workingHourId}}"] },
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                { "key": "_method", "value": "DELETE", "type": "text" }
-              ]
-            }
-          }
-        }
-        ,
-        {
-          "name": "Get Off Hours",
+          "name": "Show Vacation",
           "request": {
             "method": "GET",
             "header": [
               { "key": "Accept", "value": "application/json" },
               { "key": "Authorization", "value": "Bearer {{token}}" }
             ],
-            "url": {
-              "raw": "{{baseUrl}}/api/chef/working-hours/off-hours",
-              "host": ["{{baseUrl}}"],
-              "path": ["api","chef","working-hours","off-hours"],
-              "query": [
-                { "key": "day_of_week", "value": "", "disabled": false }
+            "url": { "raw": "{{baseUrl}}/api/chef/vacations/{{vacationId}}", "host": ["{{baseUrl}}"], "path": ["api","chef","vacations","{{vacationId}}"] }
+          }
+        },
+        {
+          "name": "Update Vacation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/chef/vacations/{{vacationId}}", "host": ["{{baseUrl}}"], "path": ["api","chef","vacations","{{vacationId}}"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "_method", "value": "PUT", "type": "text" },
+                { "key": "note", "value": "تعديل الملاحظة", "type": "text" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Delete Vacation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": { "raw": "{{baseUrl}}/api/chef/vacations/{{vacationId}}", "host": ["{{baseUrl}}"], "path": ["api","chef","vacations","{{vacationId}}"] },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                { "key": "_method", "value": "DELETE", "type": "text" }
               ]
             }
           }

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\UpsertChefWorkingHoursRequest;
 use App\Http\Requests\StoreChefWorkingHourRequest;
 use App\Http\Requests\UpdateChefWorkingHourRequest;
+use App\Http\Requests\GetChefOffHoursRequest;
 use App\Http\Traits\ExceptionHandler;
 use App\Http\Traits\SuccessResponse;
 use App\Services\ChefWorkingHourService;
@@ -52,5 +53,15 @@ class ChefWorkingHourController extends Controller
     {
         $service->deleteForCurrentChef((int) $id);
         return $this->deletedResponse(__('messages.deleted_success'));
+    }
+
+    /**
+     * Return off-hours (outside working hours) for a day of week (0-6). Defaults to current day.
+     */
+    public function offHours(GetChefOffHoursRequest $request, ChefWorkingHourService $service)
+    {
+        $day = $request->input('day_of_week');
+        $data = $service->getOffHoursForCurrentChef($day !== null ? (int)$day : null);
+        return $this->successResponse($data, __('messages.list_success'));
     }
 }
