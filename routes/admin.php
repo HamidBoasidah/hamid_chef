@@ -256,6 +256,7 @@ Route::middleware('auth:admin')
 
         // Discount Codes
         Route::resource('discount-codes', App\Http\Controllers\Admin\DiscountCodeController::class)
+            ->parameters(['discount-codes' => 'id'])
             ->names('discount-codes');
 
         // Admins (managers of the system)
