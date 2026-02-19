@@ -467,5 +467,157 @@ class ChefService
         }
     }
 
+    /**
+     * البحث عن أقرب الشيفات بناءً على الإحداثيات
+     * يستخدم صيغة Haversine لحساب المسافة بين نقطتين جغرافيتين
+     *
+     * @param float $latitude خط العرض للمستخدم
+     * @param float $longitude خط الطول للمستخدم
+     * @param int $radius نصف القطر بالكيلومتر (افتراضي 50 كم)
+     * @param int|null $limit الحد الأقصى للنتائج
+     * @param array|null $with العلاقات المطلوب تحميلها
+     * @return \Illuminate\Support\Collection
+     */
+    public function findNearestChefs(
+        float $latitude,
+        float $longitude,
+        int $radius = 50,
+        ?int $limit = null,
+        ?array $with = null
+    ) {
+        // صيغة Haversine لحساب المسافة بالكيلومتر
+        $haversine = "(
+            6371 * acos(
+                cos(radians(?))
+                * cos(radians(addresses.lat))
+                * cos(radians(addresses.lang) - radians(?))
+                + sin(radians(?))
+                * sin(radians(addresses.lat))
+            )
+        )";
 
+        $query = $this->chefs->query($with)
+            ->select('chefs.*')
+            ->selectRaw("{$haversine} AS distance", [$latitude, $longitude, $latitude])
+            ->join('addresses', function ($join) {
+                $join->on('chefs.user_id', '=', 'addresses.user_id')
+                    ->where('addresses.is_active', true)
+                    ->where('addresses.is_default', true);
+            })
+            ->where('chefs.is_active', true)
+            ->whereNotNull('addresses.lat')
+            ->whereNotNull('addresses.lang')
+            ->having('distance', '<=', $radius)
+            ->orderBy('distance', 'asc');
+
+        if ($limit) {
+            $query->limit($limit);
+        }
+
+        return $query->get();
+    }
+
+    /**
+     * البحث عن أقرب الشيفات مع التقييم والمسافة (مع ترقيم الصفحات)
+     * يدعم البحث الشامل في: اسم الشيف، الخدمات، الوسوم، التصنيفات
+     *
+     * @param float $latitude خط العرض للمستخدم
+     * @param float $longitude خط الطول للمستخدم
+     * @param int $radius نصف القطر بالكيلومتر
+     * @param int $perPage عدد النتائج في الصفحة
+     * @param array $filters فلاتر إضافية (category_id, min_rating, max_price, search, tag_id)
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
+     */
+    public function searchNearestChefs(
+        float $latitude,
+        float $longitude,
+        int $radius = 50,
+        int $perPage = 10,
+        array $filters = []
+    ) {
+        // صيغة Haversine لحساب المسافة بالكيلومتر
+        $haversine = "(
+            6371 * acos(
+                cos(radians(?))
+                * cos(radians(addresses.lat))
+                * cos(radians(addresses.lang) - radians(?))
+                + sin(radians(?))
+                * sin(radians(addresses.lat))
+            )
+        )";
+
+        $query = $this->chefs->query(['categories:id,name,slug', 'services.tags'])
+            ->select('chefs.*')
+            ->selectRaw("{$haversine} AS distance", [$latitude, $longitude, $latitude])
+            ->join('addresses', function ($join) {
+                $join->on('chefs.user_id', '=', 'addresses.user_id')
+                    ->where('addresses.is_active', true)
+                    ->where('addresses.is_default', true);
+            })
+            ->where('chefs.is_active', true)
+            ->whereNotNull('addresses.lat')
+            ->whereNotNull('addresses.lang')
+            ->having('distance', '<=', $radius);
+
+        // فلتر حسب التصنيف
+        if (!empty($filters['category_id'])) {
+            $query->whereHas('categories', function ($q) use ($filters) {
+                $q->where('categories.id', $filters['category_id']);
+            });
+        }
+
+        // فلتر حسب الوسم (Tag)
+        if (!empty($filters['tag_id'])) {
+            $query->whereHas('services.tags', function ($q) use ($filters) {
+                $q->where('tags.id', $filters['tag_id']);
+            });
+        }
+
+        // فلتر حسب الحد الأدنى للتقييم
+        if (!empty($filters['min_rating'])) {
+            $query->where('chefs.rating_avg', '>=', $filters['min_rating']);
+        }
+
+        // فلتر حسب الحد الأقصى للسعر
+        if (!empty($filters['max_price'])) {
+            $query->where('chefs.base_hourly_rate', '<=', $filters['max_price']);
+        }
+
+        // فلتر حسب المحافظة
+        if (!empty($filters['governorate_id'])) {
+            $query->where('chefs.governorate_id', $filters['governorate_id']);
+        }
+
+        // البحث النصي الشامل (في اسم الشيف، الخدمات، الوسوم، التصنيفات)
+        if (!empty($filters['search'])) {
+            $search = $filters['search'];
+            $query->where(function ($q) use ($search) {
+                // البحث في اسم الشيف والوصف
+                $q->where('chefs.name', 'like', "%{$search}%")
+                    ->orWhere('chefs.short_description', 'like', "%{$search}%")
+                    ->orWhere('chefs.long_description', 'like', "%{$search}%")
+                    // البحث في الخدمات
+                    ->orWhereHas('services', function ($sq) use ($search) {
+                        $sq->where('name', 'like', "%{$search}%")
+                            ->orWhere('description', 'like', "%{$search}%");
+                    })
+                    // البحث في الوسوم (Tags)
+                    ->orWhereHas('services.tags', function ($tq) use ($search) {
+                        $tq->where('tags.name', 'like', "%{$search}%")
+                            ->orWhere('tags.slug', 'like', "%{$search}%");
+                    })
+                    // البحث في التصنيفات (Categories)
+                    ->orWhereHas('categories', function ($cq) use ($search) {
+                        $cq->where('categories.name', 'like', "%{$search}%")
+                            ->orWhere('categories.slug', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        // الترتيب: الأقرب أولاً، ثم الأعلى تقييماً
+        $query->orderBy('distance', 'asc')
+            ->orderBy('chefs.rating_avg', 'desc');
+
+        return $query->paginate($perPage);
+    }
 }

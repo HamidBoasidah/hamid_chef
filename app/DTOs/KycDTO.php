@@ -17,11 +17,13 @@ class KycDTO extends BaseDTO
     public $address;
     public $document_type;
     public $document_scan_copy;
+    public $certificates;
     public $is_verified;
     public $created_by;
     public $updated_by;
     public $created_at;
     public $deleted_at;
+    public $user;
 
     public function __construct(
         $id,
@@ -35,11 +37,13 @@ class KycDTO extends BaseDTO
         $address,
         $document_type,
         $document_scan_copy,
+        $certificates,
         $is_verified,
         $created_by,
         $updated_by,
         $created_at = null,
-        $deleted_at = null
+        $deleted_at = null,
+        $user = null
     ) {
         $this->id = $id;
         $this->user_id = $user_id;
@@ -52,15 +56,45 @@ class KycDTO extends BaseDTO
         $this->address = $address;
         $this->document_type = $document_type;
         $this->document_scan_copy = $document_scan_copy;
+        $this->certificates = $certificates;
         $this->is_verified = (bool) $is_verified;
         $this->created_by = $created_by;
         $this->updated_by = $updated_by;
         $this->created_at = $created_at;
         $this->deleted_at = $deleted_at;
+        $this->user = $user;
     }
 
     public static function fromModel(Kyc $kyc): self
     {
+        // Process certificates to add download URLs
+        $certificates = $kyc->certificates ?? [];
+        $processedCertificates = [];
+
+        foreach ($certificates as $type => $cert) {
+            if (!empty($cert['path'])) {
+                $processedCertificates[$type] = [
+                    'path' => $cert['path'],
+                    'uploaded_at' => $cert['uploaded_at'] ?? null,
+                    'file_type' => $cert['file_type'] ?? null,
+                    'download_url' => route('admin.kyc.certificates.download', ['kyc' => $kyc->id, 'type' => $type]),
+                ];
+            }
+        }
+
+        // Get user data
+        $userData = null;
+        if ($kyc->user) {
+            $userData = [
+                'id' => $kyc->user->id,
+                'first_name' => $kyc->user->first_name,
+                'last_name' => $kyc->user->last_name,
+                'email' => $kyc->user->email,
+                'phone_number' => $kyc->user->phone_number,
+                'avatar' => $kyc->user->avatar,
+            ];
+        }
+
         return new self(
             $kyc->id,
             $kyc->user_id ?? null,
@@ -73,11 +107,13 @@ class KycDTO extends BaseDTO
             $kyc->address ?? null,
             $kyc->document_type ?? null,
             $kyc->document_scan_copy ?? null,
+            $processedCertificates,
             $kyc->is_verified ?? false,
             $kyc->created_by ?? null,
             $kyc->updated_by ?? null,
             $kyc->created_at?->toDateTimeString() ?? null,
             $kyc->deleted_at?->toDateTimeString() ?? null,
+            $userData,
         );
     }
 
@@ -95,11 +131,13 @@ class KycDTO extends BaseDTO
             'address' => $this->address,
             'document_type' => $this->document_type,
             'document_scan_copy' => $this->document_scan_copy,
+            'certificates' => $this->certificates,
             'is_verified' => $this->is_verified,
             'created_by' => $this->created_by,
             'updated_by' => $this->updated_by,
             'created_at' => $this->created_at,
             'deleted_at' => $this->deleted_at,
+            'user' => $this->user,
         ];
     }
 

@@ -50,7 +50,7 @@ class BookingConflictService
         }
 
         $conflictingBookings = $this->findConflictingBookings($booking, $excludeBookingId);
-        
+
         if ($conflictingBookings->isEmpty()) {
             return [
                 'valid' => true,
@@ -123,7 +123,7 @@ class BookingConflictService
         return DB::transaction(function () use ($bookingDTO) {
             // Lock chef bookings for the date to prevent race conditions
             $this->bookingRepository->lockChefBookingsForDate(
-                $bookingDTO->chef_id, 
+                $bookingDTO->chef_id,
                 Carbon::parse($bookingDTO->date)
             );
 
@@ -189,10 +189,10 @@ class BookingConflictService
     {
         $startDateTime = $booking->getStartDateTime();
         $endDateTime = $booking->getEndDateTime();
-        
+
         // Use the provided rest hours or get from service
         $restHours = $newBookingRestHours ?? $this->getServiceRestHours($booking->chef_service_id);
-        
+
         // Extend search range by maximum possible rest hours (use a safe maximum)
         $maxRestHours = max($restHours, 8); // Search up to 8 hours to catch all potential conflicts
         $searchStart = $startDateTime->copy()->subHours($maxRestHours);
@@ -270,8 +270,33 @@ class BookingConflictService
     public function checkChefAvailability(int $chefId, string $date, string $startTime, int $hoursCount, ?int $serviceId = null, ?int $excludeBookingId = null): array
     {
         $bookingDTO = new BookingDTO(
-            null, null, $chefId, $serviceId, null, $date, $startTime, $hoursCount,
-            null, null, null, null, null, null, null, null, null, null, true, null, null
+            null, // id
+            null, // customer_id
+            $chefId, // chef_id
+            $serviceId, // chef_service_id
+            null, // address_id
+            $date, // date
+            $startTime, // start_time
+            $hoursCount, // hours_count
+            null, // number_of_guests
+            null, // service_type
+            null, // unit_price
+            null, // extra_guests_count
+            null, // extra_guests_amount
+            null, // total_amount
+            null, // commission_amount
+            null, // payment_status
+            null, // booking_status
+            null, // rejection_reason
+            null, // cancellation_reason
+            null, // discount_code_id
+            null, // discount_code
+            0, // discount_amount
+            null, // original_amount
+            null, // notes
+            true, // is_active
+            null, // created_by
+            null // updated_by
         );
 
         $conflictValidation = $this->validateBookingConflicts($bookingDTO, $excludeBookingId);
@@ -280,7 +305,7 @@ class BookingConflictService
         $available = $conflictValidation['valid'] && $gapValidation['valid'];
         $errors = array_merge($conflictValidation['errors'], $gapValidation['errors']);
         $conflictingBookings = array_merge(
-            $conflictValidation['conflicting_bookings'], 
+            $conflictValidation['conflicting_bookings'],
             $gapValidation['conflicting_bookings']
         );
 

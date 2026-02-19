@@ -66,29 +66,33 @@ class BookingController extends Controller
 
             // Create BookingDTO
             $bookingDTO = new BookingDTO(
-                null,
-                $validated['customer_id'],
-                $validated['chef_id'],
-                $validated['chef_service_id'],
-                $validated['address_id'] ?? null,
-                $validated['date'],
-                $validated['start_time'],
-                $validated['hours_count'],
-                $validated['number_of_guests'],
-                $validated['service_type'],
-                $validated['unit_price'],
-                $validated['extra_guests_count'] ?? 0,
-                $validated['extra_guests_amount'] ?? 0,
-                $validated['total_amount'],
-                $validated['commission_amount'] ?? 0,
-                'pending',
-                'pending',
+                null, // id
+                $validated['customer_id'], // customer_id
+                $validated['chef_id'], // chef_id
+                $validated['chef_service_id'], // chef_service_id
+                $validated['address_id'] ?? null, // address_id
+                $validated['date'], // date
+                $validated['start_time'], // start_time
+                $validated['hours_count'], // hours_count
+                $validated['number_of_guests'], // number_of_guests
+                $validated['service_type'], // service_type
+                $validated['unit_price'], // unit_price
+                $validated['extra_guests_count'] ?? 0, // extra_guests_count
+                $validated['extra_guests_amount'] ?? 0, // extra_guests_amount
+                $validated['total_amount'], // total_amount
+                $validated['commission_amount'] ?? 0, // commission_amount
+                'pending', // payment_status
+                'pending', // booking_status
                 null, // rejection_reason
                 null, // cancellation_reason
-                $validated['notes'] ?? null,
-                true,
-                $validated['created_by'],
-                null
+                $validated['discount_code_id'] ?? null, // discount_code_id
+                null, // discount_code (will be loaded from relation)
+                $validated['discount_amount'] ?? 0, // discount_amount
+                $validated['original_amount'] ?? $validated['total_amount'], // original_amount
+                $validated['notes'] ?? null, // notes
+                true, // is_active
+                $validated['created_by'], // created_by
+                null // updated_by
             );
 
             $result = $bookingService->createWithConflictCheck($bookingDTO);

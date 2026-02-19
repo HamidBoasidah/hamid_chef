@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $this->hasOne(Chef::class , 'user_id');
     }
 
+    public function addresses()
+    {
+        return $this->hasMany(Address::class, 'user_id');
+    }
+
     public function bookings()
     {
         return $this->hasMany(Booking::class, 'customer_id');

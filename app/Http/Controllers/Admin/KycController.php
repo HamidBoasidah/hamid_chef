@@ -33,10 +33,9 @@ class KycController extends Controller
         $kycs = $kycService->paginate($perPage);
 
         $kycs->getCollection()->transform(function ($kyc) {
+            // Load user relationship
+            $kyc->load('user');
             $dto = KycDTO::fromModel($kyc)->toArray();
-            /*$dto['user'] = $kyc->user
-                ? $kyc->user->only(['id', 'first_name', 'last_name', 'email', 'phone_number', 'avatar'])
-                : null;*/
 
             return $dto;
         });
@@ -84,10 +83,9 @@ class KycController extends Controller
 
     public function show(Kyc $kyc): Response
     {
+        // Load user relationship for display
+        $kyc->load('user');
         $dto = KycDTO::fromModel($kyc)->toArray();
-        /*$dto['user'] = $kyc->user
-            ? $kyc->user->only(['id', 'first_name', 'last_name', 'email', 'phone_number', 'avatar'])
-            : null;*/
 
         return Inertia::render('Admin/Kyc/Show', [
             'kyc' => $dto,
@@ -96,10 +94,9 @@ class KycController extends Controller
 
     public function edit(Kyc $kyc): Response
     {
+        // Load user relationship for display
+        $kyc->load('user');
         $dto = KycDTO::fromModel($kyc)->toArray();
-        /*$dto['user'] = $kyc->user
-            ? $kyc->user->only(['id', 'first_name', 'last_name', 'email', 'phone_number', 'avatar'])
-            : null;*/
 
         // need users for selection
         $users = User::all(['id', 'first_name', 'last_name', 'email', 'phone_number']);

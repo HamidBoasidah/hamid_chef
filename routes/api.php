@@ -9,6 +9,8 @@ Route::get('/user', function (Request $request) {
 
 // Public routes for viewing chefs (list and single) — available to guests
 Route::get('chefs', [App\Http\Controllers\Api\ChefController::class, 'index']);
+// Search nearest chefs by location (public) — placed BEFORE parameterized routes
+Route::get('chefs/nearest', [App\Http\Controllers\Api\ChefController::class, 'nearest']);
 // Get chefs by category (public) — placed BEFORE the parameterized show route to avoid route shadowing
 Route::get('chefs/by-category/{category}', [App\Http\Controllers\Api\ChefController::class, 'byCategory']);
 // Public: get chef by user id (for testing via Postman)

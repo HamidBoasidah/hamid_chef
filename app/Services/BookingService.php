@@ -60,27 +60,33 @@ class BookingService
     {
         // Convert to DTO for validation
         $bookingDTO = new BookingDTO(
-            null,
-            $attributes['customer_id'] ?? null,
-            $attributes['chef_id'] ?? null,
-            $attributes['chef_service_id'] ?? null,
-            $attributes['address_id'] ?? null,
-            $attributes['date'] ?? null,
-            $attributes['start_time'] ?? null,
-            $attributes['hours_count'] ?? null,
-            $attributes['number_of_guests'] ?? null,
-            $attributes['service_type'] ?? null,
-            $attributes['unit_price'] ?? null,
-            $attributes['extra_guests_count'] ?? null,
-            $attributes['extra_guests_amount'] ?? null,
-            $attributes['total_amount'] ?? null,
-            $attributes['commission_amount'] ?? null,
-            $attributes['payment_status'] ?? 'pending',
-            $attributes['booking_status'] ?? 'pending',
-            $attributes['notes'] ?? null,
-            $attributes['is_active'] ?? true,
-            $attributes['created_by'] ?? null,
-            $attributes['updated_by'] ?? null
+            null, // id
+            $attributes['customer_id'] ?? null, // customer_id
+            $attributes['chef_id'] ?? null, // chef_id
+            $attributes['chef_service_id'] ?? null, // chef_service_id
+            $attributes['address_id'] ?? null, // address_id
+            $attributes['date'] ?? null, // date
+            $attributes['start_time'] ?? null, // start_time
+            $attributes['hours_count'] ?? null, // hours_count
+            $attributes['number_of_guests'] ?? null, // number_of_guests
+            $attributes['service_type'] ?? null, // service_type
+            $attributes['unit_price'] ?? null, // unit_price
+            $attributes['extra_guests_count'] ?? null, // extra_guests_count
+            $attributes['extra_guests_amount'] ?? null, // extra_guests_amount
+            $attributes['total_amount'] ?? null, // total_amount
+            $attributes['commission_amount'] ?? null, // commission_amount
+            $attributes['payment_status'] ?? 'pending', // payment_status
+            $attributes['booking_status'] ?? 'pending', // booking_status
+            null, // rejection_reason
+            null, // cancellation_reason
+            $attributes['discount_code_id'] ?? null, // discount_code_id
+            null, // discount_code
+            $attributes['discount_amount'] ?? 0, // discount_amount
+            $attributes['original_amount'] ?? $attributes['total_amount'] ?? null, // original_amount
+            $attributes['notes'] ?? null, // notes
+            $attributes['is_active'] ?? true, // is_active
+            $attributes['created_by'] ?? null, // created_by
+            $attributes['updated_by'] ?? null // updated_by
         );
 
         // Use conflict service for safe creation
@@ -126,27 +132,33 @@ class BookingService
         if ($timeFieldsChanged) {
             // Create DTO with updated values for conflict validation
             $bookingDTO = new BookingDTO(
-                $id,
-                $attributes['customer_id'] ?? $existingBooking->customer_id,
-                $attributes['chef_id'] ?? $existingBooking->chef_id,
-                $attributes['chef_service_id'] ?? $existingBooking->chef_service_id,
-                $attributes['address_id'] ?? $existingBooking->address_id,
-                $attributes['date'] ?? $existingBooking->date->format('Y-m-d'),
-                $attributes['start_time'] ?? $existingBooking->start_time->format('H:i'),
-                $attributes['hours_count'] ?? $existingBooking->hours_count,
-                $attributes['number_of_guests'] ?? $existingBooking->number_of_guests,
-                $attributes['service_type'] ?? $existingBooking->service_type,
-                $attributes['unit_price'] ?? $existingBooking->unit_price,
-                $attributes['extra_guests_count'] ?? $existingBooking->extra_guests_count,
-                $attributes['extra_guests_amount'] ?? $existingBooking->extra_guests_amount,
-                $attributes['total_amount'] ?? $existingBooking->total_amount,
-                $attributes['commission_amount'] ?? $existingBooking->commission_amount,
-                $attributes['payment_status'] ?? $existingBooking->payment_status,
-                $attributes['booking_status'] ?? $existingBooking->booking_status,
-                $attributes['notes'] ?? $existingBooking->notes,
-                $attributes['is_active'] ?? $existingBooking->is_active,
-                $attributes['created_by'] ?? $existingBooking->created_by,
-                $attributes['updated_by'] ?? $existingBooking->updated_by
+                $id, // id
+                $attributes['customer_id'] ?? $existingBooking->customer_id, // customer_id
+                $attributes['chef_id'] ?? $existingBooking->chef_id, // chef_id
+                $attributes['chef_service_id'] ?? $existingBooking->chef_service_id, // chef_service_id
+                $attributes['address_id'] ?? $existingBooking->address_id, // address_id
+                $attributes['date'] ?? $existingBooking->date->format('Y-m-d'), // date
+                $attributes['start_time'] ?? $existingBooking->start_time->format('H:i'), // start_time
+                $attributes['hours_count'] ?? $existingBooking->hours_count, // hours_count
+                $attributes['number_of_guests'] ?? $existingBooking->number_of_guests, // number_of_guests
+                $attributes['service_type'] ?? $existingBooking->service_type, // service_type
+                $attributes['unit_price'] ?? $existingBooking->unit_price, // unit_price
+                $attributes['extra_guests_count'] ?? $existingBooking->extra_guests_count, // extra_guests_count
+                $attributes['extra_guests_amount'] ?? $existingBooking->extra_guests_amount, // extra_guests_amount
+                $attributes['total_amount'] ?? $existingBooking->total_amount, // total_amount
+                $attributes['commission_amount'] ?? $existingBooking->commission_amount, // commission_amount
+                $attributes['payment_status'] ?? $existingBooking->payment_status, // payment_status
+                $attributes['booking_status'] ?? $existingBooking->booking_status, // booking_status
+                $attributes['rejection_reason'] ?? $existingBooking->rejection_reason, // rejection_reason
+                $attributes['cancellation_reason'] ?? $existingBooking->cancellation_reason, // cancellation_reason
+                $attributes['discount_code_id'] ?? $existingBooking->discount_code_id, // discount_code_id
+                null, // discount_code
+                $attributes['discount_amount'] ?? $existingBooking->discount_amount ?? 0, // discount_amount
+                $attributes['original_amount'] ?? $existingBooking->original_amount, // original_amount
+                $attributes['notes'] ?? $existingBooking->notes, // notes
+                $attributes['is_active'] ?? $existingBooking->is_active, // is_active
+                $attributes['created_by'] ?? $existingBooking->created_by, // created_by
+                $attributes['updated_by'] ?? $existingBooking->updated_by // updated_by
             );
 
             // Validate conflicts excluding the current booking
@@ -279,27 +291,33 @@ class BookingService
         if ($timeFieldsChanged) {
             // Create DTO with updated values for conflict validation
             $bookingDTO = new BookingDTO(
-                $booking->id,
-                $attributes['customer_id'] ?? $booking->customer_id,
-                $attributes['chef_id'] ?? $booking->chef_id,
-                $attributes['chef_service_id'] ?? $booking->chef_service_id,
-                $attributes['address_id'] ?? $booking->address_id,
-                $attributes['date'] ?? $booking->date->format('Y-m-d'),
-                $attributes['start_time'] ?? $booking->start_time->format('H:i'),
-                $attributes['hours_count'] ?? $booking->hours_count,
-                $attributes['number_of_guests'] ?? $booking->number_of_guests,
-                $attributes['service_type'] ?? $booking->service_type,
-                $attributes['unit_price'] ?? $booking->unit_price,
-                $attributes['extra_guests_count'] ?? $booking->extra_guests_count,
-                $attributes['extra_guests_amount'] ?? $booking->extra_guests_amount,
-                $attributes['total_amount'] ?? $booking->total_amount,
-                $attributes['commission_amount'] ?? $booking->commission_amount,
-                $attributes['payment_status'] ?? $booking->payment_status,
-                $attributes['booking_status'] ?? $booking->booking_status,
-                $attributes['notes'] ?? $booking->notes,
-                $attributes['is_active'] ?? $booking->is_active,
-                $attributes['created_by'] ?? $booking->created_by,
-                $attributes['updated_by'] ?? $booking->updated_by
+                $booking->id, // id
+                $attributes['customer_id'] ?? $booking->customer_id, // customer_id
+                $attributes['chef_id'] ?? $booking->chef_id, // chef_id
+                $attributes['chef_service_id'] ?? $booking->chef_service_id, // chef_service_id
+                $attributes['address_id'] ?? $booking->address_id, // address_id
+                $attributes['date'] ?? $booking->date->format('Y-m-d'), // date
+                $attributes['start_time'] ?? $booking->start_time->format('H:i'), // start_time
+                $attributes['hours_count'] ?? $booking->hours_count, // hours_count
+                $attributes['number_of_guests'] ?? $booking->number_of_guests, // number_of_guests
+                $attributes['service_type'] ?? $booking->service_type, // service_type
+                $attributes['unit_price'] ?? $booking->unit_price, // unit_price
+                $attributes['extra_guests_count'] ?? $booking->extra_guests_count, // extra_guests_count
+                $attributes['extra_guests_amount'] ?? $booking->extra_guests_amount, // extra_guests_amount
+                $attributes['total_amount'] ?? $booking->total_amount, // total_amount
+                $attributes['commission_amount'] ?? $booking->commission_amount, // commission_amount
+                $attributes['payment_status'] ?? $booking->payment_status, // payment_status
+                $attributes['booking_status'] ?? $booking->booking_status, // booking_status
+                $attributes['rejection_reason'] ?? $booking->rejection_reason, // rejection_reason
+                $attributes['cancellation_reason'] ?? $booking->cancellation_reason, // cancellation_reason
+                $attributes['discount_code_id'] ?? $booking->discount_code_id, // discount_code_id
+                null, // discount_code
+                $attributes['discount_amount'] ?? $booking->discount_amount ?? 0, // discount_amount
+                $attributes['original_amount'] ?? $booking->original_amount, // original_amount
+                $attributes['notes'] ?? $booking->notes, // notes
+                $attributes['is_active'] ?? $booking->is_active, // is_active
+                $attributes['created_by'] ?? $booking->created_by, // created_by
+                $attributes['updated_by'] ?? $booking->updated_by // updated_by
             );
 
             // Validate conflicts excluding the current booking

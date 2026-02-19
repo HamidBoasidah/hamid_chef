@@ -38,7 +38,11 @@ class StoreBookingRequest extends FormRequest
             'payment_status' => 'nullable|in:pending,paid,refunded,failed',
             'booking_status' => 'nullable|in:pending,accepted,rejected,cancelled_by_customer,cancelled_by_chef,completed',
             'notes' => 'nullable|string|max:1000',
-            'is_active' => 'nullable|boolean'
+            'is_active' => 'nullable|boolean',
+            // Discount code fields (optional)
+            'discount_code_id' => 'nullable|integer|exists:discount_codes,id',
+            'discount_amount' => 'nullable|numeric|min:0|max:9999999.99',
+            'original_amount' => 'nullable|numeric|min:0|max:9999999.99'
         ];
     }
 
@@ -171,14 +175,34 @@ class StoreBookingRequest extends FormRequest
         $totalAmount = $this->input('total_amount');
         $serviceType = $this->input('service_type');
 
+        // Discount fields
+        $discountCodeId = $this->input('discount_code_id');
+        $discountAmount = $this->input('discount_amount', 0);
+        $originalAmount = $this->input('original_amount');
+
         if ($unitPrice && $hoursCount && $totalAmount) {
-            $expectedTotal = $serviceType === 'hourly' 
+            // Calculate base amount (before discount)
+            $baseAmount = $serviceType === 'hourly'
                 ? ($unitPrice * $hoursCount) + $extraGuestsAmount
                 : $unitPrice + $extraGuestsAmount;
 
-            // Allow small rounding differences
-            if (abs($expectedTotal - $totalAmount) > 0.01) {
-                $validator->errors()->add('total_amount', __('booking.validation.total_amount_mismatch'));
+            // If discount code is used
+            if ($discountCodeId && $discountAmount > 0) {
+                // Validate original_amount matches base calculation
+                if ($originalAmount && abs($baseAmount - $originalAmount) > 0.01) {
+                    $validator->errors()->add('original_amount', __('booking.validation.original_amount_mismatch'));
+                }
+
+                // Validate total_amount = original_amount - discount_amount
+                $expectedTotal = $originalAmount - $discountAmount;
+                if (abs($expectedTotal - $totalAmount) > 0.01) {
+                    $validator->errors()->add('total_amount', __('booking.validation.total_amount_mismatch'));
+                }
+            } else {
+                // No discount: total_amount should equal base calculation
+                if (abs($baseAmount - $totalAmount) > 0.01) {
+                    $validator->errors()->add('total_amount', __('booking.validation.total_amount_mismatch'));
+                }
             }
         }
 
