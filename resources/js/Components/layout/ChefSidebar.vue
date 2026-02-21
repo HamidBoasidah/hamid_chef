@@ -339,6 +339,48 @@
                   </span>
                 </Link>
               </li>
+
+              <!-- KYC -->
+              <li>
+                <Link
+                  :href="route('chef.kyc.index')"
+                  :class="[
+                    'menu-item group',
+                    {
+                      'menu-item-active': isActive('chef.kyc'),
+                      'menu-item-inactive': !isActive('chef.kyc'),
+                    },
+                  ]"
+                >
+                  <span :class="[isActive('chef.kyc') ? 'menu-item-icon-active' : 'menu-item-icon-inactive']">
+                    <DocumentIcon />
+                  </span>
+                  <span v-if="isExpanded || isHovered || isMobileOpen" class="menu-item-text">
+                    {{ t('menu.kyc') }}
+                  </span>
+                </Link>
+              </li>
+
+              <!-- Addresses -->
+              <li>
+                <Link
+                  :href="route('chef.addresses.index')"
+                  :class="[
+                    'menu-item group',
+                    {
+                      'menu-item-active': isActive('chef.addresses'),
+                      'menu-item-inactive': !isActive('chef.addresses'),
+                    },
+                  ]"
+                >
+                  <span :class="[isActive('chef.addresses') ? 'menu-item-icon-active' : 'menu-item-icon-inactive']">
+                    <MapPinIcon />
+                  </span>
+                  <span v-if="isExpanded || isHovered || isMobileOpen" class="menu-item-text">
+                    {{ t('menu.addresses') }}
+                  </span>
+                </Link>
+              </li>
             </ul>
           </div>
         </div>
@@ -351,17 +393,19 @@
 import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { Link, usePage } from '@inertiajs/vue3'
-import { 
-  GridIcon, 
-  UserCircleIcon, 
-  CalenderIcon, 
-  TaskIcon, 
+import {
+  GridIcon,
+  UserCircleIcon,
+  CalenderIcon,
+  TaskIcon,
   HorizontalDots,
   ClockIcon,
   WalletIcon,
   BarChartIcon,
   ChevronDownIcon,
 } from '../../icons'
+import DocumentIcon from '../../icons/DocumentIcon.vue'
+import MapPinIcon from '../../icons/MapPinIcon.vue'
 import { useSidebar } from '@/composables/useSidebar'
 
 const { t } = useI18n()
@@ -382,11 +426,11 @@ const sidebarInlineStyle = computed(() => {
 const isActive = (routePattern) => {
   const currentRoute = page.props.ziggy?.location || window?.location?.pathname
   const routeName = route().current()
-  
+
   if (routeName) {
     return routeName.startsWith(routePattern)
   }
-  
+
   return false
 }
 

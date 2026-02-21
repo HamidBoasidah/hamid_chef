@@ -2,7 +2,7 @@
 
 /**
  * Chef Panel Routes
- * 
+ *
  * This file contains all routes for the Chef control panel.
  * All routes are prefixed with '/chef' and use the 'chef' guard.
  */
@@ -18,6 +18,8 @@ use App\Http\Controllers\Chef\ProfileController;
 use App\Http\Controllers\Chef\VacationController;
 use App\Http\Controllers\Chef\WorkingHourController;
 use App\Http\Controllers\Chef\WalletController;
+use App\Http\Controllers\Chef\KycController;
+use App\Http\Controllers\Chef\AddressController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -143,6 +145,40 @@ Route::middleware(['auth:chef', 'ensure.chef.type'])
             ->name('reports.export.excel');
         Route::get('reports/export-pdf', [\App\Http\Controllers\Chef\ReportController::class, 'exportPdf'])
             ->name('reports.export.pdf');
+
+        // KYC
+        Route::get('kyc', [KycController::class, 'index'])
+            ->name('kyc.index');
+        Route::get('kyc/create', [KycController::class, 'create'])
+            ->name('kyc.create');
+        Route::post('kyc', [KycController::class, 'store'])
+            ->name('kyc.store');
+        Route::get('kyc/{kyc}', [KycController::class, 'show'])
+            ->name('kyc.show');
+        Route::get('kyc/{kyc}/edit', [KycController::class, 'edit'])
+            ->name('kyc.edit');
+        Route::put('kyc/{kyc}', [KycController::class, 'update'])
+            ->name('kyc.update');
+        Route::delete('kyc/{kyc}', [KycController::class, 'destroy'])
+            ->name('kyc.destroy');
+        Route::get('kyc/{kyc}/download/{type}', [KycController::class, 'download'])
+            ->name('kyc.download');
+
+        // Addresses
+        Route::get('addresses', [AddressController::class, 'index'])
+            ->name('addresses.index');
+        Route::get('addresses/create', [AddressController::class, 'create'])
+            ->name('addresses.create');
+        Route::post('addresses', [AddressController::class, 'store'])
+            ->name('addresses.store');
+        Route::get('addresses/{address}/edit', [AddressController::class, 'edit'])
+            ->name('addresses.edit');
+        Route::put('addresses/{address}', [AddressController::class, 'update'])
+            ->name('addresses.update');
+        Route::delete('addresses/{address}', [AddressController::class, 'destroy'])
+            ->name('addresses.destroy');
+        Route::patch('addresses/{address}/default', [AddressController::class, 'setDefault'])
+            ->name('addresses.default');
 
         // Logout
         Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
